@@ -16,11 +16,14 @@ function App() {
   const [activeStage, setActiveStage] = useState(null)
   const [stats, setStats] = useState(getStats)
 
-  useEffect(() => {
+  function loadGame() {
+    setError('')
     getGame()
       .then(setGame)
       .catch(() => setError('سرور در دسترس نیست. اول سرور رو روشن کن.'))
-  }, [])
+  }
+
+  useEffect(loadGame, [])
 
   // فقط یه بار برای هر روز، وقتی بازی تموم می‌شه، آمار رو آپدیت کن
   useEffect(() => {
@@ -70,6 +73,9 @@ function App() {
     return (
       <main className="game-page">
         <p className="error">{error}</p>
+        <button type="button" className="skip-button" onClick={loadGame}>
+          تلاش دوباره
+        </button>
       </main>
     )
   }

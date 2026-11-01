@@ -1,12 +1,168 @@
-.test-page {
+.game-page {
   max-width: 480px;
-  margin: 10vh auto;
+  margin: 5vh auto;
   padding: 0 1.5rem;
   text-align: center;
   font-family: 'Vazirmatn', sans-serif;
 }
 
-.status {
+.error {
+  color: #e05252;
   font-weight: 700;
+}
+
+/* نشانگر مراحل */
+.stages {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.stage {
+  flex: 1;
+  padding: 0.6rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--code-bg);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.stage.locked {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.stage.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* جستجو */
+.search-box {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-family: inherit;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.search-results {
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  z-index: 10;
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.search-results button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: inherit;
+}
+
+.search-results button:hover {
+  background: var(--accent-bg);
+}
+
+.song-credit {
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.skip-button {
+  margin: 0.5rem 0;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.guesses-left {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+/* تاریخچه‌ی حدس‌ها */
+.guess-history {
+  list-style: none;
+  margin: 1.5rem 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.guess-history li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  background: var(--code-bg);
+}
+
+.guess-history li.empty {
+  opacity: 0.4;
+}
+
+.square {
+  font-size: 1.1rem;
+}
+
+.guess-text {
+  flex: 1;
+  text-align: start;
+}
+
+.guess-label {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* پایان بازی */
+.game-over {
   margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 10px;
+  background: var(--accent-bg);
+}
+
+.game-over .answer {
+  font-weight: 700;
+  margin: 0.5rem 0 1rem;
+}
+
+.game-over button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-family: inherit;
+  cursor: pointer;
 }

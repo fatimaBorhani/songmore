@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { clipUrl, getGame, sendGuess, sendSkip } from './api.js'
 import { playClip } from './audioPlayer.js'
+import { getStats, recordResult } from './stats.js'
 import StageIndicator from './components/StageIndicator.jsx'
 import SearchBox from './components/SearchBox.jsx'
 import GuessHistory from './components/GuessHistory.jsx'
 import GameOver from './components/GameOver.jsx'
+import StatsPanel from './components/StatsPanel.jsx'
 import './App.css'
 
 function App() {
@@ -12,12 +14,20 @@ function App() {
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const [activeStage, setActiveStage] = useState(null)
+  const [stats, setStats] = useState(getStats)
 
   useEffect(() => {
     getGame()
       .then(setGame)
       .catch(() => setError('سرور در دسترس نیست. اول سرور رو روشن کن.'))
   }, [])
+
+  // فقط یه بار برای هر روز، وقتی بازی تموم می‌شه، آمار رو آپدیت کن
+  useEffect(() => {
+    if (!game?.finished) return
+    const won = game.guesses.some((g) => g.result === 'correct')
+    setStats(recordResult(game.date, won))
+  }, [game])
 
   async function handlePlay(clip) {
     setActiveStage(clip.stage)
@@ -92,7 +102,12 @@ function App() {
 
       <GuessHistory guesses={game.guesses} />
 
-      {game.finished && <GameOver answer={game.answer} guesses={game.guesses} />}
+      {game.finished && (
+        <>
+          <GameOver answer={game.answer} guesses={game.guesses} />
+          <StatsPanel stats={stats} />
+        </>
+      )}
     </main>
   )
 }

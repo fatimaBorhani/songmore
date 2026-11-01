@@ -1,0 +1,1386 @@
+[
+  {
+    "id": "mohsen-chavoshi",
+    "name": "Mohsen Chavoshi",
+    "persian": "محسن چاوشی",
+    "aliases": [
+      "Chavoshi",
+      "Mohsen Chavosi"
+    ],
+    "song_count": 26
+  },
+  {
+    "id": "ebi",
+    "name": "Ebi",
+    "persian": "ابی",
+    "aliases": [
+      "Ebrahim Hamedi",
+      "ابراهیم حامدی"
+    ],
+    "song_count": 20
+  },
+  {
+    "id": "roozbeh-bemani",
+    "name": "Roozbeh Bemani",
+    "persian": "روزبه بمانی",
+    "aliases": [
+      "Rouzbeh Bemani",
+      "Roozbeh",
+      "Bemani"
+    ],
+    "song_count": 20
+  },
+  {
+    "id": "shadmehr-aghili",
+    "name": "Shadmehr Aghili",
+    "persian": "شادمهر عقیلی",
+    "aliases": [
+      "Shadmehr",
+      "Shadmehr Aqili"
+    ],
+    "song_count": 17
+  },
+  {
+    "id": "googoosh",
+    "name": "Googoosh",
+    "persian": "گوگوش",
+    "aliases": [
+      "Googoush",
+      "Gogoosh",
+      "Gugush"
+    ],
+    "song_count": 13
+  },
+  {
+    "id": "moein",
+    "name": "Moein",
+    "persian": "معین",
+    "aliases": [
+      "Moin",
+      "Moeen"
+    ],
+    "song_count": 12
+  },
+  {
+    "id": "siavash-ghomayshi",
+    "name": "Siavash Ghomayshi",
+    "persian": "سیاوش قمیشی",
+    "aliases": [
+      "Siavash Ghomeyshi",
+      "Ghomayshi"
+    ],
+    "song_count": 12
+  },
+  {
+    "id": "alireza-ghorbani",
+    "name": "Alireza Ghorbani",
+    "persian": "علیرضا قربانی",
+    "aliases": [
+      "Alireza Qorbani",
+      "Ghorbani"
+    ],
+    "song_count": 11
+  },
+  {
+    "id": "dariush",
+    "name": "Dariush",
+    "persian": "داریوش",
+    "aliases": [
+      "Dariush Eghbali",
+      "Dariosh"
+    ],
+    "song_count": 11
+  },
+  {
+    "id": "mehrad-hidden",
+    "name": "Mehrad Hidden",
+    "persian": "مهراد هیدن",
+    "aliases": [
+      "Mehrad Hiden",
+      "Hidden"
+    ],
+    "song_count": 11
+  },
+  {
+    "id": "morteza-pashaei",
+    "name": "Morteza Pashaei",
+    "persian": "مرتضی پاشایی",
+    "aliases": [
+      "Pashaei",
+      "Morteza Pashayi"
+    ],
+    "song_count": 11
+  },
+  {
+    "id": "mehdi-yarrahi",
+    "name": "Mehdi Yarrahi",
+    "persian": "مهدی یراحی",
+    "aliases": [
+      "Mehdi Yarahi",
+      "Yarrahi"
+    ],
+    "song_count": 10
+  },
+  {
+    "id": "mohsen-yeganeh",
+    "name": "Mohsen Yeganeh",
+    "persian": "محسن یگانه",
+    "aliases": [],
+    "song_count": 10
+  },
+  {
+    "id": "shayea",
+    "name": "Shayea",
+    "persian": "شایع",
+    "aliases": [],
+    "song_count": 10
+  },
+  {
+    "id": "reza-yazdani",
+    "name": "Reza Yazdani",
+    "persian": "رضا یزدانی",
+    "aliases": [],
+    "song_count": 9
+  },
+  {
+    "id": "the-don",
+    "name": "The Don",
+    "persian": "د دان",
+    "aliases": [
+      "Don"
+    ],
+    "song_count": 9
+  },
+  {
+    "id": "amir-tataloo",
+    "name": "Amir Tataloo",
+    "persian": "امیر تتلو",
+    "aliases": [
+      "Tataloo",
+      "Amir Tetelo",
+      "Tetelo"
+    ],
+    "song_count": 8
+  },
+  {
+    "id": "behzad-leito",
+    "name": "Behzad Leito",
+    "persian": "بهزاد لیتو",
+    "aliases": [
+      "Leito",
+      "Behzad Layto"
+    ],
+    "song_count": 7
+  },
+  {
+    "id": "hoomaan",
+    "name": "Hoomaan",
+    "persian": "هومان",
+    "aliases": [
+      "Hooman",
+      "Houman",
+      "Hoomaan"
+    ],
+    "song_count": 7
+  },
+  {
+    "id": "shervin-hajipour",
+    "name": "Shervin Hajipour",
+    "persian": "شروین حاجی‌پور",
+    "aliases": [
+      "Shervin"
+    ],
+    "song_count": 7
+  },
+  {
+    "id": "sijal",
+    "name": "Sijal",
+    "persian": "سیجل",
+    "aliases": [],
+    "song_count": 7
+  },
+  {
+    "id": "arman-garshasbi",
+    "name": "Arman Garshasbi",
+    "persian": "آرمان گرشاسبی",
+    "aliases": [
+      "Garshasbi"
+    ],
+    "song_count": 6
+  },
+  {
+    "id": "homayoun-shajarian",
+    "name": "Homayoun Shajarian",
+    "persian": "همایون شجریان",
+    "aliases": [
+      "Homayoun",
+      "Shajarian"
+    ],
+    "song_count": 6
+  },
+  {
+    "id": "sami-beigi",
+    "name": "Sami Beigi",
+    "persian": "سامی بیگی",
+    "aliases": [
+      "Sami Beygi"
+    ],
+    "song_count": 6
+  },
+  {
+    "id": "hayedeh",
+    "name": "Hayedeh",
+    "persian": "هایده",
+    "aliases": [
+      "Hayede",
+      "Hayda"
+    ],
+    "song_count": 5
+  },
+  {
+    "id": "he-and-his-friends",
+    "name": "He and His Friends",
+    "persian": "او و دوستانش",
+    "aliases": [
+      "Heandhisfriends"
+    ],
+    "song_count": 5
+  },
+  {
+    "id": "mansour",
+    "name": "Mansour",
+    "persian": "منصور",
+    "aliases": [],
+    "song_count": 5
+  },
+  {
+    "id": "zedbazi",
+    "name": "Zedbazi",
+    "persian": "زدبازی",
+    "aliases": [
+      "Zed Bazi"
+    ],
+    "song_count": 5
+  },
+  {
+    "id": "7-band",
+    "name": "7 Band",
+    "persian": "هفت بند",
+    "aliases": [
+      "7band",
+      "seven band"
+    ],
+    "song_count": 4
+  },
+  {
+    "id": "ali-yasini",
+    "name": "Ali Yasini",
+    "persian": "علی یاسینی",
+    "aliases": [
+      "Yasini"
+    ],
+    "song_count": 4
+  },
+  {
+    "id": "black-cats",
+    "name": "Black Cats",
+    "persian": "بلک کتس",
+    "aliases": [
+      "Blackcats"
+    ],
+    "song_count": 4
+  },
+  {
+    "id": "ehsan-khajeh-amiri",
+    "name": "Ehsan Khajeh Amiri",
+    "persian": "احسان خواجه امیری",
+    "aliases": [
+      "Ehsan Khajehamiri",
+      "Ehsan Khaje Amiri",
+      "Khajeh Amiri"
+    ],
+    "song_count": 4
+  },
+  {
+    "id": "farzad-farzin",
+    "name": "Farzad Farzin",
+    "persian": "فرزاد فرزین",
+    "aliases": [
+      "Farzin"
+    ],
+    "song_count": 4
+  },
+  {
+    "id": "hiphopologist",
+    "name": "Hiphopologist",
+    "persian": "هیپ‌هاپولوژیست",
+    "aliases": [
+      "Hip Hopologist"
+    ],
+    "song_count": 4
+  },
+  {
+    "id": "kamran-hooman",
+    "name": "Kamran & Hooman",
+    "persian": "کامران و هومن",
+    "aliases": [
+      "Kamran Hooman",
+      "Kamran and Hooman",
+      "Kamran",
+      "Hooman"
+    ],
+    "song_count": 4
+  },
+  {
+    "id": "shahin-najafi",
+    "name": "Shahin Najafi",
+    "persian": "شاهین نجفی",
+    "aliases": [],
+    "song_count": 4
+  },
+  {
+    "id": "shayan-eshraghi",
+    "name": "Shayan Eshraghi",
+    "persian": "شایان اشراقی",
+    "aliases": [],
+    "song_count": 4
+  },
+  {
+    "id": "arta",
+    "name": "Arta",
+    "persian": "آرتا",
+    "aliases": [],
+    "song_count": 3
+  },
+  {
+    "id": "ashvan",
+    "name": "Ashvan",
+    "persian": "اشوان",
+    "aliases": [],
+    "song_count": 3
+  },
+  {
+    "id": "faramarz-aslani",
+    "name": "Faramarz Aslani",
+    "persian": "فرامرز اصلانی",
+    "aliases": [
+      "Aslani"
+    ],
+    "song_count": 3
+  },
+  {
+    "id": "farhad-mehrad",
+    "name": "Farhad Mehrad",
+    "persian": "فرهاد مهراد",
+    "aliases": [
+      "Farhad"
+    ],
+    "song_count": 3
+  },
+  {
+    "id": "hassan-shamaizadeh",
+    "name": "Hassan Shamaizadeh",
+    "persian": "حسن شماعی‌زاده",
+    "aliases": [
+      "Hassan Shamaeezadeh",
+      "Shamaizadeh"
+    ],
+    "song_count": 3
+  },
+  {
+    "id": "koorosh",
+    "name": "Koorosh",
+    "persian": "کوروش",
+    "aliases": [
+      "Kourosh",
+      "Kurosh"
+    ],
+    "song_count": 3
+  },
+  {
+    "id": "mahyar",
+    "name": "Mahyar",
+    "persian": "مهیار",
+    "aliases": [],
+    "song_count": 3
+  },
+  {
+    "id": "reza-pishro",
+    "name": "Reza Pishro",
+    "persian": "رضا پیشرو",
+    "aliases": [
+      "Pishro"
+    ],
+    "song_count": 3
+  },
+  {
+    "id": "sepehr-khalse",
+    "name": "Sepehr Khalse",
+    "persian": "سپهر خلسه",
+    "aliases": [],
+    "song_count": 3
+  },
+  {
+    "id": "sina-sae",
+    "name": "Sina Sae",
+    "persian": "سینا سایی",
+    "aliases": [
+      "Sina Saee"
+    ],
+    "song_count": 3
+  },
+  {
+    "id": "sirvan-khosravi",
+    "name": "Sirvan Khosravi",
+    "persian": "سیروان خسروی",
+    "aliases": [
+      "Sirvan"
+    ],
+    "song_count": 3
+  },
+  {
+    "id": "wantons",
+    "name": "Wantons",
+    "persian": "وانتونز",
+    "aliases": [],
+    "song_count": 3
+  },
+  {
+    "id": "xaniar-khosravi",
+    "name": "Xaniar Khosravi",
+    "persian": "ژانیار خسروی",
+    "aliases": [
+      "Xaniar",
+      "Zhaniar",
+      "Janiar"
+    ],
+    "song_count": 3
+  },
+  {
+    "id": "afshin-moghaddam",
+    "name": "Afshin Moghaddam",
+    "persian": "افشین مقدم",
+    "aliases": [
+      "Afshin Moghadam",
+      "Afshin"
+    ],
+    "song_count": 2
+  },
+  {
+    "id": "ali-azimi",
+    "name": "Ali Azimi",
+    "persian": "علی عظیمی",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "ali-sorena",
+    "name": "Ali Sorena",
+    "persian": "علی سورنا",
+    "aliases": [
+      "Sorena"
+    ],
+    "song_count": 2
+  },
+  {
+    "id": "alireza-ag",
+    "name": "Alireza AG",
+    "persian": "علیرضا ای‌جی",
+    "aliases": [
+      "Alireza A.G"
+    ],
+    "song_count": 2
+  },
+  {
+    "id": "alireza-jj",
+    "name": "Alireza JJ",
+    "persian": "علیرضا جی‌جی",
+    "aliases": [
+      "Alireza J.J",
+      "Alireza Jj"
+    ],
+    "song_count": 2
+  },
+  {
+    "id": "amir-khalvat",
+    "name": "Amir Khalvat",
+    "persian": "امیر خلوت",
+    "aliases": [
+      "Khalvat"
+    ],
+    "song_count": 2
+  },
+  {
+    "id": "andy",
+    "name": "Andy",
+    "persian": "اندی",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "aref",
+    "name": "Aref",
+    "persian": "عارف",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "ashkan-kagan",
+    "name": "Ashkan Kagan",
+    "persian": "اشکان کاگان",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "bomrani",
+    "name": "Bomrani",
+    "persian": "بمرانی",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "chaartaar",
+    "name": "Chaartaar",
+    "persian": "چارتار",
+    "aliases": [
+      "Chartar",
+      "Chaartar"
+    ],
+    "song_count": 2
+  },
+  {
+    "id": "haamim",
+    "name": "Haamim",
+    "persian": "حامیم",
+    "aliases": [
+      "Hamim"
+    ],
+    "song_count": 2
+  },
+  {
+    "id": "ho3ein",
+    "name": "Ho3ein",
+    "persian": "حصین",
+    "aliases": [
+      "Hosein",
+      "Hossein",
+      "Hoein"
+    ],
+    "song_count": 2
+  },
+  {
+    "id": "kamyar",
+    "name": "Kamyar",
+    "persian": "کامیار",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "leila-forouhar",
+    "name": "Leila Forouhar",
+    "persian": "لیلا فروهر",
+    "aliases": [
+      "Leila Foroohar"
+    ],
+    "song_count": 2
+  },
+  {
+    "id": "marjan-farsad",
+    "name": "Marjan Farsad",
+    "persian": "مرجان فرساد",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "mehyad",
+    "name": "Mehyad",
+    "persian": "مهیاد",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "mohsen-namjoo",
+    "name": "Mohsen Namjoo",
+    "persian": "محسن نامجو",
+    "aliases": [
+      "Namjoo"
+    ],
+    "song_count": 2
+  },
+  {
+    "id": "morteza",
+    "name": "Morteza",
+    "persian": "مرتضی",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "reza-sadeghi",
+    "name": "Reza Sadeghi",
+    "persian": "رضا صادقی",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "saaren",
+    "name": "Saaren",
+    "persian": "ساران",
+    "aliases": [
+      "Saren"
+    ],
+    "song_count": 2
+  },
+  {
+    "id": "sandy",
+    "name": "Sandy",
+    "persian": "ساندی",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "sattar",
+    "name": "Sattar",
+    "persian": "ستار",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "shahab-tiam",
+    "name": "Shahab Tiam",
+    "persian": "شهاب تیام",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "shahram-shabpareh",
+    "name": "Shahram Shabpareh",
+    "persian": "شهرام شب‌پره",
+    "aliases": [
+      "Shahram Shabpare"
+    ],
+    "song_count": 2
+  },
+  {
+    "id": "sogand",
+    "name": "Sogand",
+    "persian": "سوگند",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "sohrab-mj",
+    "name": "Sohrab MJ",
+    "persian": "سهراب ام‌جی",
+    "aliases": [
+      "Sohrab M.J"
+    ],
+    "song_count": 2
+  },
+  {
+    "id": "taher-ghoreyshi",
+    "name": "Taher Ghoreyshi",
+    "persian": "طاهر قریشی",
+    "aliases": [],
+    "song_count": 2
+  },
+  {
+    "id": "viguen",
+    "name": "Viguen",
+    "persian": "ویگن",
+    "aliases": [
+      "Vigen"
+    ],
+    "song_count": 2
+  },
+  {
+    "id": "a-mafi",
+    "name": "A Mafi",
+    "persian": "",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "afx",
+    "name": "AFX",
+    "persian": "ای‌اف‌ایکس",
+    "aliases": [
+      "Aphex Twin"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "ali-bahrami-fard",
+    "name": "Ali Bahrami Fard",
+    "persian": "علی بهرامی‌فرد",
+    "aliases": [
+      "Ali Bahrami"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "ali-janak",
+    "name": "Ali Janak",
+    "persian": "علی جانک",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "alishmas",
+    "name": "Alishmas",
+    "persian": "علیشمس",
+    "aliases": [
+      "Ali Shams"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "amir-mahan",
+    "name": "Amir Mahan",
+    "persian": "امیر ماهان",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "amir-yeganeh",
+    "name": "Amir Yeganeh",
+    "persian": "امیر یگانه",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "amirabbas-golab",
+    "name": "Amirabbas Golab",
+    "persian": "امیرعباس گلاب",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "arash",
+    "name": "Arash",
+    "persian": "آرش",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "arash-fouladvand",
+    "name": "Arash Fouladvand",
+    "persian": "آرش فولادوند",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "arian-band",
+    "name": "Arian Band",
+    "persian": "آریان",
+    "aliases": [
+      "The Arian Band",
+      "Arian"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "arown",
+    "name": "Arown",
+    "persian": "آرون",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "az-shanbe",
+    "name": "Az Shanbe",
+    "persian": "از شنبه",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "babak-amini",
+    "name": "Babak Amini",
+    "persian": "بابک امینی",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "benyamin-bahadori",
+    "name": "Benyamin Bahadori",
+    "persian": "بنیامین بهادری",
+    "aliases": [
+      "Benyamin"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "bijan-mortazavi",
+    "name": "Bijan Mortazavi",
+    "persian": "بیژن مرتضوی",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "canis",
+    "name": "Canis",
+    "persian": "",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "davood-chargari",
+    "name": "Davood Chargari",
+    "persian": "",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "dekamond",
+    "name": "Dekamond",
+    "persian": "دکامند",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "dobare",
+    "name": "Dobare",
+    "persian": "دوباره",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "ebi-littles",
+    "name": "Ebi Littles",
+    "persian": "",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "eljaan",
+    "name": "Eljaan",
+    "persian": "الجان",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "emma",
+    "name": "Emma",
+    "persian": "اما",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "epicure",
+    "name": "EpiCure",
+    "persian": "اپیکیور",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "erfan",
+    "name": "Erfan",
+    "persian": "عرفان",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "erfan-tahmasbi",
+    "name": "Erfan Tahmasbi",
+    "persian": "عرفان طهماسبی",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "faramarz-assef",
+    "name": "Faramarz Assef",
+    "persian": "فرامرز آصف",
+    "aliases": [
+      "Faramarz Asef"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "farshad",
+    "name": "Farshad",
+    "persian": "فرشاد",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "fataneh",
+    "name": "Fataneh",
+    "persian": "فتانه",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "fedi",
+    "name": "Fedi",
+    "persian": "فدی",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "gdaal",
+    "name": "Gdaal",
+    "persian": "جیدال",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "glen-velez",
+    "name": "Glen Velez",
+    "persian": "گلن ولز",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "golrokh-aminian",
+    "name": "Golrokh Aminian",
+    "persian": "گلرخ امینیان",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "habib",
+    "name": "Habib",
+    "persian": "حبیب",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "hamid-hami",
+    "name": "Hamid Hami",
+    "persian": "حمید هامی",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "helena",
+    "name": "Helena",
+    "persian": "هلنا",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "hesam-naseri",
+    "name": "Hesam Naseri",
+    "persian": "حسام ناصری",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "heydoo-hedayati",
+    "name": "Heydoo Hedayati",
+    "persian": "",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "hichkas",
+    "name": "Hichkas",
+    "persian": "هیچکس",
+    "aliases": [
+      "Hichkas"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "homayoun-khorram",
+    "name": "Homayoun Khorram",
+    "persian": "همایون خرم",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "ida",
+    "name": "Ida",
+    "persian": "ایدا",
+    "aliases": [
+      "I.da",
+      "I Da"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "imanemun",
+    "name": "Imanemun",
+    "persian": "ایمانمون",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "instrubeatz",
+    "name": "InstruBeatz",
+    "persian": "اینسترو بیتز",
+    "aliases": [
+      "Instru Beatz"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "kambiz",
+    "name": "Kambiz",
+    "persian": "کامبیز",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "kaveh-afagh",
+    "name": "Kaveh Afagh",
+    "persian": "کاوه آفاق",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "kaviano",
+    "name": "Kaviano",
+    "persian": "کاویانو",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "kayhan-kalhor",
+    "name": "Kayhan Kalhor",
+    "persian": "کیهان کلهر",
+    "aliases": [
+      "Kayhan Kalhor"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "kewin-tunes",
+    "name": "Kewin Tunes",
+    "persian": "کوین تونز",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "khashayar-zikow",
+    "name": "Khashayar Zikow",
+    "persian": "خشایار زیکو",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "king-raam",
+    "name": "King Raam",
+    "persian": "کینگ رام",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "lenna",
+    "name": "Lenna",
+    "persian": "لنا",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "madgal",
+    "name": "Madgal",
+    "persian": "مدگل",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "masoud-sadeghloo",
+    "name": "Masoud Sadeghloo",
+    "persian": "مسعود صادقلو",
+    "aliases": [
+      "Masoud Sadeghlou"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "mehran-abbasi",
+    "name": "Mehran Abbasi",
+    "persian": "مهران عباسی",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "mehrshad",
+    "name": "Mehrshad",
+    "persian": "مهرشاد",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "melanie",
+    "name": "Melanie",
+    "persian": "ملانی",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "meshkat",
+    "name": "Meshkat",
+    "persian": "مشکات",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "mina-momen",
+    "name": "Mina Momen",
+    "persian": "مینا مومن",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "mj",
+    "name": "MJ",
+    "persian": "ام‌جی",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "mohammadreza-golzar",
+    "name": "Mohammadreza Golzar",
+    "persian": "محمدرضا گلزار",
+    "aliases": [
+      "Golzar"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "mohsen-yahaghi",
+    "name": "Mohsen Yahaghi",
+    "persian": "محسن یاحقی",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "naaji",
+    "name": "Naaji",
+    "persian": "ناجی",
+    "aliases": [
+      "Naji"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "nik",
+    "name": "Nik",
+    "persian": "نیک",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "nima-masiha",
+    "name": "Nima Masiha",
+    "persian": "نیما مسیحا",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "octave",
+    "name": "Octave",
+    "persian": "اکتاو",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "orchid",
+    "name": "Orchid",
+    "persian": "ارکید",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "parvin",
+    "name": "Parvin",
+    "persian": "پروین",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "poori",
+    "name": "Poori",
+    "persian": "پوری",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "pozx",
+    "name": "Pozx",
+    "persian": "پوز",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "rabih-abou-khalil",
+    "name": "Rabih Abou-Khalil",
+    "persian": "ربیع ابوخلیل",
+    "aliases": [
+      "Rabih Abou Khalil"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "raha",
+    "name": "Raha",
+    "persian": "رها",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "reza-rohani",
+    "name": "Reza Rohani",
+    "persian": "رضا روحانی",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "saman-wilson",
+    "name": "Saman Wilson",
+    "persian": "سامان ویلسون",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "sara-naeini",
+    "name": "Sara Naeini",
+    "persian": "سارا نائینی",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "sasy",
+    "name": "Sasy",
+    "persian": "ساسی",
+    "aliases": [
+      "Sasy Mankan"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "selim-kusur",
+    "name": "Selim Kusur",
+    "persian": "سلیم کوسور",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "seper",
+    "name": "Seper",
+    "persian": "سپر",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "sepideh",
+    "name": "Sepideh",
+    "persian": "سپیده",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "setrak-sarkissian",
+    "name": "Setrak Sarkissian",
+    "persian": "ستراک سرکیسیان",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "shahrokh",
+    "name": "Shahrokh",
+    "persian": "شاهرخ",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "shahrooz-goodarzi",
+    "name": "Shahrooz Goodarzi",
+    "persian": "شهروز گودرزی",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "shahrum-kashani",
+    "name": "Shahrum Kashani",
+    "persian": "شهرام کاشانی",
+    "aliases": [
+      "Shahram Kashani"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "shahryar-masrour",
+    "name": "Shahryar Masrour",
+    "persian": "شهریار مسرور",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "shayan-yo",
+    "name": "Shayan Yo",
+    "persian": "شایان یو",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "sina-hejazi",
+    "name": "Sina Hejazi",
+    "persian": "سینا حجازی",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "sina-sarlak",
+    "name": "Sina Sarlak",
+    "persian": "سینا سرلک",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "tamara",
+    "name": "Tamara",
+    "persian": "تامارا",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "tik-taak",
+    "name": "Tik Taak",
+    "persian": "تیک تاک",
+    "aliases": [
+      "Tik Tak"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "tlkhoon",
+    "name": "Tlkhoon",
+    "persian": "تلخون",
+    "aliases": [
+      "Talkhoon"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "tm-bax",
+    "name": "TM Bax",
+    "persian": "تی‌ام بکس",
+    "aliases": [
+      "T.M Bax"
+    ],
+    "song_count": 1
+  },
+  {
+    "id": "yas",
+    "name": "Yas",
+    "persian": "یاس",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "young-sudden",
+    "name": "Young Sudden",
+    "persian": "یانگ ساددن",
+    "aliases": [],
+    "song_count": 1
+  },
+  {
+    "id": "zakhmi",
+    "name": "Zakhmi",
+    "persian": "زخمی",
+    "aliases": [],
+    "song_count": 1
+  }
+]

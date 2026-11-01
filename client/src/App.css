@@ -1,0 +1,12 @@
+.test-page {
+  max-width: 480px;
+  margin: 10vh auto;
+  padding: 0 1.5rem;
+  text-align: center;
+  font-family: 'Vazirmatn', sans-serif;
+}
+
+.status {
+  font-weight: 700;
+  margin-top: 1.5rem;
+}

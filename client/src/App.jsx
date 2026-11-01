@@ -1,28 +1,98 @@
 import { useEffect, useState } from 'react'
+import { clipUrl, getGame, sendGuess, sendSkip } from './api.js'
+import { playClip } from './audioPlayer.js'
+import StageIndicator from './components/StageIndicator.jsx'
+import SearchBox from './components/SearchBox.jsx'
+import GuessHistory from './components/GuessHistory.jsx'
+import GameOver from './components/GameOver.jsx'
 import './App.css'
 
-// آدرس سرور برای حالت توسعه (بعداً بازی واقعی این‌جا اضافه می‌شه)
-const API_URL = 'http://localhost:3001/api/health'
-
 function App() {
-  const [status, setStatus] = useState('در حال بررسی اتصال به سرور...')
+  const [game, setGame] = useState(null)
+  const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [activeStage, setActiveStage] = useState(null)
 
   useEffect(() => {
-    fetch(API_URL)
-      .then((res) => res.json())
-      .then((data) => {
-        setStatus(data.ok ? 'سرور وصل است ✅' : 'سرور پاسخ غیرمنتظره داد')
-      })
-      .catch(() => {
-        setStatus('سرور در دسترس نیست ❌ (اول npm run dev توی پوشه‌ی server رو بزن)')
-      })
+    getGame()
+      .then(setGame)
+      .catch(() => setError('سرور در دسترس نیست. اول سرور رو روشن کن.'))
   }, [])
 
+  async function handlePlay(clip) {
+    setActiveStage(clip.stage)
+    try {
+      await playClip(clipUrl(clip.file))
+    } catch {
+      setError('پخش صدا با مشکل مواجه شد.')
+    }
+  }
+
+  async function handleGuess(song) {
+    if (busy) return
+    setBusy(true)
+    setError('')
+    try {
+      const updated = await sendGuess(song.id, `${song.title} - ${song.credit}`)
+      setGame(updated)
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function handleSkip() {
+    if (busy) return
+    setBusy(true)
+    setError('')
+    try {
+      const updated = await sendSkip()
+      setGame(updated)
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (error && !game) {
+    return (
+      <main className="game-page">
+        <p className="error">{error}</p>
+      </main>
+    )
+  }
+
+  if (!game) {
+    return (
+      <main className="game-page">
+        <p>در حال بارگذاری...</p>
+      </main>
+    )
+  }
+
   return (
-    <main className="test-page">
+    <main className="game-page">
       <h1>بازی حدس آهنگ</h1>
-      <p>این فقط صفحه‌ی تستی مرحله‌ی اول پروژه‌ست.</p>
-      <p className="status">{status}</p>
+
+      <StageIndicator clips={game.clips} activeStage={activeStage} onPlay={handlePlay} />
+
+      {!game.finished && (
+        <>
+          <SearchBox disabled={busy} onChoose={handleGuess} />
+          <button type="button" className="skip-button" disabled={busy} onClick={handleSkip}>
+            رد کردن (مرحله‌ی بعد)
+          </button>
+          <p className="guesses-left">{game.guessesLeft} حدس باقی مونده</p>
+        </>
+      )}
+
+      {error && <p className="error">{error}</p>}
+
+      <GuessHistory guesses={game.guesses} />
+
+      {game.finished && <GameOver answer={game.answer} guesses={game.guesses} />}
     </main>
   )
 }

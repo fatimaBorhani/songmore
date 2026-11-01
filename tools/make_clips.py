@@ -58,11 +58,12 @@ def detect_lead_in(ffmpeg, audio_path):
     """ثانیه‌ای که صدای واقعی آهنگ ازش شروع می‌شه رو برمی‌گردونه (0 یعنی از همون اول)."""
     cmd = [
         ffmpeg, "-i", audio_path,
+        "-vn",  # بعضی mp3ها عکس جلد دارن که بعضاً خرابه؛ اصلاً لازمش نداریم
         "-af", f"silencedetect=noise={SILENCE_NOISE_DB}:d={SILENCE_MIN_DURATION}",
         "-f", "null", "-",
     ]
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    log = result.stderr
+    result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
+    log = result.stderr or ""
 
     starts = [float(m) for m in re.findall(r"silence_start:\s*([\d.]+)", log)]
     ends = [float(m) for m in re.findall(r"silence_end:\s*([\d.]+)", log)]
@@ -94,10 +95,11 @@ def cut_clip(ffmpeg, audio_path, start, duration, out_path):
         "-ss", str(start),
         "-i", audio_path,
         "-t", str(duration),
+        "-vn",  # بعضی mp3ها عکس جلد دارن که بعضاً خرابه؛ اصلاً لازمش نداریم
         "-c:a", "libmp3lame", "-q:a", "4",
         out_path,
     ]
-    subprocess.run(cmd, capture_output=True, text=True, check=True)
+    subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", check=True)
 
 
 def load_clip_map():
@@ -134,24 +136,35 @@ def main():
     songs = [s for s in songs if os.path.exists(os.path.join(AUDIO_DIR, s["file_name"]))]
     if args.song_id:
         songs = [s for s in songs if s["id"] == args.song_id]
-    # آهنگ‌هایی که قبلاً پردازش شدن رو رد کن
-    songs = [s for s in songs if s["id"] not in clip_map]
+
+    def all_clips_on_disk(stage_names):
+        return all(os.path.exists(os.path.join(clips_dir, name)) for name in stage_names.values())
+
+    # آهنگی که کلیپ‌هاش همین الان کامل روی دیسک هست رو رد کن.
+    # (clip_map.json ممکنه از گیت اومده باشه ولی خود فایل‌های clips/ چون گیت‌ایگنورن
+    # روی این سیستم نباشن؛ اون‌وقت باید دوباره ساخته بشن، نه رد بشن.)
+    pending = [s for s in songs if not (s["id"] in clip_map and all_clips_on_disk(clip_map[s["id"]]))]
     if args.limit:
-        songs = songs[: args.limit]
+        pending = pending[: args.limit]
 
     done, suspicious_list = 0, []
-    for song in songs:
+    for song in pending:
         audio_path = os.path.join(AUDIO_DIR, song["file_name"])
         lead_in, suspicious = detect_lead_in(ffmpeg, audio_path)
         if suspicious:
             suspicious_list.append(f"{song['title']} ({song['id']}): {lead_in:.1f}s سکوت اول")
 
-        stage_names = {}
+        # اگه این آهنگ قبلاً توی clip_map.json اسم داشت (مثلاً از commit یه هم‌تیمی)،
+        # همون اسم‌های قبلی رو دوباره می‌سازیم تا clip_map.json عوض نشه؛
+        # فقط فایلی که روی دیسک نیست رو می‌سازیم.
+        stage_names = dict(clip_map.get(song["id"], {}))
         for stage in STAGES:
-            clip_name = random_clip_name(used_names)
+            key = str(stage)
+            clip_name = stage_names.get(key) or random_clip_name(used_names)
             out_path = os.path.join(clips_dir, clip_name)
-            cut_clip(ffmpeg, audio_path, lead_in, stage, out_path)
-            stage_names[str(stage)] = clip_name
+            if not os.path.exists(out_path):
+                cut_clip(ffmpeg, audio_path, lead_in, stage, out_path)
+            stage_names[key] = clip_name
 
         clip_map[song["id"]] = stage_names
         save_clip_map(clip_map)  # هر آهنگ که تموم شد ذخیره کن، نه فقط آخر کار

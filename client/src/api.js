@@ -1,5 +1,8 @@
 // ارتباط با سرور بازی
-const API_URL = 'http://localhost:3001'
+// هاست رو از آدرس خود صفحه می‌گیریم (نه همیشه localhost ثابت)، چون کوکی نشست
+// بین هاست‌های متفاوت (مثلاً 127.0.0.1 در مقابل localhost) رد و بدل نمی‌شه
+// و بازی هی از نو شروع می‌شد. اینجوری چه از localhost باز کنی چه از IP روی وای‌فای کار می‌کنه.
+const API_URL = `http://${window.location.hostname}:3001`
 
 async function call(path, options) {
   const res = await fetch(`${API_URL}${path}`, { credentials: 'include', ...options })

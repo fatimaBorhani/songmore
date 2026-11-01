@@ -39,6 +39,7 @@ export function getGameState(sessionId, date, dailySongId) {
   }))
 
   const state = {
+    date,
     guesses,
     guessesLeft: MAX_GUESSES - guesses.length,
     finished,

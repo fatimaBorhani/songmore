@@ -1,3 +1,7 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 # پروژه: بازی حدس آهنگ فارسی (شبیه Songless)
 
 ## هدف
@@ -41,3 +45,19 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
 - مسیر پوشه‌ی کلیپ‌ها از متغیر محیطی CLIPS_DIR خونده بشه (پیش‌فرض ./clips)؛ هیچ مسیر ثابتی توی کد ننویس
 - data/audio، clips/، *.zip، *.db و .env هرگز توی git نرن
 - data/clip_map.json رو هیچ‌وقت پاک یا از نو نساز
+
+## دستورها
+- سرور (پوشه‌ی `server/`): `npm run dev` (پورت 3001، `node --watch`)، `npm start`، `npm test` (همه‌ی تست‌ها با `node --test`)
+- یه تست تنها: `cd server && node --test test/guessLogic.test.js` (یا با `--test-name-pattern="..."`)
+- پر کردن دیتابیس: `node server/seed.js` (از songs.json + artists.json + clip_map.json؛ فقط آهنگ‌هایی که توی clip_map کلیپ دارن وارد بازی می‌شن)
+- ساخت کلیپ: `python3 tools/make_clips.py` (به ffmpeg نیاز داره؛ فقط آهنگ‌های جدید رو به clip_map.json اضافه می‌کنه)
+- کلاینت (پوشه‌ی `client/`): `npm run dev` (پورت 5173 روی 127.0.0.1)، `npm run build`، `npm run lint` (oxlint)
+- متغیرهای محیطی سرور: `PORT`، `CLIPS_DIR`، `DB_PATH` (پیش‌فرض `server/game.db`؛ تست‌ها `:memory:` می‌ذارن)
+
+## معماری
+- `server/index.js` اپ Express رو می‌سازه و `app` رو export می‌کنه (تست `game.test.js` اونو روی یه سرور http واقعی بالا میاره). APIها: `/api/health`، `/api/game`، `/api/search`، `/api/guess`، `/api/skip`؛ و `/clips` فایل‌های استاتیک `CLIPS_DIR` رو سرو می‌کنه
+- `db.js` جدول‌ها رو با SQL خام می‌سازه (artists، songs، daily_song، guesses و ...)
+- `dailySong.js`: تاریخ روز به وقت Asia/Tehran؛ آهنگ هر تاریخ یه بار انتخاب (آهنگی که کمتر تکرار شده) و توی `daily_song` ذخیره می‌شه
+- `session.js`: شناسه‌ی بازیکن توی کوکی `songmore_session`؛ حدس‌ها با (session_id, date) توی جدول guesses ذخیره می‌شن
+- `guesses.js` مراحل (`STAGES`) و ساخت وضعیت بازی برای کلاینت رو داره — اینجاست که باید مطمئن بود جواب قبل از پایان بازی لو نمی‌ره. `guessLogic.js` نتیجه‌ی حدس (correct/present/incorrect) رو حساب می‌کنه؛ `normalize.js` و `search.js` جستجو رو انجام می‌دن
+- کلاینت: `src/api.js` آدرس سرور رو از `window.location.hostname:3001` می‌سازه (نه localhost ثابت) تا کوکی نشست بین هاست‌ها گم نشه؛ همه‌ی درخواست‌ها با `credentials: 'include'`. `audioPlayer.js` پخش کلیپ‌ها با Web Audio، `stats.js` آمار بازیکن

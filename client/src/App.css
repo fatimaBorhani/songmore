@@ -1,74 +1,208 @@
 .game-page {
-  max-width: 480px;
-  margin: 5vh auto;
-  padding: 0 1.5rem 2rem;
-  text-align: center;
-  font-family: 'Vazirmatn', sans-serif;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 40px 16px 48px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-@media (max-width: 500px) {
-  .game-page {
-    margin: 1.5rem auto;
-    padding: 0 1rem 2rem;
-  }
-
-  .game-page h1 {
-    font-size: 1.4rem;
-  }
+.loading {
+  text-align: center;
+  color: var(--text-muted);
 }
 
 .error {
-  color: #e05252;
+  color: #ff8a8a;
   font-weight: 700;
+  text-align: center;
 }
 
-/* نشانگر مراحل */
-.stages {
+/* سربرگ */
+.game-header {
   display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  margin: 1.5rem 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
-.stage {
+.game-header h1 {
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.guesses-left {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* حدس‌ها */
+.guess-history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.guess-history li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 8px 14px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: var(--surface);
+  animation: fade-in 0.25s ease;
+}
+
+.guess-dot {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.correct .guess-dot {
+  background: var(--accent);
+}
+
+.present .guess-dot {
+  background: var(--present);
+}
+
+.incorrect .guess-dot {
+  background: var(--incorrect);
+}
+
+.guess-text {
   flex: 1;
-  padding: 0.6rem 0;
-  border-radius: 8px;
+  font-size: 14px;
+  text-align: start;
+}
+
+.guess-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* کارت پخش و موج صدا */
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.player-card {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 22px 22px 52px;
+  border-radius: 24px;
+  background: var(--card);
   border: 1px solid var(--border);
-  background: var(--code-bg);
-  font-family: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.player-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.player-stage {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.player-time {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.player-time strong {
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.wave {
+  height: 88px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.wave-bar {
+  flex: 1;
+  border-radius: 999px;
+  background: var(--wave-locked);
+  transition: background-color 0.15s ease;
+}
+
+.wave-bar.open {
+  background: var(--wave-open);
+}
+
+.wave-bar.played {
+  background: var(--accent);
+  transition: none;
+}
+
+.play-button {
+  width: 72px;
+  height: 72px;
+  margin-top: -36px;
+  border-radius: 50%;
+  border: 6px solid var(--bg);
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  transition: transform 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: transform 0.15s ease;
 }
 
-.stage.locked {
-  opacity: 0.35;
-  cursor: not-allowed;
+.play-button:hover {
+  transform: scale(1.05);
 }
 
-.stage.unlocked:hover:not(.locked) {
-  transform: translateY(-2px);
+/* جستجو + رد کردن */
+.guess-row {
+  display: flex;
+  gap: 8px;
 }
 
-.stage.active {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* جستجو */
 .search-box {
   position: relative;
-  margin-bottom: 1rem;
+  flex: 1;
 }
 
 .search-box input {
   width: 100%;
-  padding: 0.7rem 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  font-family: inherit;
-  font-size: 1rem;
+  height: 52px;
+  padding: 0 14px;
   box-sizing: border-box;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 15px;
+}
+
+.search-box input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-box input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 .search-results {
@@ -77,12 +211,12 @@
   top: 100%;
   z-index: 10;
   list-style: none;
-  margin: 0.25rem 0 0;
-  padding: 0;
-  background: var(--bg);
+  margin: 6px 0 0;
+  padding: 4px;
+  background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  max-height: 220px;
+  border-radius: 14px;
+  max-height: 260px;
   overflow-y: auto;
 }
 
@@ -90,63 +224,117 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: none;
+  gap: 8px;
+  padding: 10px 12px;
   border: none;
-  font-family: inherit;
+  border-radius: 10px;
+  background: none;
+  color: var(--text);
+  font-size: 14px;
   cursor: pointer;
-  text-align: inherit;
+  text-align: start;
 }
 
 .search-results button:hover {
-  background: var(--accent-bg);
+  background: var(--surface);
 }
 
 .song-credit {
-  color: var(--text);
-  opacity: 0.7;
+  color: var(--text-muted);
 }
 
 .skip-button {
-  margin: 0.5rem 0;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  height: 52px;
+  padding: 0 18px;
+  border-radius: 14px;
   border: 1px solid var(--border);
   background: none;
-  font-family: inherit;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
   cursor: pointer;
 }
 
-.guesses-left {
-  font-size: 0.9rem;
-  opacity: 0.7;
+.skip-button:hover:not(:disabled),
+.ghost-button:hover:not(:disabled) {
+  background: var(--surface);
 }
 
-/* تاریخچه‌ی حدس‌ها */
-.guess-history {
-  list-style: none;
-  margin: 1.5rem 0;
-  padding: 0;
+.ghost-button {
+  align-self: center;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px dashed var(--border);
+  background: none;
+  color: var(--text-soft);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* پایان بازی */
+.game-over {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-}
-
-.guess-history li {
-  display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 0.8rem;
-  border-radius: 8px;
-  background: var(--code-bg);
+  gap: 10px;
+  text-align: center;
+  animation: fade-in 0.3s ease;
 }
 
-.guess-history li:not(.empty) {
-  animation: guess-in 0.25s ease;
+.game-over h2 {
+  font-size: 20px;
+  font-weight: 900;
 }
 
-@keyframes guess-in {
+.game-over .answer {
+  font-size: 15px;
+  color: var(--present);
+}
+
+.game-over button {
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 14px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* آمار بازیکن */
+.stats-panel {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.stat {
+  padding: 12px 4px;
+  border-radius: 14px;
+  background: var(--surface);
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+@keyframes fade-in {
   from {
     opacity: 0;
     transform: translateY(-6px);
@@ -157,69 +345,8 @@
   }
 }
 
-.guess-history li.empty {
-  opacity: 0.4;
-}
-
-.square {
-  font-size: 1.1rem;
-}
-
-.guess-text {
-  flex: 1;
-  text-align: start;
-}
-
-.guess-label {
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-
-/* پایان بازی */
-.game-over {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  border-radius: 10px;
-  background: var(--accent-bg);
-  animation: guess-in 0.3s ease;
-}
-
-.game-over .answer {
-  font-weight: 700;
-  margin: 0.5rem 0 1rem;
-}
-
-.game-over button {
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  border: none;
-  background: var(--accent);
-  color: #fff;
-  font-family: inherit;
-  cursor: pointer;
-}
-
-/* آمار بازیکن */
-.stats-panel {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.stat {
-  flex: 1;
-  padding: 0.6rem 0.3rem;
-  border-radius: 8px;
-  background: var(--code-bg);
-}
-
-.stat-value {
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-
-.stat-label {
-  font-size: 0.75rem;
-  opacity: 0.7;
+@media (max-width: 420px) {
+  .guess-row {
+    flex-direction: column;
+  }
 }

@@ -27,7 +27,7 @@ function GameOver({ answer, guesses }) {
 
   return (
     <div className="game-over">
-      <h2>{won ? 'بردی! 🎉' : 'این دفعه نه 😅'}</h2>
+      <h2>{won ? 'بردی!' : 'این دفعه نه'}</h2>
       <p className="answer">
         {answer.title}
         {answer.altTitle ? ` (${answer.altTitle})` : ''} — {answer.credit}

@@ -15,11 +15,16 @@ function App() {
   const [busy, setBusy] = useState(false)
   const [activeStage, setActiveStage] = useState(null)
   const [stats, setStats] = useState(getStats)
+  const [testMode, setTestMode] = useState(false)
 
   function loadGame() {
     setError('')
     getGame()
-      .then(setGame)
+      .then((data) => {
+        setGame(data)
+        setTestMode(Boolean(data.testMode))
+        setActiveStage(null)
+      })
       .catch(() => setError('سرور در دسترس نیست. اول سرور رو روشن کن.'))
   }
 
@@ -69,6 +74,13 @@ function App() {
     }
   }
 
+  // فقط توی حالت تست: دکمه‌ای که بدون رفرش، یه آهنگ جدید میاره
+  const nextSongButton = testMode && (
+    <button type="button" className="skip-button" disabled={busy} onClick={loadGame}>
+      🔀 آهنگ بعدی
+    </button>
+  )
+
   if (error && !game) {
     return (
       <main className="game-page">
@@ -100,6 +112,7 @@ function App() {
           <button type="button" className="skip-button" disabled={busy} onClick={handleSkip}>
             رد کردن (مرحله‌ی بعد)
           </button>
+          {nextSongButton}
           <p className="guesses-left">{game.guessesLeft} حدس باقی مونده</p>
         </>
       )}
@@ -111,6 +124,7 @@ function App() {
       {game.finished && (
         <>
           <GameOver answer={game.answer} guesses={game.guesses} />
+          {nextSongButton}
           <StatsPanel stats={stats} />
         </>
       )}

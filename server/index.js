@@ -48,7 +48,8 @@ app.get('/api/game', (req, res) => {
   } else {
     songId = pickDailySong(date)
   }
-  res.json(getGameState(req.sessionId, date, songId))
+  // testMode به کلاینت می‌گه دکمه‌ی «آهنگ بعدی» رو نشون بده
+  res.json({ ...getGameState(req.sessionId, date, songId), testMode: RANDOM_SONG_MODE })
 })
 
 app.get('/api/search', (req, res) => {

@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node --watch index.js",
+    "dev": "node --watch index.js --random-song",
+    "dev:daily": "node --watch index.js",
     "start": "node index.js",
     "test": "node --test"
   },

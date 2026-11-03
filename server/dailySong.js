@@ -33,3 +33,16 @@ export function pickDailySong(dateString) {
   db.prepare('INSERT INTO daily_song (date, song_id) VALUES (?, ?)').run(dateString, row.id)
   return row.id
 }
+
+// فقط برای تست (حالت --random-song): یه آهنگ تصادفی جدید (غیر از آهنگ فعلی)
+// برای امروز انتخاب می‌کنه و جای آهنگ قبلی ذخیره می‌کنه.
+export function pickNewRandomSong(dateString) {
+  const current = db.prepare('SELECT song_id FROM daily_song WHERE date = ?').get(dateString)
+  const row = db
+    .prepare('SELECT id FROM songs WHERE id != ? ORDER BY RANDOM() LIMIT 1')
+    .get(current?.song_id ?? '')
+  if (!row) return pickDailySong(dateString) // فقط یه آهنگ داریم
+
+  db.prepare('INSERT OR REPLACE INTO daily_song (date, song_id) VALUES (?, ?)').run(dateString, row.id)
+  return row.id
+}

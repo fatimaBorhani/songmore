@@ -3,7 +3,7 @@ import express from 'express'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { db } from './db.js'
-import { getTodayDateString, pickDailySong } from './dailySong.js'
+import { getTodayDateString, pickDailySong, pickNewRandomSong } from './dailySong.js'
 import { searchSongs } from './search.js'
 import { buildSongArtistsMap, evaluateGuess } from './guessLogic.js'
 import { addGuess, getGameState } from './guesses.js'
@@ -14,6 +14,8 @@ const ROOT = path.join(__dirname, '..')
 
 const app = express()
 const PORT = process.env.PORT || 3001
+// حالت تست: با هر بار باز کردن صفحه، بازی از نو و با یه آهنگ تصادفی جدید شروع می‌شه
+const RANDOM_SONG_MODE = process.argv.includes('--random-song')
 const CLIPS_DIR = process.env.CLIPS_DIR || path.join(ROOT, 'clips')
 
 app.use(express.json())
@@ -38,7 +40,14 @@ app.get('/api/health', (req, res) => {
 
 app.get('/api/game', (req, res) => {
   const date = getTodayDateString()
-  const songId = pickDailySong(date)
+  let songId
+  if (RANDOM_SONG_MODE) {
+    // حدس‌های قبلی این بازیکن رو پاک کن و آهنگ جدید بیار
+    db.prepare('DELETE FROM guesses WHERE session_id = ? AND date = ?').run(req.sessionId, date)
+    songId = pickNewRandomSong(date)
+  } else {
+    songId = pickDailySong(date)
+  }
   res.json(getGameState(req.sessionId, date, songId))
 })
 
@@ -82,6 +91,7 @@ app.post('/api/skip', (req, res) => {
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {
     console.log(`سرور روی پورت ${PORT} روشن شد`)
+    if (RANDOM_SONG_MODE) console.log('حالت تست: هر رفرش = آهنگ جدید')
   })
 }
 

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { clipUrl, getGame, sendGuess, sendSkip } from './api.js'
-import { playClip } from './audioPlayer.js'
+import { getGame, sendGuess, sendSkip } from './api.js'
 import { getStats, recordResult } from './stats.js'
-import StageIndicator from './components/StageIndicator.jsx'
+import { STAGES, faNumber, faSeconds } from './stages.js'
+import WavePlayer from './components/WavePlayer.jsx'
 import SearchBox from './components/SearchBox.jsx'
 import GuessHistory from './components/GuessHistory.jsx'
 import GameOver from './components/GameOver.jsx'
@@ -13,7 +13,6 @@ function App() {
   const [game, setGame] = useState(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
-  const [activeStage, setActiveStage] = useState(null)
   const [stats, setStats] = useState(getStats)
   const [testMode, setTestMode] = useState(false)
 
@@ -23,7 +22,6 @@ function App() {
       .then((data) => {
         setGame(data)
         setTestMode(Boolean(data.testMode))
-        setActiveStage(null)
       })
       .catch(() => setError('سرور در دسترس نیست. اول سرور رو روشن کن.'))
   }
@@ -36,15 +34,6 @@ function App() {
     const won = game.guesses.some((g) => g.result === 'correct')
     setStats(recordResult(game.date, won))
   }, [game])
-
-  async function handlePlay(clip) {
-    setActiveStage(clip.stage)
-    try {
-      await playClip(clipUrl(clip.file))
-    } catch {
-      setError('پخش صدا با مشکل مواجه شد.')
-    }
-  }
 
   async function handleGuess(song) {
     if (busy) return
@@ -76,8 +65,8 @@ function App() {
 
   // فقط توی حالت تست: دکمه‌ای که بدون رفرش، یه آهنگ جدید میاره
   const nextSongButton = testMode && (
-    <button type="button" className="skip-button" disabled={busy} onClick={loadGame}>
-      🔀 آهنگ بعدی
+    <button type="button" className="ghost-button" disabled={busy} onClick={loadGame}>
+      آهنگ بعدی (تست)
     </button>
   )
 
@@ -85,7 +74,7 @@ function App() {
     return (
       <main className="game-page">
         <p className="error">{error}</p>
-        <button type="button" className="skip-button" onClick={loadGame}>
+        <button type="button" className="ghost-button" onClick={loadGame}>
           تلاش دوباره
         </button>
       </main>
@@ -95,31 +84,47 @@ function App() {
   if (!game) {
     return (
       <main className="game-page">
-        <p>در حال بارگذاری...</p>
+        <p className="loading">در حال بارگذاری...</p>
       </main>
     )
   }
 
+  // رد کردن چند ثانیه به کلیپ اضافه می‌کنه؟ (برای نوشتن روی دکمه)
+  const unlocked = game.clips.length
+  const lastClip = game.clips[unlocked - 1]
+  const extraSeconds = unlocked < STAGES.length ? STAGES[unlocked] - STAGES[unlocked - 1] : 0
+  const skipLabel = extraSeconds ? `رد کردن +${faSeconds(extraSeconds)} ث` : 'رد کردن'
+
   return (
     <main className="game-page">
-      <h1>بازی حدس آهنگ</h1>
+      <header className="game-header">
+        <h1>بازی حدس آهنگ</h1>
+        <p className="guesses-left">
+          {game.finished ? 'بازی تموم شد' : `${faNumber(game.guessesLeft)} فرصت باقی مونده`}
+        </p>
+      </header>
 
-      <StageIndicator clips={game.clips} activeStage={activeStage} onPlay={handlePlay} />
+      <GuessHistory guesses={game.guesses} />
+
+      <WavePlayer
+        key={`${unlocked}-${lastClip.file}`}
+        clips={game.clips}
+        onError={() => setError('پخش صدا با مشکل مواجه شد.')}
+      />
 
       {!game.finished && (
         <>
-          <SearchBox disabled={busy} onChoose={handleGuess} />
-          <button type="button" className="skip-button" disabled={busy} onClick={handleSkip}>
-            رد کردن (مرحله‌ی بعد)
-          </button>
+          <div className="guess-row">
+            <SearchBox disabled={busy} onChoose={handleGuess} />
+            <button type="button" className="skip-button" disabled={busy} onClick={handleSkip}>
+              {skipLabel}
+            </button>
+          </div>
           {nextSongButton}
-          <p className="guesses-left">{game.guessesLeft} حدس باقی مونده</p>
         </>
       )}
 
       {error && <p className="error">{error}</p>}
-
-      <GuessHistory guesses={game.guesses} />
 
       {game.finished && (
         <>

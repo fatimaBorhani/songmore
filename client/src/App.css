@@ -175,10 +175,76 @@
 }
 
 .wave {
+  position: relative;
   height: 88px;
   display: flex;
   align-items: center;
   gap: 3px;
+}
+
+/* از مرحله‌ی دوم: موج قابل کشیدنه */
+.wave.seekable {
+  cursor: pointer;
+  touch-action: none; /* موقع کشیدن روی گوشی صفحه اسکرول نشه */
+  user-select: none;
+}
+
+.wave.seekable:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+  border-radius: 8px;
+}
+
+.wave.dragging {
+  cursor: grabbing;
+}
+
+/* بخش قفل: شکل موس «ممنوع» */
+.wave-locked-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  cursor: not-allowed;
+}
+
+/* خط سفید جای پخش، با دایره‌ی بالاش */
+.wave-head {
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  width: 2px;
+  margin-left: -1px;
+  border-radius: 2px;
+  background: var(--text);
+  pointer-events: none;
+}
+
+.wave-head::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text);
+}
+
+/* برچسب ثانیه بالای موس */
+.wave-label {
+  position: absolute;
+  top: -30px;
+  transform: translateX(-50%);
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 .wave-bar {

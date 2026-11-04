@@ -1,6 +1,6 @@
 // جدول امتیاز یه روز: فقط کسایی که حساب دارن و بازی اون روز رو تموم کردن.
 // ترتیب: امتیاز بیشتر بالاتر؛ اگه مساوی بود، کسی که زودتر تموم کرده بالاتر.
-import { db } from './db.js'
+import { db } from '../../core/db.js'
 import { computeScore } from './scoring.js'
 
 export const LEADERBOARD_SIZE = 20

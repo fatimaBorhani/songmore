@@ -6,9 +6,9 @@ import http from 'node:http'
 process.env.DB_PATH = ':memory:'
 process.env.NODE_ENV = 'test'
 
-const { db } = await import('../db.js')
-const { getTodayDateString } = await import('../dailySong.js')
-const { app } = await import('../index.js')
+const { db } = await import('../../core/db.js')
+const { getTodayDateString } = await import('../../games/song/dailySong.js')
+const { app } = await import('../../index.js')
 
 let server
 let baseUrl
@@ -52,7 +52,7 @@ function extractSessionCookie(res) {
 }
 
 test('قبل از هر حدسی، جواب لو نمی‌ره', async () => {
-  const res = await fetch(`${baseUrl}/api/game`)
+  const res = await fetch(`${baseUrl}/api/song/game`)
   const body = await res.json()
   const asText = JSON.stringify(body)
 
@@ -65,24 +65,24 @@ test('قبل از هر حدسی، جواب لو نمی‌ره', async () => {
 })
 
 test('جستجو با اسم فارسی و alias کار می‌کنه', async () => {
-  const resFa = await fetch(`${baseUrl}/api/search?q=${encodeURIComponent('قمیشی')}`)
+  const resFa = await fetch(`${baseUrl}/api/song/search?q=${encodeURIComponent('قمیشی')}`)
   const resultsFa = await resFa.json()
   assert.equal(resultsFa.length, 2) // هر دو آهنگ سیاوش قمیشی
 
-  const resAlias = await fetch(`${baseUrl}/api/search?q=Siavash`)
+  const resAlias = await fetch(`${baseUrl}/api/song/search?q=Siavash`)
   const resultsAlias = await resAlias.json()
   assert.equal(resultsAlias.length, 2)
 })
 
 test('روند کامل یه بازی: present بعد incorrect بعد رد کردن تا تموم شدن', async () => {
-  const first = await fetch(`${baseUrl}/api/game`)
+  const first = await fetch(`${baseUrl}/api/song/game`)
   const cookie = extractSessionCookie(first)
   assert.ok(cookie, 'سرور باید کوکی نشست بده')
 
   const headers = { 'Content-Type': 'application/json', Cookie: cookie }
 
   // حدس ۱: song-B (همون خواننده، آهنگ غلط) -> present
-  let res = await fetch(`${baseUrl}/api/guess`, {
+  let res = await fetch(`${baseUrl}/api/song/guess`, {
     method: 'POST', headers, body: JSON.stringify({ songId: 'song-B', label: 'Jazireh' }),
   })
   let state = await res.json()
@@ -91,7 +91,7 @@ test('روند کامل یه بازی: present بعد incorrect بعد رد کر
   assert.equal('answer' in state, false)
 
   // حدس ۲: song-C (خواننده‌ی غیرمرتبط) -> incorrect
-  res = await fetch(`${baseUrl}/api/guess`, {
+  res = await fetch(`${baseUrl}/api/song/guess`, {
     method: 'POST', headers, body: JSON.stringify({ songId: 'song-C', label: 'Ba To' }),
   })
   state = await res.json()
@@ -100,11 +100,11 @@ test('روند کامل یه بازی: present بعد incorrect بعد رد کر
   assert.equal(state.clips.length, 1) // حدس غلط مرحله‌ی بعد رو باز نمی‌کنه
 
   // حدس ۳ تا ۵: رد کردن؛ هر رد کردن یه مرحله باز می‌کنه
-  res = await fetch(`${baseUrl}/api/skip`, { method: 'POST', headers })
+  res = await fetch(`${baseUrl}/api/song/skip`, { method: 'POST', headers })
   state = await res.json()
   assert.equal(state.clips.length, 2)
   for (let i = 0; i < 2; i++) {
-    res = await fetch(`${baseUrl}/api/skip`, { method: 'POST', headers })
+    res = await fetch(`${baseUrl}/api/song/skip`, { method: 'POST', headers })
     state = await res.json()
   }
 
@@ -115,7 +115,7 @@ test('روند کامل یه بازی: present بعد incorrect بعد رد کر
   assert.equal(state.clips.length, 5) // همه‌ی مراحل باز شده
 
   // بعد از تموم شدن بازی، حدس/رد کردن جدید رد می‌شه
-  res = await fetch(`${baseUrl}/api/guess`, {
+  res = await fetch(`${baseUrl}/api/song/guess`, {
     method: 'POST', headers, body: JSON.stringify({ songId: 'song-B', label: 'x' }),
   })
   assert.equal(res.status, 400)
@@ -123,11 +123,11 @@ test('روند کامل یه بازی: present بعد incorrect بعد رد کر
 
 test('حدس درست بلافاصله بازی رو تموم می‌کنه و جواب رو می‌ده', async () => {
   // بدون کوکی قبلی = نشست تازه
-  const first = await fetch(`${baseUrl}/api/game`)
+  const first = await fetch(`${baseUrl}/api/song/game`)
   const cookie = extractSessionCookie(first)
   const headers = { 'Content-Type': 'application/json', Cookie: cookie }
 
-  const res = await fetch(`${baseUrl}/api/guess`, {
+  const res = await fetch(`${baseUrl}/api/song/guess`, {
     method: 'POST', headers, body: JSON.stringify({ songId: 'song-A', label: 'Neghab' }),
   })
   const state = await res.json()

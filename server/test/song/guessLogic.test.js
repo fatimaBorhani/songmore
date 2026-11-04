@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { evaluateGuess } from '../guessLogic.js'
+import { evaluateGuess } from '../../games/song/guessLogic.js'
 
 const artistsMap = new Map([
   ['song-A', new Set(['artist-x'])],

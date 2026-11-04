@@ -1,7 +1,7 @@
 // تست فرمول امتیاز
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { stageValue, computeScore, getWorth, STAGES } from '../scoring.js'
+import { stageValue, computeScore, getWorth, STAGES } from '../../games/song/scoring.js'
 
 // حدس‌ها از روی یه رشته: s = رد کردن، x = غلط، p = خواننده درسته، c = درست
 function g(pattern) {

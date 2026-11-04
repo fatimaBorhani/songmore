@@ -6,10 +6,10 @@ import http from 'node:http'
 process.env.DB_PATH = ':memory:'
 process.env.NODE_ENV = 'test'
 
-const { db } = await import('../db.js')
-const { getTodayDateString } = await import('../dailySong.js')
-const { getDailyLeaderboard } = await import('../leaderboard.js')
-const { app } = await import('../index.js')
+const { db } = await import('../../core/db.js')
+const { getTodayDateString } = await import('../../games/song/dailySong.js')
+const { getDailyLeaderboard } = await import('../../games/song/leaderboard.js')
+const { app } = await import('../../index.js')
 
 let server
 let baseUrl
@@ -57,11 +57,11 @@ function newBrowser() {
     return res.json()
   }
   return {
-    game: () => request('/api/game'),
-    guess: (songId) => request('/api/guess', { method: 'POST', body: { songId, label: songId } }),
-    skip: () => request('/api/skip', { method: 'POST' }),
+    game: () => request('/api/song/game'),
+    guess: (songId) => request('/api/song/guess', { method: 'POST', body: { songId, label: songId } }),
+    skip: () => request('/api/song/skip', { method: 'POST' }),
     signup: (username) => request('/api/auth/signup', { method: 'POST', body: { username, password: 'pass-1234' } }),
-    leaderboard: () => request('/api/leaderboard/today'),
+    leaderboard: () => request('/api/song/leaderboard/today'),
   }
 }
 

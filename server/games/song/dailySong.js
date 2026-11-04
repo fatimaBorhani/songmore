@@ -1,5 +1,5 @@
 // انتخاب آهنگ روزانه بر اساس تاریخ تهران (نیمه‌شب عوض می‌شه)
-import { db } from './db.js'
+import { db } from '../../core/db.js'
 
 export function getTodayDateString(date = new Date()) {
   const parts = new Intl.DateTimeFormat('en-CA', {

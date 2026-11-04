@@ -1,5 +1,5 @@
 // آمار بازیکن از روی حدس‌های ذخیره‌شده (همون قانون‌های آمار مرورگر: client/src/stats.js)
-import { db } from './db.js'
+import { db } from '../../core/db.js'
 import { computeScore } from './scoring.js'
 
 // همه‌ی حدس‌های یه بازیکن، روز به روز: { '2026-11-04': [حدس‌ها به ترتیب], ... }

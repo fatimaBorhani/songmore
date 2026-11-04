@@ -1,6 +1,6 @@
 // جستجوی آهنگ با اسم خواننده (فارسی/انگلیسی/alias) یا عنوان آهنگ
-import { db } from './db.js'
-import { normalizePersian } from './normalize.js'
+import { db } from '../../core/db.js'
+import { normalizePersian } from '../../core/normalize.js'
 
 export function searchSongs(query) {
   const q = normalizePersian(query)

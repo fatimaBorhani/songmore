@@ -1,5 +1,5 @@
 // ذخیره‌ی حدس‌ها و ساختن وضعیت بازی برای برگردوندن به کلاینت
-import { db } from './db.js'
+import { db } from '../../core/db.js'
 import { STAGES, MAX_GUESSES, computeScore, getWorth } from './scoring.js'
 
 // برای جاهای دیگه که STAGES رو از اینجا می‌گیرن

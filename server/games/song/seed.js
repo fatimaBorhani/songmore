@@ -1,13 +1,13 @@
 // دیتابیس رو از data/songs.json + data/artists.json + data/clip_map.json پر می‌کنه.
 // فقط آهنگ‌هایی که توی clip_map.json کلیپ دارن وارد بازی می‌شن (یعنی واقعاً mp3 دارن).
-// اجرا: node server/seed.js
+// اجرا (از پوشه‌ی server): npm run seed
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { db } from './db.js'
+import { db } from '../../core/db.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const ROOT = path.join(__dirname, '..')
+const ROOT = path.join(__dirname, '..', '..', '..') // ریشه‌ی پروژه
 
 function readJson(relPath, fallback = null) {
   const full = path.join(ROOT, relPath)

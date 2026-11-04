@@ -6,10 +6,10 @@ import http from 'node:http'
 process.env.DB_PATH = ':memory:'
 process.env.NODE_ENV = 'test'
 
-const { db } = await import('../db.js')
-const { getTodayDateString } = await import('../dailySong.js')
-const { getPlayerStats } = await import('../playerStats.js')
-const { app } = await import('../index.js')
+const { db } = await import('../../core/db.js')
+const { getTodayDateString } = await import('../../games/song/dailySong.js')
+const { getPlayerStats } = await import('../../games/song/playerStats.js')
+const { app } = await import('../../index.js')
 
 let server
 let baseUrl
@@ -59,14 +59,14 @@ function newBrowser() {
     return { status: res.status, body: await res.json() }
   }
   return {
-    game: () => request('/api/game').then((r) => r.body),
-    guessWrong: () => request('/api/guess', { method: 'POST', body: { songId: 'song-C', label: 'Ba To' } }).then((r) => r.body),
-    guessRight: () => request('/api/guess', { method: 'POST', body: { songId: 'song-A', label: 'Neghab' } }).then((r) => r.body),
-    skip: () => request('/api/skip', { method: 'POST' }).then((r) => r.body),
+    game: () => request('/api/song/game').then((r) => r.body),
+    guessWrong: () => request('/api/song/guess', { method: 'POST', body: { songId: 'song-C', label: 'Ba To' } }).then((r) => r.body),
+    guessRight: () => request('/api/song/guess', { method: 'POST', body: { songId: 'song-A', label: 'Neghab' } }).then((r) => r.body),
+    skip: () => request('/api/song/skip', { method: 'POST' }).then((r) => r.body),
     signup: (username, password) => request('/api/auth/signup', { method: 'POST', body: { username, password } }),
     login: (username, password) => request('/api/auth/login', { method: 'POST', body: { username, password } }),
     logout: () => request('/api/auth/logout', { method: 'POST' }),
-    stats: () => request('/api/stats'),
+    stats: () => request('/api/song/stats'),
   }
 }
 
@@ -126,13 +126,13 @@ test('بعد از خروج، بازی حساب دیگه نشون داده نمی
   assert.equal((await browser.game()).guesses.length, 0)
 })
 
-test('/api/stats بدون ورود 401 میده', async () => {
+test('/api/song/stats بدون ورود 401 میده', async () => {
   const res = await newBrowser().stats()
   assert.equal(res.status, 401)
   assert.equal(res.body.error, 'NOT_LOGGED_IN')
 })
 
-test('/api/stats آمار بازی امروز رو بعد از تموم شدن حساب می‌کنه', async () => {
+test('/api/song/stats آمار بازی امروز رو بعد از تموم شدن حساب می‌کنه', async () => {
   const browser = newBrowser()
   await browser.signup('stats_today', 'pass-1234')
   await browser.game()

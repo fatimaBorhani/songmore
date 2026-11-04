@@ -1,5 +1,5 @@
 // تعیین نتیجه‌ی یه حدس: درست / خواننده‌ی مشترک / غلط
-import { db } from './db.js'
+import { db } from '../../core/db.js'
 
 export function buildSongArtistsMap() {
   const rows = db.prepare('SELECT song_id, artist_id FROM song_artists').all()

@@ -19,7 +19,7 @@ test('دیتابیس قدیمی ستون created_at می‌گیره و حدس‌
   old.close()
 
   process.env.DB_PATH = dbPath
-  const { db } = await import('../db.js')
+  const { db } = await import('../../core/db.js')
 
   const columns = db.prepare('PRAGMA table_info(guesses)').all().map((c) => c.name)
   assert.ok(columns.includes('created_at'))

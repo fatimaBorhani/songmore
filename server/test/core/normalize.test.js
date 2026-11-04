@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { normalizePersian } from '../normalize.js'
+import { normalizePersian } from '../../core/normalize.js'
 
 test('ي و ك عربی به ی و ک فارسی تبدیل می‌شن', () => {
   assert.equal(normalizePersian('علي'), normalizePersian('علی'))

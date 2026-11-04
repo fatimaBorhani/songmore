@@ -4,7 +4,8 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'game.db')
+// پیش‌فرض: server/game.db (یه پوشه بالاتر از core/)
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, '..', 'game.db')
 
 export const db = new Database(DB_PATH)
 db.pragma('journal_mode = WAL')

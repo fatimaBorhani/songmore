@@ -6,9 +6,9 @@ import http from 'node:http'
 process.env.DB_PATH = ':memory:'
 process.env.NODE_ENV = 'test'
 
-const { db } = await import('../db.js')
-const { hashPassword, verifyPassword, isValidUsername, isValidPassword } = await import('../auth.js')
-const { app } = await import('../index.js')
+const { db } = await import('../../core/db.js')
+const { hashPassword, verifyPassword, isValidUsername, isValidPassword } = await import('../../core/auth.js')
+const { app } = await import('../../index.js')
 
 let server
 let baseUrl

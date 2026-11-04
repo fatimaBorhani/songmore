@@ -7,7 +7,8 @@
     "dev": "node --watch index.js --random-song",
     "dev:daily": "node --watch index.js",
     "start": "node index.js",
-    "test": "node --test"
+    "test": "node --test",
+    "seed": "node games/song/seed.js"
   },
   "dependencies": {
     "better-sqlite3": "^13.0.3",

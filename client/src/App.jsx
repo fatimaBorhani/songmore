@@ -6,11 +6,13 @@ import AuthPanel from './shared/components/AuthPanel.jsx'
 import HomePage from './pages/HomePage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import SongGame from './games/song/SongGame.jsx'
+import WordGame from './games/word/WordGame.jsx'
 import './shared/shared.css'
 
 // پوسته‌ی سایت: سربرگ مشترک (اسم سایت + ورود) و صفحه‌ها
 //   /      صفحه‌ی اول (انتخاب بازی)
 //   /song  بازی حدس آهنگ
+//   /word  بازی واژه‌یاب
 function App() {
   const [user, setUser] = useState(null) // کاربر واردشده، یا null
   const [authChecked, setAuthChecked] = useState(false) // هنوز معلوم نیست وارد شده یا نه؟
@@ -40,6 +42,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/song" element={<SongGame user={user} />} />
+          <Route path="/word" element={<WordGame user={user} />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       )}

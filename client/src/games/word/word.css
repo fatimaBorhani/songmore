@@ -1,0 +1,566 @@
+/* بازی واژه‌یاب (طرح «الف»): صفحه‌ی حرف‌ها، کیبورد، کارت نتیجه و راهنما */
+
+.word-page {
+  max-width: 560px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  /* کل ارتفاع صفحه منهای سربرگ سایت، تا کیبورد پایین صفحه بشینه */
+  min-height: calc(100dvh - 64px);
+  padding: 8px 6px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.word-page.desktop {
+  padding-bottom: 32px;
+  gap: 20px;
+}
+
+.word-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.word-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.word-title h1 {
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.desktop .word-title h1 {
+  font-size: 28px;
+}
+
+.word-title p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.icon-button {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.icon-button:hover {
+  color: var(--text);
+  border-color: #3f3f46;
+}
+
+.word-top-spacer {
+  width: 44px;
+  flex-shrink: 0;
+}
+
+/* ---------- صفحه‌ی حرف‌ها ---------- */
+
+.word-stage {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.board {
+  --gap: 6px;
+  /* پهنا به اندازه‌ی جا: نه بیشتر از ۳۳۰، و روی صفحه‌های کوتاه کوچیک‌تر تا کیبورد جا بشه */
+  width: min(100%, 330px, max(220px, calc((100dvh - 390px) * 5 / 6)));
+  display: grid;
+  gap: var(--gap);
+  perspective: 600px;
+}
+
+.desktop .board {
+  width: min(100%, 320px);
+}
+
+/* آخر بازی کارت نتیجه جای کیبورد رو می‌گیره؛ صفحه‌ی حرف‌ها کوچیک‌تر تا همه‌چی جا بشه */
+.word-page.finished .board {
+  width: min(100%, 230px, max(160px, calc((100dvh - 430px) * 5 / 6)));
+  --gap: 5px;
+}
+
+.word-page.finished .tile {
+  font-size: 20px;
+  border-radius: 8px;
+}
+
+.board-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.tile {
+  /* رنگ‌ها با متغیر، تا انیمیشن برگشتن بتونه رنگ آخر رو از همین‌ها برداره */
+  --tile-bg: transparent;
+  --tile-fg: var(--text);
+  --tile-border: #27272a;
+  aspect-ratio: 1;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 2px solid var(--tile-border);
+  background: var(--tile-bg);
+  color: var(--tile-fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(20px, 7vw, 28px);
+  font-weight: 900;
+  line-height: 1;
+  user-select: none;
+}
+
+.tile.future {
+  --tile-border: #1f1f23;
+}
+
+.tile.cursor {
+  --tile-border: var(--accent);
+}
+
+.tile.filled,
+.tile.plain {
+  --tile-border: #71717a;
+}
+
+.tile.filled {
+  animation: tile-pop 0.12s ease-out;
+}
+
+.tile.correct {
+  --tile-bg: var(--accent);
+  --tile-fg: #fff;
+  --tile-border: var(--accent);
+}
+
+.tile.present {
+  --tile-bg: var(--present);
+  --tile-fg: var(--bg);
+  --tile-border: var(--present);
+}
+
+.tile.absent {
+  --tile-bg: var(--border);
+  --tile-fg: var(--text-soft);
+  --tile-border: var(--border);
+}
+
+/* برگشتن کاشی بعد از ثبت؛ تأخیر هر کاشی از Board میاد. طولش با timing.js جوره */
+.tile.reveal {
+  animation: tile-flip 0.48s ease-in-out both;
+}
+
+.board-row.shake {
+  animation: row-shake 0.45s ease;
+}
+
+.board-row.win .tile {
+  animation: tile-bounce 0.7s ease both;
+}
+
+@keyframes tile-pop {
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes tile-flip {
+  0% {
+    transform: rotateX(0);
+    background: transparent;
+    color: var(--text);
+    border-color: #71717a;
+  }
+  50% {
+    transform: rotateX(90deg);
+    background: transparent;
+    color: var(--text);
+    border-color: #71717a;
+  }
+  51% {
+    transform: rotateX(90deg);
+    background: var(--tile-bg);
+    color: var(--tile-fg);
+    border-color: var(--tile-border);
+  }
+  100% {
+    transform: rotateX(0);
+    background: var(--tile-bg);
+    color: var(--tile-fg);
+    border-color: var(--tile-border);
+  }
+}
+
+@keyframes row-shake {
+  15%,
+  55% {
+    transform: translateX(-7px);
+  }
+  35%,
+  75% {
+    transform: translateX(7px);
+  }
+}
+
+@keyframes tile-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  35% {
+    transform: translateY(-14px);
+    box-shadow: 0 10px 24px rgba(48, 48, 230, 0.45);
+  }
+  60% {
+    transform: translateY(2px);
+  }
+}
+
+/* پیام کوتاه بالای صفحه («حروف کافی نیست»، «نتیجه کپی شد») */
+.word-toast-area {
+  position: absolute;
+  top: -44px; /* بالای صفحه‌ی حرف‌ها، تا ردیف‌ها رو نپوشونه */
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.word-toast {
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  animation: fade-in 0.15s ease-out;
+}
+
+/* ---------- کیبورد ---------- */
+
+.word-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.kb-row {
+  --gap: 4px;
+  /* پهنای یه کلید: ردیف اول ۱۳ کلید داره؛ بقیه‌ی ردیف‌ها با همین پهنا وسط‌چین می‌شن */
+  --k: calc((100% - 12 * var(--gap)) / 13);
+  display: flex;
+  justify-content: center;
+  gap: var(--gap);
+}
+
+.kb-key {
+  flex: 0 0 var(--k);
+  min-width: 0;
+  height: 54px;
+  box-sizing: border-box;
+  padding: 0;
+  border: none;
+  border-radius: 7px;
+  background: #3f3f46;
+  color: var(--text);
+  font: inherit;
+  font-size: clamp(15px, 4.6vw, 19px);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.kb-key.wide {
+  flex-basis: calc(2 * var(--k) + var(--gap));
+  font-size: 14px;
+}
+
+.kb-key:active {
+  filter: brightness(1.3);
+}
+
+.kb-key.correct {
+  background: var(--accent);
+  color: #fff;
+}
+
+.kb-key.present {
+  background: var(--present);
+  color: var(--bg);
+}
+
+.kb-key.absent {
+  background: #18181b;
+  color: #52525b;
+}
+
+/* نسخه‌ی کامپیوتر: نقشه‌ی کوچیک، فقط برای دیدن رنگ‌ها */
+.word-keyboard.map {
+  align-self: center;
+  gap: 5px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #111113;
+  border: 1px solid #1f1f23;
+}
+
+.word-keyboard.map .kb-row {
+  --k: 32px;
+}
+
+.word-keyboard.map .kb-key {
+  height: 32px;
+  border-radius: 6px;
+  background: var(--border);
+  font-size: 14px;
+  cursor: default;
+}
+
+.word-keyboard.map .kb-key.wide {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.word-keyboard.map .kb-key.correct {
+  background: var(--accent);
+}
+
+.word-keyboard.map .kb-key.present {
+  background: var(--present);
+}
+
+.word-keyboard.map .kb-key.absent {
+  background: transparent;
+}
+
+.word-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.word-hint span {
+  color: #3f3f46;
+}
+
+kbd {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--card);
+  border: 1px solid #3f3f46;
+  border-bottom-width: 2px;
+  color: #e4e4e7;
+}
+
+/* ---------- کارت آخر بازی ---------- */
+
+.word-result {
+  width: 100%;
+  max-width: 380px;
+  align-self: center;
+  box-sizing: border-box;
+  padding: 16px 18px;
+  border-radius: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fade-in 0.35s ease-out;
+}
+
+.word-result-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.word-result-message {
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.word-result-message.won {
+  color: #b4b4ff;
+  font-weight: 700;
+}
+
+.word-result-answer {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.word-result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.word-result-actions .ghost-button {
+  align-self: stretch;
+}
+
+.primary-button {
+  height: 44px;
+  border: none;
+  border-radius: 14px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary-button:hover {
+  background: #4040f0;
+}
+
+.word-next {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.word-next b {
+  color: var(--text);
+}
+
+/* ---------- راهنما ---------- */
+
+.help-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  box-sizing: border-box;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in 0.15s ease-out;
+}
+
+.help-dialog {
+  width: 100%;
+  max-width: 400px;
+  max-height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 20px;
+  border-radius: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.help-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.help-head h2 {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.help-example {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.help-tiles {
+  display: grid;
+  grid-template-columns: repeat(5, 40px);
+  gap: 4px;
+}
+
+.tile.small {
+  font-size: 18px;
+  border-radius: 8px;
+}
+
+.help-note {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* صفحه‌های کوتاه (مثل آیفون SE): کلیدها و فاصله‌ها کوچیک‌تر تا همه‌چی بدون اسکرول جا بشه */
+@media (max-height: 700px) {
+  .word-page {
+    gap: 8px;
+    padding-top: 0;
+  }
+
+  .word-title h1 {
+    font-size: 20px;
+  }
+
+  .board {
+    --gap: 5px;
+    width: min(100%, 330px, max(180px, calc((100dvh - 315px) * 5 / 6)));
+  }
+
+  .word-keyboard {
+    gap: 6px;
+  }
+
+  .kb-key {
+    height: 46px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile.filled,
+  .tile.reveal,
+  .board-row.shake,
+  .board-row.win .tile {
+    animation-duration: 0.01ms;
+    animation-delay: 0ms !important;
+  }
+}

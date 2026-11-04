@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # پروژه: سایت بازی‌های روزانه‌ی فارسی
 
 ## هدف
-یه سایت با چند بازی روزانه؛ صفحه‌ی اول بازی رو انتخاب می‌کنی. بازی اول «حدس آهنگ» (شبیه Songless): هر روز یه آهنگ، کلیپ‌های کوتاه (از ۰.۱۵ تا ۱۵ ثانیه) و حداکثر ۵ حدس. بازی بعدی (برنامه‌ریزی‌شده): وردل فارسی با اسم موقت «واژه‌یاب» (اسم Wordle و ظاهر نیویورک‌تایمز رو کپی نکن).
+یه سایت با چند بازی روزانه؛ صفحه‌ی اول بازی رو انتخاب می‌کنی. بازی اول «حدس آهنگ» (شبیه Songless): هر روز یه آهنگ، کلیپ‌های کوتاه (از ۰.۱۵ تا ۱۵ ثانیه) و حداکثر ۵ حدس. بازی دوم: وردل فارسی با اسم موقت «واژه‌یاب» (`/word`؛ اسم Wordle و ظاهر نیویورک‌تایمز رو کپی نکن).
 
 ## استک
 - فرانت: React + Vite + react-router (JavaScript، نه TypeScript)، راست‌به‌چپ، فونت Vazirmatn از npm (@fontsource/vazirmatn)
@@ -20,12 +20,14 @@ client/src/
   pages/            صفحه‌ی اول (انتخاب بازی) و «پیدا نشد»
   games/index.js    فهرست بازی‌ها (کارت‌های صفحه‌ی اول از روی همینه)
   games/song/       همه‌چیزِ بازی حدس آهنگ (SongGame.jsx، api.js، اجزا، song.css)
+  games/word/       همه‌چیزِ بازی واژه‌یاب (WordGame.jsx، letters.js، timing.js، اجزا، word.css)
   shared/           مشترک بین بازی‌ها: api.js (درخواست + ورود)، format.js، site.js (اسم سایت)، اجزای ورود/آمار/جدول امتیاز، shared.css
 server/
   index.js          اپ Express: میان‌افزارهای مشترک + وصل کردن API هر بازی زیر مسیر خودش
-  core/             مشترک: db.js، session.js، auth.js، authRoutes.js، player.js، normalize.js
+  core/             مشترک: db.js، session.js، auth.js، authRoutes.js، player.js، normalize.js، today.js (تاریخ تهران)
   games/song/       بازی حدس آهنگ: routes.js، scoring.js، guesses.js، guessLogic.js، dailySong.js، search.js، playerStats.js، leaderboard.js، seed.js
-  test/core/ و test/song/   تست‌ها، هم‌شکل همون پوشه‌ها
+  games/word/       بازی واژه‌یاب: routes.js، letters.js، evaluate.js، game.js، dailyWord.js
+  test/core/، test/song/ و test/word/   تست‌ها، هم‌شکل همون پوشه‌ها
 tools/   اسکریپت‌های پایتون
 data/    songs.json و artists.json (خروجی اسکریپت‌های خودم؛ فقط بخون، دستی ویرایش نکن)
 data/audio/  آهنگ‌های اصلی (توی git نمیره)
@@ -41,6 +43,13 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
 - نتیجه‌ی هر حدس: correct (🟩)، present (🟨: آهنگ غلطه ولی یکی از خواننده‌هاش با جواب یکیه)، incorrect (🟥)، skipped (⬜)، حدس نزده (⬛)
 - آهنگ روز نیمه‌شب به وقت تهران عوض می‌شه
 - جواب فقط آخر بازی (برد یا حدس پنجم) به کلاینت میرسه. هیچ API نباید قبلش جواب رو لو بده (نه عنوان، نه اسم فایل اصلی). اسم فایل کلیپ‌ها شناسه‌ی تصادفی است
+
+## قوانین واژه‌یاب
+- کلمه‌ی ۵ حرفی، ۶ حدس. رنگ‌ها: correct (آبی، جای درست)، present (طوسی روشن، توی کلمه هست)، absent (تیره، نیست). حروف تکراری مثل وردل حساب می‌شن (`evaluate.js`)
+- ۳۴ حرف: ۳۲ حرف الفبا + «آ» و «ئ» که حرف جدان (آ با ا یکی نیست). ي/ك عربی، نیم‌فاصله و اعراب یکسان می‌شن
+- فعلاً جواب همیشه «پرنده» است (`dailyWord.js`) و هر ترکیب ۵ حرفی قبوله، حتی اگه کلمه وجود نداشته باشه؛ بعداً لیست کلمه‌ها میاد
+- مثل بازی آهنگ، رنگ‌ها روی سرور حساب می‌شن و جواب فقط آخر بازی به کلاینت میرسه
+- کیبورد: چیدمان استاندارد فارسی از چپ به راست (`KEY_ROWS` توی `client/src/games/word/letters.js`). روی کامپیوتر فقط با کیبورد خود کامپیوتر تایپ می‌شه (زیر صفحه یه نقشه‌ی نمایشی از کیبورد هست)، روی گوشی دکمه‌های لمسی. اگه زبان سیستم انگلیسی باشه، حرف از جای کلید (`event.code`) پیدا می‌شه
 
 ## جستجو
 - وقتی کاربر اسم یه خواننده رو بنویسه، همه‌ی آهنگ‌های اون خواننده (اصلی + همکاری/feat) بیاد؛ اول آهنگ‌هایی که اصلی‌ان
@@ -68,24 +77,28 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
 - ساخت کلیپ: `python3 tools/make_clips.py` (به ffmpeg نیاز داره؛ فقط آهنگ‌های جدید رو به clip_map.json اضافه می‌کنه)
 - خوندن ژانر و سال از تگ mp3ها: `python3 tools/read_song_tags.py` (با ffprobe؛ فقط می‌خونه و خروجی‌ش `tools/song_tags.csv` برای بررسی دستیه)
 - ژانر و دهه‌ی آهنگ‌ها: `python3 tools/build_song_categories.py` (ژانر از روی خواننده از `tools/artist_genres.csv`، سال از `tools/song_tags.csv` مگر اینکه توی `tools/year_overrides.csv` دستی درست شده باشه؛ خروجی `tools/song_categories.csv` برای بررسی دستی)
-- کلاینت (پوشه‌ی `client/`): `npm run dev` (پورت 5173 روی 127.0.0.1؛ صفحه‌ی اول `/`، بازی آهنگ `/song`)، `npm run build`، `npm run lint` (oxlint)
+- کلاینت (پوشه‌ی `client/`): `npm run dev` (پورت 5173 روی 127.0.0.1؛ صفحه‌ی اول `/`، بازی آهنگ `/song`، واژه‌یاب `/word`)، `npm run build`، `npm run lint` (oxlint)
 - متغیرهای محیطی سرور: `PORT`، `CLIPS_DIR`، `DB_PATH` (پیش‌فرض `server/game.db`؛ تست‌ها `:memory:` می‌ذارن)
 
 ## معماری
-- `server/index.js` اپ Express رو می‌سازه و `app` رو export می‌کنه (تست‌ها اونو روی یه سرور http واقعی بالا میارن). مسیرها: `/api/health`، `/api/auth/...` (مشترک)، `/api/song/...` (بازی آهنگ)، و `/clips` فایل‌های استاتیک `CLIPS_DIR`
+- `server/index.js` اپ Express رو می‌سازه و `app` رو export می‌کنه (تست‌ها اونو روی یه سرور http واقعی بالا میارن). مسیرها: `/api/health`، `/api/auth/...` (مشترک)، `/api/song/...` (بازی آهنگ)، `/api/word/...` (واژه‌یاب)، و `/clips` فایل‌های استاتیک `CLIPS_DIR`
 - **مشترک (`server/core/`)**
   - `db.js` جدول‌ها رو با SQL خام می‌سازه (artists، songs، daily_song، guesses، users، auth_sessions و ...)؛ پیش‌فرض دیتابیس `server/game.db`؛ ستون‌های جدید رو برای دیتابیس‌های قدیمی خودکار اضافه می‌کنه
   - `session.js`: شناسه‌ی مرورگر توی کوکی `songmore_session`
   - `player.js`: «بازیکن» = اگه وارد شده `user:<id>`، وگرنه شناسه‌ی مرورگر (`req.playerKey`). موقع ثبت‌نام/ورود، بازی‌های مهمانِ همون مرورگر به حساب منتقل می‌شن (`claimGuestGames`)، مگر روزهایی که حساب خودش بازی داره
   - احراز هویت (`auth.js` و `authRoutes.js`): نام کاربری و رمز؛ رمز با `crypto.scrypt` خود Node هش می‌شه. APIها: `POST /api/auth/signup`، `POST /api/auth/login`، `POST /api/auth/logout`، `GET /api/auth/me`. نشست ورود توی کوکی جدای `songmore_auth` (فقط هش توکن توی جدول `auth_sessions`). بعد از ۱۰ تلاش ناموفق ورود از یه IP، تا ۱۵ دقیقه 429 برمی‌گرده (توی حافظه، با ری‌استارت سرور صفر می‌شه)
 - **بازی آهنگ (`server/games/song/`)**، APIها زیر `/api/song`: `game`، `search`، `guess`، `skip`، `stats`، `leaderboard/today`
-  - `dailySong.js`: تاریخ روز به وقت Asia/Tehran؛ آهنگ هر تاریخ یه بار انتخاب (آهنگی که کمتر تکرار شده) و توی `daily_song` ذخیره می‌شه
+  - `dailySong.js` (تاریخ روز از `core/today.js` به وقت Asia/Tehran)؛ آهنگ هر تاریخ یه بار انتخاب (آهنگی که کمتر تکرار شده) و توی `daily_song` ذخیره می‌شه
   - حدس‌ها با (playerKey, date) توی ستون `session_id` جدول guesses ذخیره می‌شن
   - `scoring.js`: مراحل (`STAGES`)، فرمول امتیاز، `computeScore` (امتیاز بازی تموم‌شده) و `getWorth` (ارزش الان و ارزش بعد از رد کردن). `GET /api/song/game` وسط بازی `worthNow`/`worthAfterSkip` و آخر بازی `score` برمی‌گردونه
   - `guesses.js` ساخت وضعیت بازی برای کلاینت رو داره — اینجاست که باید مطمئن بود جواب قبل از پایان بازی لو نمی‌ره. `guessLogic.js` نتیجه‌ی حدس (correct/present/incorrect) رو حساب می‌کنه؛ `search.js` (با `core/normalize.js`) جستجو رو انجام می‌ده
   - `playerStats.js` و `GET /api/song/stats`: آمار کاربر واردشده از روی حدس‌ها (روی همه‌ی دستگاه‌ها یکیه)؛ مهمان‌ها آمار رو توی localStorage دارن (`client/src/games/song/stats.js`)
   - `leaderboard.js` و `GET /api/song/leaderboard/today`: جدول امتیاز امروز (فقط کاربرهای واردشده‌ای که تموم کردن؛ مساوی‌ها با زمان تموم کردن از ستون `created_at` جدول guesses)
   - حالت تست (`npm run dev` = `--random-song`): هر بار باز کردن بازی، آهنگ تصادفی جدید و پاک شدن بازی امروز همون بازیکن
+- **بازی واژه‌یاب (`server/games/word/`)**، APIها زیر `/api/word`: `GET game` و `POST guess` (`{ word }`)
+  - حدس‌ها توی جدول `word_guesses` (player_key, date, guess_number, word)؛ رنگ‌ها ذخیره نمی‌شن و هر بار از روی جواب حساب می‌شن. `claimGuestGames` این جدول رو هم به حساب منتقل می‌کنه
+  - `game.js` وضعیت بازی رو می‌سازه (جواب فقط وقتی `finished`). خطاها: `WORD_LENGTH`، `INVALID_LETTERS`، `GAME_OVER`
+  - حالت تست (همون `--random-song`): هر بار باز کردن صفحه بازی امروز از اول شروع می‌شه و دکمه‌ی «بازی دوباره (تست)» میاد
 - **کلاینت**
   - `App.jsx`: سربرگ مشترک و مسیرها؛ کاربر واردشده رو یه بار می‌گیره و به صفحه‌ی هر بازی می‌ده (`user`). صفحه‌ی بازی با عوض شدن کاربر بازی رو دوباره می‌گیره
   - `shared/api.js` آدرس سرور رو از `window.location.hostname:3001` می‌سازه (نه localhost ثابت) تا کوکی نشست بین هاست‌ها گم نشه؛ همه‌ی درخواست‌ها با `credentials: 'include'`. API هر بازی توی `games/<بازی>/api.js`

@@ -9,3 +9,8 @@ export function faNumber(n, digits = 0) {
 export function faSeconds(n) {
   return faNumber(n, n < 1 ? 2 : 0)
 }
+
+// رقم‌های انگلیسی یه متن -> فارسی (مثلاً برای ساعت ۰۸:۱۲:۴۰)
+export function faDigits(text) {
+  return String(text).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d])
+}

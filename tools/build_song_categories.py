@@ -25,6 +25,8 @@ SONGS_JSON = os.path.join(ROOT, "data", "songs.json")
 CLIP_MAP_JSON = os.path.join(ROOT, "data", "clip_map.json")
 ARTIST_GENRES_CSV = os.path.join(ROOT, "tools", "artist_genres.csv")
 SONG_TAGS_CSV = os.path.join(ROOT, "tools", "song_tags.csv")
+# سال‌هایی که دستی (با جستجو) درست شدن؛ این‌ها از سالِ تگ مهم‌ترن
+YEAR_OVERRIDES_CSV = os.path.join(ROOT, "tools", "year_overrides.csv")
 OUTPUT_CSV = os.path.join(ROOT, "tools", "song_categories.csv")
 
 # اگه اسم آلبوم یکی از این‌ها رو داشته باشه، احتمالاً یه مجموعه است و سالش سالِ مجموعه‌ست.
@@ -83,6 +85,9 @@ def main():
         clip_ids = list(json.load(f).keys())
     genres = {row["artist_id"]: row for row in read_csv(ARTIST_GENRES_CSV)}
     tags = {row["id"]: row for row in read_csv(args.tags)}
+    overrides = {}
+    if os.path.isfile(YEAR_OVERRIDES_CSV):
+        overrides = {row["id"]: row for row in read_csv(YEAR_OVERRIDES_CSV)}
 
     rows = []
     for song_id in clip_ids:
@@ -102,8 +107,15 @@ def main():
         elif genres[main_ids[0]]["confidence"] == "کم":
             genre_note = "ژانر خواننده مطمئن نیست"
 
-        year = tag.get("year", "")
-        problem = year_problem(year, tag.get("album", ""), main_ids)
+        if song_id in overrides:
+            # سال درست‌شده‌ی دستی؛ دیگه نیازی به بررسی نداره
+            year = overrides[song_id]["year"]
+            year_source = "اصلاح دستی"
+            problem = ""
+        else:
+            year = tag.get("year", "")
+            year_source = "تگ فایل" if year else ""
+            problem = year_problem(year, tag.get("album", ""), main_ids)
         rows.append({
             "id": song_id,
             "title": song["title"],
@@ -111,7 +123,8 @@ def main():
             "genre": genre,
             "genre_fa": genres[main_ids[0]]["genre_fa"] if unique else "",
             "genre_note": genre_note,
-            "tag_year": year,
+            "year": year,
+            "year_source": year_source,
             "decade": "" if problem else decade_label(year),
             "year_problem": problem,
         })

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getGame, sendGuess, sendSkip } from './api.js'
+import { getGame, getMe, sendGuess, sendSkip } from './api.js'
 import { getStats, recordResult } from './stats.js'
 import { STAGES, faNumber, faSeconds } from './stages.js'
 import WavePlayer from './components/WavePlayer.jsx'
@@ -7,6 +7,7 @@ import SearchBox from './components/SearchBox.jsx'
 import GuessHistory from './components/GuessHistory.jsx'
 import GameOver from './components/GameOver.jsx'
 import StatsPanel from './components/StatsPanel.jsx'
+import AuthPanel from './components/AuthPanel.jsx'
 import './App.css'
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
   const [busy, setBusy] = useState(false)
   const [stats, setStats] = useState(getStats)
   const [testMode, setTestMode] = useState(false)
+  const [user, setUser] = useState(null) // کاربر واردشده، یا null
 
   function loadGame() {
     setError('')
@@ -27,6 +29,13 @@ function App() {
   }
 
   useEffect(loadGame, [])
+
+  // اول کار ببین کاربر قبلاً وارد شده یا نه (کوکی ورود)
+  useEffect(() => {
+    getMe()
+      .then(setUser)
+      .catch(() => {}) // اگه سرور در دسترس نبود، loadGame خودش خطا رو نشون می‌ده
+  }, [])
 
   // فقط یه بار برای هر روز، وقتی بازی تموم می‌شه، آمار رو آپدیت کن
   useEffect(() => {
@@ -97,6 +106,8 @@ function App() {
 
   return (
     <main className="game-page">
+      <AuthPanel user={user} onUserChange={setUser} />
+
       <header className="game-header">
         <h1>بازی حدس آهنگ</h1>
         <p className="guesses-left">

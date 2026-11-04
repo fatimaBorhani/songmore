@@ -36,3 +36,33 @@ export function sendSkip() {
 export function clipUrl(fileName) {
   return `${API_URL}/clips/${fileName}`
 }
+
+// ---------- احراز هویت ----------
+
+function postJson(path, body) {
+  return call(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body ?? {}),
+  })
+}
+
+// کاربر واردشده رو برمی‌گردونه، یا null
+export async function getMe() {
+  const data = await call('/api/auth/me')
+  return data.user
+}
+
+export async function signup(username, password) {
+  const data = await postJson('/api/auth/signup', { username, password })
+  return data.user
+}
+
+export async function login(username, password) {
+  const data = await postJson('/api/auth/login', { username, password })
+  return data.user
+}
+
+export function logout() {
+  return postJson('/api/auth/logout')
+}

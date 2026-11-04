@@ -64,5 +64,6 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
 - `db.js` جدول‌ها رو با SQL خام می‌سازه (artists، songs، daily_song، guesses و ...)
 - `dailySong.js`: تاریخ روز به وقت Asia/Tehran؛ آهنگ هر تاریخ یه بار انتخاب (آهنگی که کمتر تکرار شده) و توی `daily_song` ذخیره می‌شه
 - `session.js`: شناسه‌ی بازیکن توی کوکی `songmore_session`؛ حدس‌ها با (session_id, date) توی جدول guesses ذخیره می‌شن
+- احراز هویت (`auth.js` و `authRoutes.js`): نام کاربری و رمز؛ رمز با `crypto.scrypt` خود Node هش می‌شه (کتابخونه‌ی جدید نداره). APIها: `POST /api/auth/signup`، `POST /api/auth/login`، `POST /api/auth/logout`، `GET /api/auth/me`. نشست ورود توی کوکی جدای `songmore_auth` (فقط هش توکن توی جدول `auth_sessions`)؛ کوکی بازی (`songmore_session`) جداست و حدس‌ها هنوز به اون وصلن، نه به کاربر. بعد از ۱۰ تلاش ناموفق ورود از یه IP، تا ۱۵ دقیقه 429 برمی‌گرده (توی حافظه، با ری‌استارت سرور صفر می‌شه)
 - `guesses.js` مراحل (`STAGES`) و ساخت وضعیت بازی برای کلاینت رو داره — اینجاست که باید مطمئن بود جواب قبل از پایان بازی لو نمی‌ره. `guessLogic.js` نتیجه‌ی حدس (correct/present/incorrect) رو حساب می‌کنه؛ `normalize.js` و `search.js` جستجو رو انجام می‌دن
 - کلاینت: `src/api.js` آدرس سرور رو از `window.location.hostname:3001` می‌سازه (نه localhost ثابت) تا کوکی نشست بین هاست‌ها گم نشه؛ همه‌ی درخواست‌ها با `credentials: 'include'`. `audioPlayer.js` پخش کلیپ‌ها با Web Audio، `stats.js` آمار بازیکن

@@ -8,6 +8,7 @@ import { searchSongs } from './search.js'
 import { buildSongArtistsMap, evaluateGuess } from './guessLogic.js'
 import { addGuess, getGameState } from './guesses.js'
 import { getOrCreateSessionId } from './session.js'
+import { authRouter } from './authRoutes.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..')
@@ -33,6 +34,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/clips', express.static(CLIPS_DIR))
+app.use('/api/auth', authRouter)
 
 app.get('/api/health', (req, res) => {
   res.json({ ok: true })

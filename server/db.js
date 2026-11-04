@@ -53,4 +53,20 @@ db.exec(`
     result TEXT NOT NULL CHECK (result IN ('correct', 'present', 'incorrect', 'skipped')),
     PRIMARY KEY (session_id, date, guess_number)
   );
+
+  -- حساب‌های کاربری؛ نام کاربری بدون توجه به حروف بزرگ و کوچیک یکتاست
+  -- رمز هیچ‌وقت خودش ذخیره نمی‌شه، فقط هش scrypt با salt تصادفی
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE COLLATE NOCASE,
+    password_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+  );
+
+  -- نشست‌های ورود؛ خود توکن فقط توی کوکی کاربره، اینجا فقط هش SHA-256 ش
+  CREATE TABLE IF NOT EXISTS auth_sessions (
+    token_hash TEXT PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    expires_at INTEGER NOT NULL
+  );
 `)

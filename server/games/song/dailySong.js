@@ -1,16 +1,8 @@
 // انتخاب آهنگ روزانه بر اساس تاریخ تهران (نیمه‌شب عوض می‌شه)
 import { db } from '../../core/db.js'
 
-export function getTodayDateString(date = new Date()) {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Tehran',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(date)
-  const get = (type) => parts.find((p) => p.type === type).value
-  return `${get('year')}-${get('month')}-${get('day')}`
-}
+// تاریخ امروز حالا توی core/today.js مشترکه؛ برای کدهای قبلی از اینجا هم در دسترسه
+export { getTodayDateString } from '../../core/today.js'
 
 // اگه برای این تاریخ قبلاً آهنگ انتخاب شده، همونو برمی‌گردونه.
 // وگرنه آهنگی که کمتر از همه تکرار شده رو انتخاب و ذخیره می‌کنه.

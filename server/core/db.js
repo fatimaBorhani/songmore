@@ -71,6 +71,16 @@ db.exec(`
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     expires_at INTEGER NOT NULL
   );
+
+  -- حدس‌های بازی واژه‌یاب؛ رنگ حرف‌ها ذخیره نمی‌شه و هر بار از روی کلمه‌ی جواب حساب می‌شه
+  CREATE TABLE IF NOT EXISTS word_guesses (
+    player_key TEXT NOT NULL,
+    date TEXT NOT NULL,
+    guess_number INTEGER NOT NULL,
+    word TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    PRIMARY KEY (player_key, date, guess_number)
+  );
 `)
 
 // ارتقای دیتابیس‌های قدیمی: اگه جدول guesses از قبل بوده و ستون created_at نداره، اضافه‌ش کن

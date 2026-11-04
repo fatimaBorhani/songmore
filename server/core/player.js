@@ -1,5 +1,5 @@
 // «بازیکن» کیه؟ اگه وارد شده، حساب کاربریش؛ وگرنه همون کوکی مرورگر (مهمان).
-// حدس‌ها با همین کلید توی ستون session_id جدول guesses ذخیره می‌شن:
+// حدس‌ها با همین کلید ذخیره می‌شن (بازی آهنگ: ستون session_id جدول guesses، واژه‌یاب: player_key جدول word_guesses):
 //   کاربر واردشده -> 'user:<id>'   (روی همه‌ی دستگاه‌هاش یکیه)
 //   مهمان        -> شناسه‌ی تصادفی کوکی (UUID؛ هیچ‌وقت با 'user:' شروع نمی‌شه)
 import { db } from './db.js'
@@ -21,12 +21,21 @@ export function attachPlayer(req, res, next) {
 export function claimGuestGames(sessionId, userId) {
   if (!sessionId) return 0
   const userKey = userPlayerKey(userId)
-  const info = db
+  // بازی آهنگ
+  const songInfo = db
     .prepare(
       `UPDATE guesses SET session_id = ?
        WHERE session_id = ?
          AND date NOT IN (SELECT date FROM guesses WHERE session_id = ?)`
     )
     .run(userKey, sessionId, userKey)
-  return info.changes
+  // بازی واژه‌یاب
+  const wordInfo = db
+    .prepare(
+      `UPDATE word_guesses SET player_key = ?
+       WHERE player_key = ?
+         AND date NOT IN (SELECT date FROM word_guesses WHERE player_key = ?)`
+    )
+    .run(userKey, sessionId, userKey)
+  return songInfo.changes + wordInfo.changes
 }

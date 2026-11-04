@@ -657,3 +657,139 @@ button:disabled {
     animation: none;
   }
 }
+
+/* ---------- امتیاز ---------- */
+
+/* «ارزش الان» بالای کارت موج */
+.worth {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: -8px;
+}
+
+.worth-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.worth-value {
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+/* هزینه‌ی رد کردن، کنار متن دکمه */
+.skip-cost {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* امتیاز آخر بازی */
+.final-score {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.final-score-value {
+  font-size: 44px;
+  font-weight: 900;
+  line-height: 1.1;
+  color: #b4b4ff;
+}
+
+.final-score.zero .final-score-value {
+  color: var(--text-muted);
+}
+
+.final-score-label {
+  font-size: 15px;
+  color: var(--text-soft);
+}
+
+/* آمار: ردیف امتیازها سه‌ستونه */
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stats-panel.scores {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* جدول امتیاز امروز */
+.leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.leaderboard-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.leaderboard-head h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.leaderboard-head span,
+.leaderboard-empty,
+.leaderboard-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.leaderboard-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.leaderboard-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.leaderboard-list li:nth-child(odd) {
+  background: var(--surface);
+}
+
+.leaderboard-list li.me {
+  background: #14143a;
+  box-shadow: inset 0 0 0 1px var(--accent);
+  font-weight: 700;
+}
+
+.lb-rank {
+  width: 24px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.lb-name {
+  flex: 1;
+  text-align: start;
+}
+
+.lb-score {
+  font-variant-numeric: tabular-nums;
+}

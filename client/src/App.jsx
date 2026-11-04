@@ -6,6 +6,8 @@ import WavePlayer from './components/WavePlayer.jsx'
 import SearchBox from './components/SearchBox.jsx'
 import GuessHistory from './components/GuessHistory.jsx'
 import GameOver from './components/GameOver.jsx'
+import AnimatedNumber from './components/AnimatedNumber.jsx'
+import Leaderboard from './components/Leaderboard.jsx'
 import StatsPanel from './components/StatsPanel.jsx'
 import { playWinSound } from './audioPlayer.js'
 import AuthPanel from './components/AuthPanel.jsx'
@@ -70,7 +72,7 @@ function App() {
       return
     }
     const won = game.guesses.some((g) => g.result === 'correct')
-    setStats(recordResult(game.date, won))
+    setStats(recordResult(game.date, won, game.score))
   }, [game, user])
 
   // بعد از ورود یا خروج، بازی امروز رو دوباره بگیر:
@@ -141,6 +143,8 @@ function App() {
   const lastClip = game.clips[unlocked - 1]
   const extraSeconds = unlocked < STAGES.length ? STAGES[unlocked] - STAGES[unlocked - 1] : 0
   const skipLabel = extraSeconds ? `رد کردن +${faSeconds(extraSeconds)} ث` : 'رد کردن'
+  // رد کردن چند امتیاز از «ارزش الان» کم می‌کنه
+  const skipCost = game.finished ? 0 : game.worthNow - game.worthAfterSkip
 
   return (
     <main className="game-page">
@@ -155,6 +159,15 @@ function App() {
 
       <GuessHistory guesses={game.guesses} celebrating={celebrating} />
 
+      {!game.finished && (
+        <div className="worth" aria-live="polite">
+          <span className="worth-label">ارزش الان</span>
+          <span className="worth-value">
+            <AnimatedNumber value={game.worthNow} />
+          </span>
+        </div>
+      )}
+
       <WavePlayer
         key={`${unlocked}-${lastClip.file}`}
         clips={game.clips}
@@ -168,6 +181,7 @@ function App() {
             <SearchBox disabled={busy} onChoose={handleGuess} />
             <button type="button" className="skip-button" disabled={busy} onClick={handleSkip}>
               {skipLabel}
+              {skipCost > 0 && <span className="skip-cost"> −{faNumber(skipCost)}</span>}
             </button>
           </div>
           {nextSongButton}
@@ -181,11 +195,13 @@ function App() {
           <GameOver
             answer={game.answer}
             guesses={game.guesses}
+            score={game.score}
             celebrating={celebrating}
             busy={busy}
             onNext={testMode ? loadGame : undefined}
           />
           {(user ? myStats : stats) && <StatsPanel stats={user ? myStats : stats} />}
+          <Leaderboard user={user} refreshKey={`${user ? user.id : 'guest'}-${game.date}-${game.score}`} />
         </>
       )}
     </main>

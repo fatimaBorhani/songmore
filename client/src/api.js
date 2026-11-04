@@ -72,3 +72,8 @@ export async function fetchMyStats() {
   const data = await call('/api/stats')
   return data.stats
 }
+
+// جدول امتیاز امروز
+export function getTodayLeaderboard() {
+  return call('/api/leaderboard/today')
+}

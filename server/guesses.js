@@ -1,8 +1,9 @@
 // ذخیره‌ی حدس‌ها و ساختن وضعیت بازی برای برگردوندن به کلاینت
 import { db } from './db.js'
+import { STAGES, MAX_GUESSES, computeScore, getWorth } from './scoring.js'
 
-export const STAGES = [0.15, 0.5, 2, 8, 15]
-const MAX_GUESSES = 5
+// برای جاهای دیگه که STAGES رو از اینجا می‌گیرن
+export { STAGES }
 
 export function getGuesses(sessionId, date) {
   return db
@@ -19,9 +20,10 @@ export function addGuess(sessionId, date, guessText, result) {
     .get(sessionId, date).n
   if (count >= MAX_GUESSES) throw new Error('GAME_OVER')
 
+  // created_at: زمان حدس (میلی‌ثانیه)؛ برای جدول امتیاز، وقتی امتیازها مساوی‌ان
   db.prepare(
-    'INSERT INTO guesses (session_id, date, guess_number, guess_text, result) VALUES (?, ?, ?, ?, ?)'
-  ).run(sessionId, date, count + 1, guessText, result)
+    'INSERT INTO guesses (session_id, date, guess_number, guess_text, result, created_at) VALUES (?, ?, ?, ?, ?, ?)'
+  ).run(sessionId, date, count + 1, guessText, result, Date.now())
 }
 
 // وضعیت کامل بازی امروز برای این بازیکن: حدس‌ها، کلیپ‌های بازشده، و فقط اگه
@@ -46,6 +48,13 @@ export function getGameState(sessionId, date, dailySongId) {
     guessesLeft: MAX_GUESSES - guesses.length,
     finished,
     clips,
+  }
+
+  if (finished) {
+    state.score = computeScore(guesses)
+  } else {
+    // ارزش الان و ارزش بعد از رد کردن؛ از جواب هیچی لو نمی‌ده
+    Object.assign(state, getWorth(guesses))
   }
 
   if (finished) {

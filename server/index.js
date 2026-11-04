@@ -11,6 +11,7 @@ import { getOrCreateSessionId } from './session.js'
 import { authRouter } from './authRoutes.js'
 import { attachPlayer } from './player.js'
 import { getPlayerStats } from './playerStats.js'
+import { getDailyLeaderboard } from './leaderboard.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..')
@@ -62,6 +63,11 @@ app.get('/api/game', (req, res) => {
 app.get('/api/stats', (req, res) => {
   if (!req.user) return res.status(401).json({ error: 'NOT_LOGGED_IN' })
   res.json({ stats: getPlayerStats(req.playerKey) })
+})
+
+// جدول امتیاز امروز: ۲۰ نفر اول + رتبه‌ی خودت (اگه وارد شدی و تموم کردی)
+app.get('/api/leaderboard/today', (req, res) => {
+  res.json(getDailyLeaderboard(getTodayDateString(), req.user ? req.user.id : null))
 })
 
 app.get('/api/search', (req, res) => {

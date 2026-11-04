@@ -138,10 +138,15 @@ test('/api/stats آمار بازی امروز رو بعد از تموم شدن �
   await browser.game()
   await browser.guessWrong()
   // بازی نیمه‌کاره هنوز حساب نمی‌شه
-  assert.deepEqual((await browser.stats()).body.stats, { played: 0, wins: 0, currentStreak: 0, maxStreak: 0 })
+  assert.deepEqual((await browser.stats()).body.stats, {
+    played: 0, wins: 0, currentStreak: 0, maxStreak: 0, totalScore: 0, bestScore: 0, averageScore: 0,
+  })
 
   await browser.guessRight()
-  assert.deepEqual((await browser.stats()).body.stats, { played: 1, wins: 1, currentStreak: 1, maxStreak: 1 })
+  // یه حدس غلط (−۱۰۰۰) بعد درست توی مرحله‌ی اول: ۹۰۰۰
+  assert.deepEqual((await browser.stats()).body.stats, {
+    played: 1, wins: 1, currentStreak: 1, maxStreak: 1, totalScore: 9000, bestScore: 9000, averageScore: 9000,
+  })
 })
 
 test('آمار چند روزه: برد، برد، باخت، برد، و یه روز نیمه‌کاره', () => {
@@ -156,5 +161,8 @@ test('آمار چند روزه: برد، برد، باخت، برد، و یه ر
   insert.run(key, '2026-01-04', 1, 'x', 'correct') // برد
   insert.run(key, '2026-01-05', 1, 'x', 'incorrect') // نیمه‌کاره: حساب نمی‌شه
 
-  assert.deepEqual(getPlayerStats(key), { played: 4, wins: 3, currentStreak: 1, maxStreak: 2 })
+  // امتیازها: ۱۰۰۰۰ + ۹۰۰۰ + ۰ + ۱۰۰۰۰ = ۲۹۰۰۰، میانگین ۷۲۵۰
+  assert.deepEqual(getPlayerStats(key), {
+    played: 4, wins: 3, currentStreak: 1, maxStreak: 2, totalScore: 29000, bestScore: 10000, averageScore: 7250,
+  })
 })

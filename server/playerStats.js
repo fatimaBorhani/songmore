@@ -1,31 +1,38 @@
 // آمار بازیکن از روی حدس‌های ذخیره‌شده (همون قانون‌های آمار مرورگر: client/src/stats.js)
 import { db } from './db.js'
+import { computeScore } from './scoring.js'
 
-const MAX_GUESSES = 5
-
-export function getPlayerStats(playerKey) {
-  // برای هر روز: چند تا حدس زده و درست زده یا نه
-  const days = db
+// همه‌ی حدس‌های یه بازیکن، روز به روز: { '2026-11-04': [حدس‌ها به ترتیب], ... }
+function guessesByDay(playerKey) {
+  const rows = db
     .prepare(
-      `SELECT date,
-              COUNT(*) AS guess_count,
-              MAX(result = 'correct') AS won
-       FROM guesses WHERE session_id = ?
-       GROUP BY date ORDER BY date`
+      'SELECT date, guess_number, result FROM guesses WHERE session_id = ? ORDER BY date, guess_number'
     )
     .all(playerKey)
+  const days = new Map()
+  for (const row of rows) {
+    if (!days.has(row.date)) days.set(row.date, [])
+    days.get(row.date).push(row)
+  }
+  return days
+}
 
+export function getPlayerStats(playerKey) {
   let played = 0
   let wins = 0
   let currentStreak = 0
   let maxStreak = 0
+  let totalScore = 0
+  let bestScore = 0
 
-  for (const day of days) {
-    const finished = day.won === 1 || day.guess_count >= MAX_GUESSES
-    if (!finished) continue // بازی نیمه‌تموم (مثلاً امروز) هنوز حساب نمی‌شه
+  for (const guesses of guessesByDay(playerKey).values()) {
+    const score = computeScore(guesses)
+    if (score === null) continue // بازی نیمه‌تموم (مثلاً امروز) هنوز حساب نمی‌شه
 
     played += 1
-    if (day.won === 1) {
+    totalScore += score
+    bestScore = Math.max(bestScore, score)
+    if (guesses.some((g) => g.result === 'correct')) {
       wins += 1
       currentStreak += 1
       maxStreak = Math.max(maxStreak, currentStreak)
@@ -34,5 +41,13 @@ export function getPlayerStats(playerKey) {
     }
   }
 
-  return { played, wins, currentStreak, maxStreak }
+  return {
+    played,
+    wins,
+    currentStreak,
+    maxStreak,
+    totalScore,
+    bestScore,
+    averageScore: played > 0 ? Math.round(totalScore / played) : 0,
+  }
 }

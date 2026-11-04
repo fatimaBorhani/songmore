@@ -51,6 +51,7 @@ db.exec(`
     guess_number INTEGER NOT NULL,
     guess_text TEXT NOT NULL,
     result TEXT NOT NULL CHECK (result IN ('correct', 'present', 'incorrect', 'skipped')),
+    created_at INTEGER,
     PRIMARY KEY (session_id, date, guess_number)
   );
 
@@ -70,3 +71,10 @@ db.exec(`
     expires_at INTEGER NOT NULL
   );
 `)
+
+// ارتقای دیتابیس‌های قدیمی: اگه جدول guesses از قبل بوده و ستون created_at نداره، اضافه‌ش کن
+// (CREATE TABLE IF NOT EXISTS به جدولی که از قبل هست ستون اضافه نمی‌کنه)
+const guessColumns = db.prepare('PRAGMA table_info(guesses)').all().map((c) => c.name)
+if (!guessColumns.includes('created_at')) {
+  db.exec('ALTER TABLE guesses ADD COLUMN created_at INTEGER')
+}

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { clipUrl } from '../api.js'
 import { getPlaybackPosition, playClip, stopClip } from '../audioPlayer.js'
-import { faNumber, faSeconds } from '../stages.js'
+import { faNumber, faSeconds } from '../../../shared/format.js'
 
 const BAR_COUNT = 48
 const MAX_SECONDS = 15

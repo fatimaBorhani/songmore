@@ -1,4 +1,4 @@
-import { faNumber } from '../stages.js'
+import { faNumber } from '../format.js'
 
 // خلاصه‌ی آمار بازیکن: ردیف اول بازی‌ها و رکوردها، ردیف دوم امتیازها
 function StatsPanel({ stats }) {

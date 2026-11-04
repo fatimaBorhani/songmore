@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { STAGES, faNumber, faSeconds } from '../stages.js'
-import AnimatedNumber from './AnimatedNumber.jsx'
+import { STAGES } from '../stages.js'
+import { faNumber, faSeconds } from '../../../shared/format.js'
+import AnimatedNumber from '../../../shared/components/AnimatedNumber.jsx'
 
 const RESULT_EMOJI = { correct: '🟩', present: '🟨', incorrect: '🟥', skipped: '⬜' }
 

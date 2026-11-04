@@ -1,26 +1,28 @@
 import { useEffect, useRef, useState } from 'react'
-import { fetchMyStats, getGame, getMe, sendGuess, sendSkip } from './api.js'
+import { fetchMyStats, getGame, getTodayLeaderboard, sendGuess, sendSkip } from './api.js'
 import { getStats, recordResult } from './stats.js'
-import { STAGES, faNumber, faSeconds } from './stages.js'
+import { STAGES } from './stages.js'
+import { faNumber, faSeconds } from '../../shared/format.js'
 import WavePlayer from './components/WavePlayer.jsx'
 import SearchBox from './components/SearchBox.jsx'
 import GuessHistory from './components/GuessHistory.jsx'
 import GameOver from './components/GameOver.jsx'
-import AnimatedNumber from './components/AnimatedNumber.jsx'
-import Leaderboard from './components/Leaderboard.jsx'
-import StatsPanel from './components/StatsPanel.jsx'
+import AnimatedNumber from '../../shared/components/AnimatedNumber.jsx'
+import Leaderboard from '../../shared/components/Leaderboard.jsx'
+import StatsPanel from '../../shared/components/StatsPanel.jsx'
 import { playWinSound } from './audioPlayer.js'
-import AuthPanel from './components/AuthPanel.jsx'
-import './App.css'
+import { SITE_NAME } from '../../shared/site.js'
+import './song.css'
 
-function App() {
+// صفحه‌ی بازی حدس آهنگ (آدرس /song)
+// user: کاربر واردشده یا null (از App میاد، چون ورود بین همه‌ی بازی‌ها مشترکه)
+function SongGame({ user }) {
   const [game, setGame] = useState(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const [stats, setStats] = useState(getStats) // آمار مهمان (توی همین مرورگر)
   const [myStats, setMyStats] = useState(null) // آمار کاربر واردشده (از سرور)
   const [testMode, setTestMode] = useState(false)
-  const [user, setUser] = useState(null) // کاربر واردشده، یا null
   const [celebrating, setCelebrating] = useState(false) // جشن حدس درست در حال نمایشه؟
   const celebrateTimer = useRef(null)
 
@@ -51,15 +53,14 @@ function App() {
 
   useEffect(loadGame, [])
 
+  useEffect(() => {
+    document.title = `حدس آهنگ · ${SITE_NAME}`
+  }, [])
+
   // اگه صفحه بسته شد، تایمر جشن نمونه
   useEffect(() => () => clearTimeout(celebrateTimer.current), [])
 
   // اول کار ببین کاربر قبلاً وارد شده یا نه (کوکی ورود)
-  useEffect(() => {
-    getMe()
-      .then(setUser)
-      .catch(() => {}) // اگه سرور در دسترس نبود، loadGame خودش خطا رو نشون می‌ده
-  }, [])
 
   // وقتی بازی تموم می‌شه آمار رو آپدیت کن:
   // کاربر واردشده -> از سرور بگیر؛ مهمان -> توی مرورگر ثبت کن (فقط یه بار برای هر روز)
@@ -77,11 +78,15 @@ function App() {
 
   // بعد از ورود یا خروج، بازی امروز رو دوباره بگیر:
   // با ورود بازی حساب میاد (که بازی مهمان این مرورگر هم بهش منتقل شده)، با خروج بازی مهمان
-  function handleUserChange(newUser) {
-    setUser(newUser)
+  const userId = user ? user.id : null
+  const lastUserId = useRef(userId)
+  useEffect(() => {
+    if (lastUserId.current === userId) return // اولین بار یا بدون تغییر
+    lastUserId.current = userId
     setMyStats(null)
     loadGame()
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId])
 
   async function handleGuess(song) {
     if (busy) return
@@ -148,8 +153,6 @@ function App() {
 
   return (
     <main className="game-page">
-      <AuthPanel user={user} onUserChange={handleUserChange} />
-
       <header className="game-header">
         <h1>بازی حدس آهنگ</h1>
         <p className="guesses-left">
@@ -201,11 +204,15 @@ function App() {
             onNext={testMode ? loadGame : undefined}
           />
           {(user ? myStats : stats) && <StatsPanel stats={user ? myStats : stats} />}
-          <Leaderboard user={user} refreshKey={`${user ? user.id : 'guest'}-${game.date}-${game.score}`} />
+          <Leaderboard
+            user={user}
+            load={getTodayLeaderboard}
+            refreshKey={`${user ? user.id : 'guest'}-${game.date}-${game.score}`}
+          />
         </>
       )}
     </main>
   )
 }
 
-export default App
+export default SongGame

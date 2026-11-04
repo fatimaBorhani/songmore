@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { faNumber } from '../stages.js'
+import { faNumber } from '../format.js'
 
 // عددی که وقتی عوض می‌شه، نرم از مقدار قبلی به مقدار جدید می‌شمره (با رقم فارسی)
 // from: اولین بار از کجا شروع کنه (مثلاً 0 برای شمردن امتیاز آخر بازی)

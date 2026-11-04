@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
-import { getTodayLeaderboard } from '../api.js'
-import { faNumber } from '../stages.js'
+import { faNumber } from '../format.js'
 
-// جدول امتیاز امروز (۲۰ نفر اول + رتبه‌ی خودت اگه بیرون از ۲۰ نفری)
+// جدول امتیاز امروز (۲۰ نفر اول + رتبه‌ی خودت اگه بیرون از ۲۰ نفری)؛ مشترک بین بازی‌ها
+// load: تابعی که جدول همون بازی رو از سرور می‌گیره (مثلاً getTodayLeaderboard بازی آهنگ)
 // refreshKey: هر وقت عوض بشه (ورود/خروج، تموم شدن بازی) جدول دوباره گرفته می‌شه
-function Leaderboard({ user, refreshKey }) {
+function Leaderboard({ user, load, refreshKey }) {
   const [board, setBoard] = useState(null)
 
   useEffect(() => {
     let cancelled = false
-    getTodayLeaderboard()
+    load()
       .then((data) => {
         if (!cancelled) setBoard(data)
       })
@@ -17,7 +17,7 @@ function Leaderboard({ user, refreshKey }) {
     return () => {
       cancelled = true
     }
-  }, [refreshKey])
+  }, [load, refreshKey])
 
   if (!board) return null
 

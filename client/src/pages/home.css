@@ -1,0 +1,135 @@
+/* صفحه‌ی اول: انتخاب بازی */
+.home-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 16px 64px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.home-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: center;
+}
+
+.home-header h1 {
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.home-header p {
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.game-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.game-card {
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 22px;
+  border-radius: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+a.game-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+a.game-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.game-card-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 6px;
+  border-radius: 14px;
+  background: #14143a;
+  color: #b4b4ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-card-title {
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.game-card-desc {
+  font-size: 14px;
+  color: var(--text-soft);
+  line-height: 1.7;
+}
+
+.game-card-cta {
+  margin-top: auto;
+  padding-top: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #b4b4ff;
+}
+
+/* بازی‌ای که هنوز آماده نیست */
+.game-card.soon {
+  opacity: 0.6;
+}
+
+.game-card.soon .game-card-icon {
+  background: var(--surface);
+  color: var(--text-muted);
+}
+
+.game-card-badge {
+  margin-top: auto;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+/* صفحه‌ی «پیدا نشد» */
+.not-found {
+  align-items: center;
+  text-align: center;
+}
+
+.not-found h1 {
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.not-found p {
+  color: var(--text-muted);
+}
+
+.not-found .ghost-button {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}

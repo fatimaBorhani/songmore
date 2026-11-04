@@ -1,10 +1,11 @@
-// ارتباط با سرور بازی
+// ارتباط با سرور (بخش مشترک بین همه‌ی بازی‌ها)
 // هاست رو از آدرس خود صفحه می‌گیریم (نه همیشه localhost ثابت)، چون کوکی نشست
 // بین هاست‌های متفاوت (مثلاً 127.0.0.1 در مقابل localhost) رد و بدل نمی‌شه
 // و بازی هی از نو شروع می‌شد. اینجوری چه از localhost باز کنی چه از IP روی وای‌فای کار می‌کنه.
-const API_URL = `http://${window.location.hostname}:3001`
+export const API_URL = `http://${window.location.hostname}:3001`
 
-async function call(path, options) {
+// همه‌ی درخواست‌ها از اینجا رد می‌شن؛ اگه سرور خطا داد، کد خطا رو به شکل Error پرت می‌کنه
+export async function call(path, options) {
   const res = await fetch(`${API_URL}${path}`, { credentials: 'include', ...options })
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
@@ -13,39 +14,15 @@ async function call(path, options) {
   return res.json()
 }
 
-export function getGame() {
-  return call('/api/game')
-}
-
-export function searchSongs(query) {
-  return call(`/api/search?q=${encodeURIComponent(query)}`)
-}
-
-export function sendGuess(songId, label) {
-  return call('/api/guess', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ songId, label }),
-  })
-}
-
-export function sendSkip() {
-  return call('/api/skip', { method: 'POST' })
-}
-
-export function clipUrl(fileName) {
-  return `${API_URL}/clips/${fileName}`
-}
-
-// ---------- احراز هویت ----------
-
-function postJson(path, body) {
+export function postJson(path, body) {
   return call(path, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body ?? {}),
   })
 }
+
+// ---------- احراز هویت ----------
 
 // کاربر واردشده رو برمی‌گردونه، یا null
 export async function getMe() {
@@ -65,15 +42,4 @@ export async function login(username, password) {
 
 export function logout() {
   return postJson('/api/auth/logout')
-}
-
-// آمار کاربر واردشده از سرور (روی همه‌ی دستگاه‌ها یکیه)
-export async function fetchMyStats() {
-  const data = await call('/api/stats')
-  return data.stats
-}
-
-// جدول امتیاز امروز
-export function getTodayLeaderboard() {
-  return call('/api/leaderboard/today')
 }

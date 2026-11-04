@@ -13,7 +13,7 @@ function buildShareText(guesses) {
 
 // پیام پایان بازی: جواب، چند ثانیه طول کشید، و دکمه‌های کپی نتیجه و آهنگ بعدی.
 // onNext فقط توی حالت تست داده می‌شه؛ اگه نباشه دکمه‌ی «آهنگ بعدی» نمیاد.
-function GameOver({ answer, guesses, onNext, busy }) {
+function GameOver({ answer, guesses, onNext, busy, celebrating }) {
   const correctGuess = guesses.find((g) => g.result === 'correct')
   const [copied, setCopied] = useState(false)
 
@@ -40,7 +40,7 @@ function GameOver({ answer, guesses, onNext, busy }) {
 
   return (
     <section className="game-over">
-      <h2>{correctGuess ? 'بردی!' : 'این دفعه نه'}</h2>
+      <h2 className={celebrating ? 'pop' : ''}>{correctGuess ? 'بردی!' : 'این دفعه نه'}</h2>
       <p className="answer">
         {answerText}
         {seconds !== null && ` · توی ${faSeconds(seconds)} ثانیه`}

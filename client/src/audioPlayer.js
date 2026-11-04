@@ -67,3 +67,31 @@ export function getPlaybackPosition() {
   if (!currentSource || !audioContext) return null
   return startOffset + (audioContext.currentTime - startedAt)
 }
+
+// صدای کوتاه پیروزی: چهار نت بالارونده (دو-می-سل-دو) که خود Web Audio می‌سازه؛ فایل صدا لازم نداره
+export async function playWinSound() {
+  try {
+    const ctx = getContext()
+    if (ctx.state === 'suspended') await ctx.resume()
+    const notes = [523.25, 659.25, 783.99, 1046.5] // فرکانس نت‌ها (هرتز)
+    const start = ctx.currentTime + 0.02
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.type = 'triangle'
+      osc.frequency.value = freq
+      const t = start + i * 0.09
+      const length = i === notes.length - 1 ? 0.5 : 0.18 // نت آخر کشیده‌تر
+      // صدا آروم شروع و آروم تموم بشه تا «تق» نزنه
+      gain.gain.setValueAtTime(0.0001, t)
+      gain.gain.exponentialRampToValueAtTime(0.18, t + 0.02)
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + length)
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.start(t)
+      osc.stop(t + length + 0.05)
+    })
+  } catch {
+    // اگه مرورگر صدا رو اجازه نداد، مهم نیست؛ جشن تصویری هنوز هست
+  }
+}

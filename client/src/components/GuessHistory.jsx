@@ -5,14 +5,18 @@ const RESULT_LABEL = {
 }
 
 // فقط حدس‌های واقعی رو نشون می‌ده؛ «رد کردن»ها فقط روی نوار پخش دیده می‌شن
-function GuessHistory({ guesses }) {
+// celebrating: وقتی تازه درست حدس زده، ردیف درست یه بار نبض می‌زنه
+function GuessHistory({ guesses, celebrating }) {
   const realGuesses = guesses.filter((g) => g.result !== 'skipped')
   if (realGuesses.length === 0) return null
 
   return (
     <ol className="guess-history" aria-label="حدس‌ها">
       {realGuesses.map((guess) => (
-        <li key={guess.guess_number} className={guess.result}>
+        <li
+          key={guess.guess_number}
+          className={`${guess.result} ${celebrating && guess.result === 'correct' ? 'celebrate' : ''}`}
+        >
           {guess.result === 'correct' ? (
             // حدس درست: تیک سفید توی دایره‌ی آبی
             <span className="guess-check" aria-hidden="true">

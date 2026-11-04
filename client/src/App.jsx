@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getGame, getMe, sendGuess, sendSkip } from './api.js'
 import { getStats, recordResult } from './stats.js'
 import { STAGES, faNumber, faSeconds } from './stages.js'
@@ -7,6 +7,7 @@ import SearchBox from './components/SearchBox.jsx'
 import GuessHistory from './components/GuessHistory.jsx'
 import GameOver from './components/GameOver.jsx'
 import StatsPanel from './components/StatsPanel.jsx'
+import { playWinSound } from './audioPlayer.js'
 import AuthPanel from './components/AuthPanel.jsx'
 import './App.css'
 
@@ -17,9 +18,26 @@ function App() {
   const [stats, setStats] = useState(getStats)
   const [testMode, setTestMode] = useState(false)
   const [user, setUser] = useState(null) // کاربر واردشده، یا null
+  const [celebrating, setCelebrating] = useState(false) // جشن حدس درست در حال نمایشه؟
+  const celebrateTimer = useRef(null)
+
+  // جشن حدس درست: موج می‌رقصه، ردیف درست نبض می‌زنه و صدای پیروزی پخش می‌شه.
+  // فقط همون لحظه‌ی حدس درست، نه با باز کردن یا رفرش صفحه.
+  function celebrate() {
+    clearTimeout(celebrateTimer.current)
+    setCelebrating(true)
+    playWinSound()
+    celebrateTimer.current = setTimeout(() => setCelebrating(false), 3000)
+  }
+
+  function stopCelebration() {
+    clearTimeout(celebrateTimer.current)
+    setCelebrating(false)
+  }
 
   function loadGame() {
     setError('')
+    stopCelebration()
     getGame()
       .then((data) => {
         setGame(data)
@@ -29,6 +47,9 @@ function App() {
   }
 
   useEffect(loadGame, [])
+
+  // اگه صفحه بسته شد، تایمر جشن نمونه
+  useEffect(() => () => clearTimeout(celebrateTimer.current), [])
 
   // اول کار ببین کاربر قبلاً وارد شده یا نه (کوکی ورود)
   useEffect(() => {
@@ -51,6 +72,7 @@ function App() {
     try {
       const updated = await sendGuess(song.id, `${song.title} - ${song.credit}`)
       setGame(updated)
+      if (updated.guesses.at(-1)?.result === 'correct') celebrate()
     } catch (e) {
       setError(e.message)
     } finally {
@@ -115,11 +137,12 @@ function App() {
         </p>
       </header>
 
-      <GuessHistory guesses={game.guesses} />
+      <GuessHistory guesses={game.guesses} celebrating={celebrating} />
 
       <WavePlayer
         key={`${unlocked}-${lastClip.file}`}
         clips={game.clips}
+        celebrating={celebrating}
         onError={() => setError('پخش صدا با مشکل مواجه شد.')}
       />
 
@@ -142,6 +165,7 @@ function App() {
           <GameOver
             answer={game.answer}
             guesses={game.guesses}
+            celebrating={celebrating}
             busy={busy}
             onNext={testMode ? loadGame : undefined}
           />

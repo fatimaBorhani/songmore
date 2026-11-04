@@ -35,7 +35,8 @@ function secondsAt(fraction) {
 // از مرحله‌ی دوم به بعد، با کشیدن روی موج می‌شه جای پخش رو عوض کرد:
 // موقع کشیدن فقط خط سفید جابه‌جا می‌شه، با ول کردن از همون‌جا تا آخر مرحله پخش می‌شه.
 // والد با key عوضش می‌کنه، پس با هر مرحله‌ی جدید از صفر شروع می‌شه.
-function WavePlayer({ clips, onError }) {
+// celebrating: وقتی تازه درست حدس زده، همه‌ی میله‌ها آبی می‌شن و مثل اکولایزر می‌رقصن
+function WavePlayer({ clips, onError, celebrating }) {
   const clip = clips[clips.length - 1]
   const limit = clip.stage
   const seekable = clips.length >= 2 // مرحله‌ی اول (۰٫۱۵ ثانیه) برای جابه‌جا کردن خیلی کوتاهه
@@ -195,7 +196,7 @@ function WavePlayer({ clips, onError }) {
 
         <div
           ref={waveRef}
-          className={`wave ${seekable ? 'seekable' : ''} ${dragging ? 'dragging' : ''}`}
+          className={`wave ${seekable ? 'seekable' : ''} ${dragging ? 'dragging' : ''} ${celebrating ? 'celebrating' : ''}`}
           dir="ltr"
           {...a11y}
           onPointerDown={handlePointerDown}
@@ -211,7 +212,14 @@ function WavePlayer({ clips, onError }) {
             let state = 'locked'
             if (pos > 0 && p <= playedUntil) state = 'played'
             else if (p <= openUntil) state = 'open'
-            return <span key={i} className={`wave-bar ${state}`} style={{ height }} />
+            // تأخیر کوچیک برای هر میله تا موقع جشن رقصشون موجی باشه
+            return (
+              <span
+                key={i}
+                className={`wave-bar ${state}`}
+                style={{ height, animationDelay: `${(i % 12) * 45}ms` }}
+              />
+            )
           })}
 
           {/* روی بخش قفل، شکل موس «ممنوع» می‌شه */}

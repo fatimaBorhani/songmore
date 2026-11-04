@@ -128,8 +128,12 @@ function App() {
 
       {game.finished && (
         <>
-          <GameOver answer={game.answer} guesses={game.guesses} />
-          {nextSongButton}
+          <GameOver
+            answer={game.answer}
+            guesses={game.guesses}
+            busy={busy}
+            onNext={testMode ? loadGame : undefined}
+          />
           <StatsPanel stats={stats} />
         </>
       )}

@@ -1,6 +1,6 @@
 const RESULT_LABEL = {
-  correct: 'درست',
-  present: 'خواننده مشترک',
+  correct: 'درسته',
+  present: 'خواننده درسته',
   incorrect: 'غلط',
 }
 
@@ -13,7 +13,16 @@ function GuessHistory({ guesses }) {
     <ol className="guess-history" aria-label="حدس‌ها">
       {realGuesses.map((guess) => (
         <li key={guess.guess_number} className={guess.result}>
-          <span className="guess-dot" aria-hidden="true" />
+          {guess.result === 'correct' ? (
+            // حدس درست: تیک سفید توی دایره‌ی آبی
+            <span className="guess-check" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12.5l4.5 4.5L19 7.5" />
+              </svg>
+            </span>
+          ) : (
+            <span className="guess-dot" aria-hidden="true" />
+          )}
           <span className="guess-text">{guess.guess_text}</span>
           <span className="guess-label">{RESULT_LABEL[guess.result]}</span>
         </li>

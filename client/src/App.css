@@ -51,31 +51,20 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  min-height: 44px;
-  padding: 8px 14px;
+  min-height: 46px;
+  padding: 8px 16px;
   box-sizing: border-box;
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--surface);
   animation: fade-in 0.25s ease;
 }
 
 .guess-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   flex-shrink: 0;
+  box-sizing: border-box;
   border-radius: 50%;
-}
-
-.correct .guess-dot {
-  background: var(--accent);
-}
-
-.present .guess-dot {
-  background: var(--present);
-}
-
-.incorrect .guess-dot {
-  background: var(--incorrect);
 }
 
 .guess-text {
@@ -86,7 +75,61 @@
 
 .guess-label {
   font-size: 12px;
-  color: var(--text-muted);
+}
+
+/* غلط: کم‌رنگ و خاکستری */
+.guess-history li.incorrect {
+  background: #111113;
+  color: #71717a;
+}
+
+.incorrect .guess-dot {
+  background: #3f3f46;
+}
+
+/* خواننده درسته: معمولی، با دایره‌ی توخالی */
+.guess-history li.present {
+  color: #e4e4e7;
+}
+
+.present .guess-dot {
+  border: 2px solid var(--text-soft);
+}
+
+.present .guess-label {
+  color: var(--text-soft);
+}
+
+/* درست: پس‌زمینه‌ی آبی تیره، حاشیه‌ی آبی و هاله‌ی ملایم */
+.guess-history li.correct {
+  min-height: 50px;
+  background: #14143a;
+  box-shadow:
+    inset 0 0 0 1px var(--accent),
+    0 0 24px rgba(48, 48, 230, 0.25);
+  color: #fff;
+}
+
+.correct .guess-text {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.correct .guess-label {
+  font-weight: 700;
+  color: #b4b4ff;
+}
+
+.guess-check {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* کارت پخش و موج صدا */
@@ -283,31 +326,53 @@ button:disabled {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   text-align: center;
   animation: fade-in 0.3s ease;
 }
 
 .game-over h2 {
-  font-size: 20px;
+  font-size: 30px;
   font-weight: 900;
 }
 
 .game-over .answer {
-  font-size: 15px;
-  color: var(--present);
+  font-size: 14px;
+  color: var(--text-soft);
 }
 
-.game-over button {
-  height: 48px;
-  padding: 0 24px;
+.game-over-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.game-over-actions button {
+  height: 46px;
+  padding: 0 22px;
   border-radius: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.game-over-actions .primary {
   border: none;
   background: var(--accent);
   color: #fff;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
+}
+
+.game-over-actions .secondary {
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.game-over-actions .secondary:hover:not(:disabled) {
+  background: var(--surface);
 }
 
 /* آمار بازیکن */

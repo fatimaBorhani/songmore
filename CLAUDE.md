@@ -51,6 +51,7 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
 - یه تست تنها: `cd server && node --test test/guessLogic.test.js` (یا با `--test-name-pattern="..."`)
 - پر کردن دیتابیس: `node server/seed.js` (از songs.json + artists.json + clip_map.json؛ فقط آهنگ‌هایی که توی clip_map کلیپ دارن وارد بازی می‌شن)
 - ساخت کلیپ: `python3 tools/make_clips.py` (به ffmpeg نیاز داره؛ فقط آهنگ‌های جدید رو به clip_map.json اضافه می‌کنه)
+- خوندن ژانر و سال از تگ mp3ها: `python3 tools/read_song_tags.py` (با ffprobe؛ فقط می‌خونه و خروجی‌ش `tools/song_tags.csv` برای بررسی دستیه)
 - کلاینت (پوشه‌ی `client/`): `npm run dev` (پورت 5173 روی 127.0.0.1)، `npm run build`، `npm run lint` (oxlint)
 - متغیرهای محیطی سرور: `PORT`، `CLIPS_DIR`، `DB_PATH` (پیش‌فرض `server/game.db`؛ تست‌ها `:memory:` می‌ذارن)
 

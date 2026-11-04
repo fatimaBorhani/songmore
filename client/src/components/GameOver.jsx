@@ -28,8 +28,15 @@ function GameOver({ answer, guesses, onNext, busy }) {
   }
 
   const answerText = `${answer.title}${answer.altTitle ? ` (${answer.altTitle})` : ''} — ${answer.credit}`
-  // اگه برده، کنار جواب بنویس توی چند ثانیه پیداش کرد (همون مرحله‌ای که حدس درست زده شد)
-  const seconds = correctGuess ? STAGES[correctGuess.guess_number - 1] : null
+  // اگه برده، کنار جواب بنویس توی چند ثانیه پیداش کرد.
+  // فقط «رد کردن» مرحله رو جلو می‌بره، پس مرحله = تعداد رد کردن‌های قبل از حدس درست
+  let seconds = null
+  if (correctGuess) {
+    const skipsBefore = guesses.filter(
+      (g) => g.result === 'skipped' && g.guess_number < correctGuess.guess_number,
+    ).length
+    seconds = STAGES[skipsBefore]
+  }
 
   return (
     <section className="game-over">

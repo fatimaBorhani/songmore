@@ -29,7 +29,9 @@ export function addGuess(sessionId, date, guessText, result) {
 export function getGameState(sessionId, date, dailySongId) {
   const guesses = getGuesses(sessionId, date)
   const finished = guesses.length >= MAX_GUESSES || guesses.some((g) => g.result === 'correct')
-  const unlockedCount = finished ? STAGES.length : Math.min(guesses.length + 1, STAGES.length)
+  // فقط «رد کردن» مرحله‌ی بعد رو باز می‌کنه؛ حدس غلط زمان کلیپ رو زیاد نمی‌کنه
+  const skips = guesses.filter((g) => g.result === 'skipped').length
+  const unlockedCount = finished ? STAGES.length : Math.min(skips + 1, STAGES.length)
 
   const clipRows = db.prepare('SELECT stage, file_name FROM clips WHERE song_id = ?').all(dailySongId)
   const clipByStage = Object.fromEntries(clipRows.map((r) => [r.stage, r.file_name]))

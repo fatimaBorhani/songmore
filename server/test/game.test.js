@@ -97,9 +97,13 @@ test('روند کامل یه بازی: present بعد incorrect بعد رد کر
   state = await res.json()
   assert.equal(state.guesses.at(-1).result, 'incorrect')
   assert.equal('answer' in state, false)
+  assert.equal(state.clips.length, 1) // حدس غلط مرحله‌ی بعد رو باز نمی‌کنه
 
-  // حدس ۳ تا ۵: رد کردن
-  for (let i = 0; i < 3; i++) {
+  // حدس ۳ تا ۵: رد کردن؛ هر رد کردن یه مرحله باز می‌کنه
+  res = await fetch(`${baseUrl}/api/skip`, { method: 'POST', headers })
+  state = await res.json()
+  assert.equal(state.clips.length, 2)
+  for (let i = 0; i < 2; i++) {
     res = await fetch(`${baseUrl}/api/skip`, { method: 'POST', headers })
     state = await res.json()
   }

@@ -66,3 +66,9 @@ export async function login(username, password) {
 export function logout() {
   return postJson('/api/auth/logout')
 }
+
+// آمار کاربر واردشده از سرور (روی همه‌ی دستگاه‌ها یکیه)
+export async function fetchMyStats() {
+  const data = await call('/api/stats')
+  return data.stats
+}

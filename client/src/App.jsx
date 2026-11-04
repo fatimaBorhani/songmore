@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { getGame, getMe, sendGuess, sendSkip } from './api.js'
+import { fetchMyStats, getGame, getMe, sendGuess, sendSkip } from './api.js'
 import { getStats, recordResult } from './stats.js'
 import { STAGES, faNumber, faSeconds } from './stages.js'
 import WavePlayer from './components/WavePlayer.jsx'
@@ -15,7 +15,8 @@ function App() {
   const [game, setGame] = useState(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
-  const [stats, setStats] = useState(getStats)
+  const [stats, setStats] = useState(getStats) // آمار مهمان (توی همین مرورگر)
+  const [myStats, setMyStats] = useState(null) // آمار کاربر واردشده (از سرور)
   const [testMode, setTestMode] = useState(false)
   const [user, setUser] = useState(null) // کاربر واردشده، یا null
   const [celebrating, setCelebrating] = useState(false) // جشن حدس درست در حال نمایشه؟
@@ -58,12 +59,27 @@ function App() {
       .catch(() => {}) // اگه سرور در دسترس نبود، loadGame خودش خطا رو نشون می‌ده
   }, [])
 
-  // فقط یه بار برای هر روز، وقتی بازی تموم می‌شه، آمار رو آپدیت کن
+  // وقتی بازی تموم می‌شه آمار رو آپدیت کن:
+  // کاربر واردشده -> از سرور بگیر؛ مهمان -> توی مرورگر ثبت کن (فقط یه بار برای هر روز)
   useEffect(() => {
     if (!game?.finished) return
+    if (user) {
+      fetchMyStats()
+        .then(setMyStats)
+        .catch(() => {})
+      return
+    }
     const won = game.guesses.some((g) => g.result === 'correct')
     setStats(recordResult(game.date, won))
-  }, [game])
+  }, [game, user])
+
+  // بعد از ورود یا خروج، بازی امروز رو دوباره بگیر:
+  // با ورود بازی حساب میاد (که بازی مهمان این مرورگر هم بهش منتقل شده)، با خروج بازی مهمان
+  function handleUserChange(newUser) {
+    setUser(newUser)
+    setMyStats(null)
+    loadGame()
+  }
 
   async function handleGuess(song) {
     if (busy) return
@@ -128,7 +144,7 @@ function App() {
 
   return (
     <main className="game-page">
-      <AuthPanel user={user} onUserChange={setUser} />
+      <AuthPanel user={user} onUserChange={handleUserChange} />
 
       <header className="game-header">
         <h1>بازی حدس آهنگ</h1>
@@ -169,7 +185,7 @@ function App() {
             busy={busy}
             onNext={testMode ? loadGame : undefined}
           />
-          <StatsPanel stats={stats} />
+          {(user ? myStats : stats) && <StatsPanel stats={user ? myStats : stats} />}
         </>
       )}
     </main>

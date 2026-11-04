@@ -15,6 +15,7 @@ import {
   recordFailedLogin,
   setAuthCookie,
 } from './auth.js'
+import { claimGuestGames } from './player.js'
 
 export const authRouter = express.Router()
 
@@ -42,6 +43,8 @@ authRouter.post(
       throw e
     }
 
+    // بازی‌هایی که توی همین مرورگر به عنوان مهمان کرده، مال حساب جدیدش بشن
+    claimGuestGames(req.sessionId, user.id)
     setAuthCookie(res, createAuthSession(user.id))
     res.status(201).json({ user })
   })
@@ -68,6 +71,7 @@ authRouter.post(
     }
 
     clearFailedLogins(ip)
+    claimGuestGames(req.sessionId, user.id)
     // اگه از قبل وارد بود، نشست قبلی رو پاک کن و یه توکن تازه بده
     deleteAuthSession(getAuthToken(req))
     setAuthCookie(res, createAuthSession(user.id))

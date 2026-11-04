@@ -9,6 +9,8 @@ import { buildSongArtistsMap, evaluateGuess } from './guessLogic.js'
 import { addGuess, getGameState } from './guesses.js'
 import { getOrCreateSessionId } from './session.js'
 import { authRouter } from './authRoutes.js'
+import { attachPlayer } from './player.js'
+import { getPlayerStats } from './playerStats.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..')
@@ -32,6 +34,8 @@ app.use((req, res, next) => {
   req.sessionId = getOrCreateSessionId(req, res)
   next()
 })
+// req.user و req.playerKey: اگه وارد شده بازی‌ها مال حسابشه، وگرنه مال همین مرورگر
+app.use(attachPlayer)
 
 app.use('/clips', express.static(CLIPS_DIR))
 app.use('/api/auth', authRouter)
@@ -45,13 +49,19 @@ app.get('/api/game', (req, res) => {
   let songId
   if (RANDOM_SONG_MODE) {
     // حدس‌های قبلی این بازیکن رو پاک کن و آهنگ جدید بیار
-    db.prepare('DELETE FROM guesses WHERE session_id = ? AND date = ?').run(req.sessionId, date)
+    db.prepare('DELETE FROM guesses WHERE session_id = ? AND date = ?').run(req.playerKey, date)
     songId = pickNewRandomSong(date)
   } else {
     songId = pickDailySong(date)
   }
   // testMode به کلاینت می‌گه دکمه‌ی «آهنگ بعدی» رو نشون بده
-  res.json({ ...getGameState(req.sessionId, date, songId), testMode: RANDOM_SONG_MODE })
+  res.json({ ...getGameState(req.playerKey, date, songId), testMode: RANDOM_SONG_MODE })
+})
+
+// آمار بازیکن واردشده (روی همه‌ی دستگاه‌هاش یکیه). مهمان‌ها آمار رو توی مرورگر نگه می‌دارن.
+app.get('/api/stats', (req, res) => {
+  if (!req.user) return res.status(401).json({ error: 'NOT_LOGGED_IN' })
+  res.json({ stats: getPlayerStats(req.playerKey) })
 })
 
 app.get('/api/search', (req, res) => {
@@ -61,7 +71,7 @@ app.get('/api/search', (req, res) => {
 app.post('/api/guess', (req, res) => {
   const date = getTodayDateString()
   const songId = pickDailySong(date)
-  const stateBefore = getGameState(req.sessionId, date, songId)
+  const stateBefore = getGameState(req.playerKey, date, songId)
   if (stateBefore.finished) {
     return res.status(400).json({ error: 'GAME_OVER' })
   }
@@ -74,21 +84,21 @@ app.post('/api/guess', (req, res) => {
 
   const artistsMap = buildSongArtistsMap()
   const result = evaluateGuess(guessSongId, songId, artistsMap)
-  addGuess(req.sessionId, date, label || guessSong.id, result)
+  addGuess(req.playerKey, date, label || guessSong.id, result)
 
-  res.json(getGameState(req.sessionId, date, songId))
+  res.json(getGameState(req.playerKey, date, songId))
 })
 
 app.post('/api/skip', (req, res) => {
   const date = getTodayDateString()
   const songId = pickDailySong(date)
-  const stateBefore = getGameState(req.sessionId, date, songId)
+  const stateBefore = getGameState(req.playerKey, date, songId)
   if (stateBefore.finished) {
     return res.status(400).json({ error: 'GAME_OVER' })
   }
 
-  addGuess(req.sessionId, date, '(رد شد)', 'skipped')
-  res.json(getGameState(req.sessionId, date, songId))
+  addGuess(req.playerKey, date, '(رد شد)', 'skipped')
+  res.json(getGameState(req.playerKey, date, songId))
 })
 
 if (process.env.NODE_ENV !== 'test') {

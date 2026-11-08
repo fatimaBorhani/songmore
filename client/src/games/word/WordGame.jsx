@@ -297,9 +297,9 @@ function WordGame({ user }) {
         <WordResult game={game} onShare={handleShare} testMode={game.testMode} onReplay={loadGame} />
       ) : isDesktop ? (
         <>
-          <Keyboard mode="map" statuses={statuses} />
+          <Keyboard mode="map" statuses={statuses} onLetter={addLetter} onEnter={submit} onDelete={removeLetter} />
           <p className="word-hint">
-            با کیبورد تایپ کن
+            با کیبورد تایپ کن (یا روی کلیدها کلیک کن)
             <span aria-hidden="true">·</span>
             <kbd>Enter</kbd> ثبت
             <span aria-hidden="true">·</span>

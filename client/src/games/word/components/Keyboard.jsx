@@ -1,6 +1,6 @@
 // کیبورد فارسی با رنگ حرف‌ها
 //   mode="touch": دکمه‌های بزرگ برای گوشی و تبلت (با لمس تایپ می‌شه)
-//   mode="map":   نقشه‌ی کوچیک برای کامپیوتر؛ فقط نشون می‌ده، تایپ با کیبورد خود کامپیوتره
+//   mode="map":   کیبورد کوچیک برای کامپیوتر؛ تایپ اصلی با کیبورد خود کامپیوتره ولی کلیک هم کار می‌کنه
 // چیدمان از چپ به راسته، مثل کیبورد واقعی: «پاک کردن» سمت چپ، «ثبت» سمت راست
 import { KEY_ROWS } from '../letters.js'
 
@@ -15,17 +15,32 @@ function BackspaceIcon() {
 
 function Keyboard({ mode, statuses, onLetter, onEnter, onDelete }) {
   if (mode === 'map') {
+    // کامپیوتر: تایپ اصلی با کیبورد فیزیکیه، ولی با کلیک هم کار می‌کنه (tabIndex=-1 تا Tab بین ۳۴ کلید نچرخه)
     return (
-      <div className="word-keyboard map" dir="ltr" aria-hidden="true">
+      <div className="word-keyboard map" dir="ltr" role="group" aria-label="کیبورد روی صفحه">
         {KEY_ROWS.map((row, r) => (
           <div key={r} className="kb-row">
-            {r === 2 && <span className="kb-key wide">Backspace</span>}
+            {r === 2 && (
+              <button type="button" tabIndex={-1} className="kb-key wide" aria-label="پاک کردن" onClick={onDelete}>
+                Backspace
+              </button>
+            )}
             {row.map((letter) => (
-              <span key={letter} className={`kb-key ${statuses[letter] || ''}`}>
+              <button
+                key={letter}
+                type="button"
+                tabIndex={-1}
+                className={`kb-key ${statuses[letter] || ''}`}
+                onClick={() => onLetter(letter)}
+              >
                 {letter}
-              </span>
+              </button>
             ))}
-            {r === 2 && <span className="kb-key wide">Enter</span>}
+            {r === 2 && (
+              <button type="button" tabIndex={-1} className="kb-key wide" aria-label="ثبت" onClick={onEnter}>
+                Enter
+              </button>
+            )}
           </div>
         ))}
       </div>

@@ -341,7 +341,11 @@
   border-radius: 6px;
   background: var(--border);
   font-size: 14px;
-  cursor: default;
+  cursor: pointer;
+}
+
+.word-keyboard.map .kb-key:hover {
+  filter: brightness(1.25);
 }
 
 .word-keyboard.map .kb-key.wide {

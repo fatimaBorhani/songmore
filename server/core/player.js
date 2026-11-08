@@ -37,5 +37,13 @@ export function claimGuestGames(sessionId, userId) {
          AND date NOT IN (SELECT date FROM word_guesses WHERE player_key = ?)`
     )
     .run(userKey, sessionId, userKey)
-  return songInfo.changes + wordInfo.changes
+  // بازی حافظه‌ی رنگ
+  const colorInfo = db
+    .prepare(
+      `UPDATE color_guesses SET player_key = ?
+       WHERE player_key = ?
+         AND date NOT IN (SELECT date FROM color_guesses WHERE player_key = ?)`
+    )
+    .run(userKey, sessionId, userKey)
+  return songInfo.changes + wordInfo.changes + colorInfo.changes
 }

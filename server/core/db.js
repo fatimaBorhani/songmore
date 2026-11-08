@@ -93,6 +93,28 @@ db.exec(`
     PRIMARY KEY (game_id, guess_number)
   );
 
+  -- بازی حافظه‌ی رنگ: ۵ رنگ هر روز (برای همه یکی، تصادفی و موقع اولین درخواست ساخته می‌شه تا از قبل قابل حدس نباشه)
+  CREATE TABLE IF NOT EXISTS color_daily (
+    date TEXT NOT NULL,
+    round INTEGER NOT NULL,
+    h INTEGER NOT NULL,
+    s INTEGER NOT NULL,
+    b INTEGER NOT NULL,
+    PRIMARY KEY (date, round)
+  );
+
+  -- رنگی که بازیکن توی هر دور ساخته (HSB)؛ امتیاز ذخیره نمی‌شه و از روی رنگ‌ها حساب می‌شه
+  CREATE TABLE IF NOT EXISTS color_guesses (
+    player_key TEXT NOT NULL,
+    date TEXT NOT NULL,
+    round INTEGER NOT NULL,
+    h INTEGER NOT NULL,
+    s INTEGER NOT NULL,
+    b INTEGER NOT NULL,
+    created_at INTEGER NOT NULL,
+    PRIMARY KEY (player_key, date, round)
+  );
+
   -- حدس‌های بازی واژه‌یاب؛ رنگ حرف‌ها ذخیره نمی‌شه و هر بار از روی کلمه‌ی جواب حساب می‌شه
   CREATE TABLE IF NOT EXISTS word_guesses (
     player_key TEXT NOT NULL,

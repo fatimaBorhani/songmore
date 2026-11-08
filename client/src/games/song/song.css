@@ -98,7 +98,7 @@
 
 .correct .guess-label {
   font-weight: 700;
-  color: #b4b4ff;
+  color: #fff;
 }
 
 .guess-check {
@@ -516,7 +516,7 @@
   font-size: 44px;
   font-weight: 900;
   line-height: 1.1;
-  color: #b4b4ff;
+  color: #fff;
 }
 
 .final-score.zero .final-score-value {

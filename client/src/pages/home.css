@@ -69,7 +69,7 @@ a.game-card:focus-visible {
   margin-bottom: 6px;
   border-radius: 14px;
   background: #14143a;
-  color: #b4b4ff;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -91,7 +91,7 @@ a.game-card:focus-visible {
   padding-top: 10px;
   font-size: 14px;
   font-weight: 700;
-  color: #b4b4ff;
+  color: #fff;
 }
 
 /* بازی‌ای که هنوز آماده نیست */

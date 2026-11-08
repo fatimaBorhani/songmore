@@ -3,7 +3,7 @@ import { db } from '../../core/db.js'
 import { computeScore } from './scoring.js'
 
 // همه‌ی حدس‌های یه بازیکن، روز به روز: { '2026-11-04': [حدس‌ها به ترتیب], ... }
-function guessesByDay(playerKey) {
+export function guessesByDay(playerKey) {
   const rows = db
     .prepare(
       'SELECT date, guess_number, result FROM guesses WHERE session_id = ? ORDER BY date, guess_number'

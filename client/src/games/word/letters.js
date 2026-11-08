@@ -29,16 +29,27 @@ const SHIFT_CODE_TO_LETTER = { KeyH: 'آ', KeyC: 'ژ' }
 // شکل‌های عربی بعضی حروف (مثلاً از کیبوردهای قدیمی) -> فارسی
 const VARIANTS = { 'ي': 'ی', 'ى': 'ی', 'ك': 'ک', 'ة': 'ه', 'ۀ': 'ه', 'أ': 'ا', 'إ': 'ا', 'ؤ': 'و' }
 
+// کلیدهایی که خودشون حرف نیستن (Enter، Backspace، فلش‌ها، Shift و ...) و نباید «ناشناخته» حساب بشن
+function isCharacterKey(e) {
+  return e.key.length === 1 || e.key === 'Process' || e.key === 'Unidentified' || e.key === 'Dead'
+}
+
 // حرف فارسیِ یه کلید، یا null اگه حرف نبود
 export function letterFromKeyEvent(e) {
   const key = VARIANTS[e.key] ?? e.key
-  if (LETTERS.has(key)) return key // زبان سیستم فارسیه
-  // زبان سیستم انگلیسیه (کلید یه حرف یا علامت لاتین داده)
-  if (/^[\x21-\x7e]$/.test(e.key)) {
+  if (LETTERS.has(key)) return key // زبان سیستم فارسیه و کلید خودش حرف فارسی داده
+  // هر کلید حرفی دیگه (کیبورد انگلیسی، کیبورد IME که Process می‌ده، حرف عربی یا هر چیز غیرمنتظره):
+  // از جای کلید روی کیبورد حرف فارسیِ همون جا رو پیدا می‌کنیم
+  if (isCharacterKey(e)) {
     if (e.shiftKey && SHIFT_CODE_TO_LETTER[e.code]) return SHIFT_CODE_TO_LETTER[e.code]
     return CODE_TO_LETTER[e.code] ?? null
   }
   return null
+}
+
+// کلیدی که حرف بوده ولی حرف فارسی ازش در نمیاد (مثلاً عدد یا علامت)؛ برای پیام «این کلید رو نمی‌شناسم»
+export function isUnknownCharacterKey(e) {
+  return isCharacterKey(e) && e.key !== 'Process' && e.key !== 'Unidentified' && e.key !== 'Dead' && e.key !== ' '
 }
 
 // بهترین رنگی که هر حرف تا الان گرفته (برای رنگ کیبورد): درست > جای غلط > نیست

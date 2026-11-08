@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { getWordGame, sendWordGuess } from './api.js'
-import { letterFromKeyEvent, letterStatuses, shareText, WORD_LENGTH } from './letters.js'
+import { isUnknownCharacterKey, letterFromKeyEvent, letterStatuses, shareText, WORD_LENGTH } from './letters.js'
 import { REVEAL_TOTAL_MS } from './timing.js'
 import Board from './components/Board.jsx'
 import Keyboard from './components/Keyboard.jsx'
@@ -162,7 +162,9 @@ function WordGame({ user }) {
         if (e.key === 'Escape') closeHelp()
         return
       }
-      if (e.ctrlKey || e.metaKey || e.altKey) return
+      // میانبرهای مرورگر (Ctrl+C، Alt+Tab و ...) کار خودشون رو بکنن. بعضی کیبوردها (AltGr) هم Ctrl و Alt رو
+      // با هم میزنن و حرف می‌دن؛ اونا باید کار کنن
+      if (e.metaKey || (e.ctrlKey && !e.altKey) || (e.altKey && !e.ctrlKey)) return
       const target = e.target instanceof Element ? e.target : null
       // وقتی داره توی فرم ورود یا هر جعبه‌ی متنی تایپ می‌کنه، کاری نداریم
       if (target?.closest('input, textarea, select, [contenteditable="true"]')) return
@@ -183,6 +185,9 @@ function WordGame({ user }) {
       if (letter) {
         e.preventDefault()
         addLetter(letter)
+      } else if (isUnknownCharacterKey(e) && !locked) {
+        // کلید حرفی بوده ولی حرف فارسی نیست (مثلاً عدد)؛ بی‌صدا نادیده نمی‌گیریم
+        showToast(`«${e.key}» حرف فارسی نیست`)
       }
     }
     window.addEventListener('keydown', onKeyDown)

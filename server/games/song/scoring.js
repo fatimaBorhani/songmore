@@ -4,7 +4,8 @@
 
 // مراحل کلیپ (ثانیه)؛ guesses.js هم از همین‌جا می‌گیره تا فقط یه جا تعریف بشه
 export const STAGES = [0.15, 0.5, 2, 8, 15]
-export const MAX_GUESSES = 5
+export const MAX_GUESSES = 5 // حدس‌های واقعی (رد کردن جزوشون نیست)
+export const MAX_SKIPS = STAGES.length - 1 // رد کردن جداست و هر بار یه مرحله جلو می‌ره؛ توی مرحله‌ی آخر دیگه جایی نیست
 
 export const MAX_SCORE = 10000 // حدس درست توی کوتاه‌ترین مرحله
 export const FLOOR_SCORE = 3500 // ارزش آخرین مرحله
@@ -19,6 +20,23 @@ export function stageValue(seconds) {
   const last = STAGES[STAGES.length - 1]
   const x = Math.log(seconds / first) / Math.log(last / first)
   return Math.max(FLOOR_SCORE, Math.round(FLOOR_SCORE + (MAX_SCORE - FLOOR_SCORE) * (1 - x) ** 1.55))
+}
+
+// حدس‌های واقعی (بدون «رد کردن»)؛ فقط اینا از ۵ فرصت حدس کم می‌کنن
+export function countRealGuesses(guesses) {
+  return guesses.filter((g) => g.result !== 'skipped').length
+}
+
+// بازی تموم شده؟ حدس درست، یا ۵ حدس واقعی
+export function isGameFinished(guesses) {
+  return guesses.some((g) => g.result === 'correct') || countRealGuesses(guesses) >= MAX_GUESSES
+}
+
+// اگه این حرکت (نتیجه‌ی result) الان مجاز نباشه، کد خطا برمی‌گردونه، وگرنه null
+export function moveError(guesses, result) {
+  if (isGameFinished(guesses)) return 'GAME_OVER'
+  if (result === 'skipped' && guesses.filter((g) => g.result === 'skipped').length >= MAX_SKIPS) return 'NO_SKIPS_LEFT'
+  return null
 }
 
 function countResults(guesses) {
@@ -43,7 +61,7 @@ function winScore(skips, penalty) {
 export function computeScore(guesses) {
   const correctIndex = guesses.findIndex((g) => g.result === 'correct')
   if (correctIndex === -1) {
-    return guesses.length >= MAX_GUESSES ? 0 : null // باخت یا هنوز تموم نشده
+    return countRealGuesses(guesses) >= MAX_GUESSES ? 0 : null // باخت یا هنوز تموم نشده
   }
   const { skips, penalty } = countResults(guesses.slice(0, correctIndex))
   return winScore(skips, penalty)

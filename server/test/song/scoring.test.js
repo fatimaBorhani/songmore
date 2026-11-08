@@ -20,12 +20,14 @@ test('نمونه‌های جدول پلن', () => {
   assert.equal(computeScore(g('pssc')), 4805) // خواننده درسته + دو رد کردن، بعد درست
   assert.equal(computeScore(g('ssssc')), 3500) // چهار رد کردن، بعد درست
   assert.equal(computeScore(g('xxxxx')), 0) // باخت
-  assert.equal(computeScore(g('sssss')), 0) // باخت با رد کردن
+  assert.equal(computeScore(g('sssxxxxx')), 0) // رد کردن‌ها حدس نیستن؛ ۵ حدس غلط = باخت
 })
 
 test('بازی نیمه‌کاره امتیاز نداره', () => {
   assert.equal(computeScore([]), null)
   assert.equal(computeScore(g('xs')), null)
+  assert.equal(computeScore(g('ssss')), null) // فقط رد کردن، هیچ حدسی نزده
+  assert.equal(computeScore(g('sssxxxx')), null) // ۴ حدس واقعی؛ هنوز یه فرصت مونده
 })
 
 test('بدترین برد ممکن هنوز امتیاز خوبی داره (کف ۱۰۰۰ فقط برای احتیاطه)', () => {
@@ -49,4 +51,18 @@ test('ارزش الان همیشه با امتیاز واقعی بعد از حد
   for (const pattern of ['', 'x', 's', 'ps', 'xsx', 'ssss', 'pxsp']) {
     assert.equal(getWorth(g(pattern)).worthNow, computeScore(g(pattern + 'c')), pattern)
   }
+})
+
+test('رد کردن و حدس جدا شمرده می‌شن: ۴ رد کردن + ۴ حدس غلط هنوز بازی تموم نشده', async () => {
+  const { isGameFinished, moveError, countRealGuesses, MAX_SKIPS } = await import('../../games/song/scoring.js')
+  assert.equal(MAX_SKIPS, 4)
+  assert.equal(countRealGuesses(g('ssxpx')), 3)
+  assert.equal(isGameFinished(g('ssssxxxx')), false)
+  assert.equal(isGameFinished(g('ssssxxxxx')), true)
+  assert.equal(isGameFinished(g('sc')), true)
+  assert.equal(moveError(g('ssss'), 'skipped'), 'NO_SKIPS_LEFT')
+  assert.equal(moveError(g('sss'), 'skipped'), null)
+  assert.equal(moveError(g('ssss'), 'incorrect'), null) // حدس همیشه مجازه تا ۵ تا
+  assert.equal(moveError(g('xxxxx'), 'skipped'), 'GAME_OVER')
+  assert.equal(moveError(g('c'), 'incorrect'), 'GAME_OVER')
 })

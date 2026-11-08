@@ -157,7 +157,7 @@ test('آمار چند روزه: برد، برد، باخت، برد، و یه ر
   insert.run(key, '2026-01-01', 1, 'x', 'correct') // برد
   insert.run(key, '2026-01-02', 1, 'x', 'incorrect')
   insert.run(key, '2026-01-02', 2, 'x', 'correct') // برد
-  for (let i = 1; i <= 5; i++) insert.run(key, '2026-01-03', i, 'x', 'skipped') // باخت (۵ حدس)
+  for (let i = 1; i <= 5; i++) insert.run(key, '2026-01-03', i, 'x', 'incorrect') // باخت (۵ حدس)
   insert.run(key, '2026-01-04', 1, 'x', 'correct') // برد
   insert.run(key, '2026-01-05', 1, 'x', 'incorrect') // نیمه‌کاره: حساب نمی‌شه
 

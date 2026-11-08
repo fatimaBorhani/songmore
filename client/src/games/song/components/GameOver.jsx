@@ -5,11 +5,9 @@ import AnimatedNumber from '../../../shared/components/AnimatedNumber.jsx'
 
 const RESULT_EMOJI = { correct: '🟩', present: '🟨', incorrect: '🟥', skipped: '⬜' }
 
+// هر تلاش یه مربع، به ترتیب (رد کردن‌ها هم ⬜)؛ بدون اسم آهنگ
 function buildShareText(guesses, score) {
-  const squares = Array.from({ length: 5 }, (_, i) => {
-    const g = guesses[i]
-    return g ? RESULT_EMOJI[g.result] : '⬛'
-  }).join('')
+  const squares = guesses.map((g) => RESULT_EMOJI[g.result]).join('')
   return `بازی حدس آهنگ\n${squares}\nامتیاز: ${faNumber(score ?? 0)} از ${faNumber(10000)}`
 }
 

@@ -34,7 +34,9 @@ practiceRouter.post('/guess', (req, res) => {
 
 practiceRouter.post('/skip', (req, res) => {
   const game = getCurrentGame(req.playerKey, getTodayDateString())
-  if (getPracticeState(game).finished) return res.status(400).json({ error: 'GAME_OVER' })
+  const state = getPracticeState(game)
+  if (state.finished) return res.status(400).json({ error: 'GAME_OVER' })
+  if (state.skipsLeft <= 0) return res.status(400).json({ error: 'NO_SKIPS_LEFT' })
   addPracticeGuess(game, '(رد شد)', 'skipped')
   res.json(getPracticeState(game))
 })

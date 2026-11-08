@@ -190,7 +190,7 @@ function SongGame({ user, mode = 'daily' }) {
       <header className="game-header">
         <h1>بازی حدس آهنگ</h1>
         <p className="guesses-left">
-          {game.finished ? 'بازی تموم شد' : `${faNumber(game.guessesLeft)} فرصت باقی مونده`}
+          {game.finished ? 'بازی تموم شد' : `${faNumber(game.guessesLeft)} حدس و ${faNumber(game.skipsLeft)} رد کردن باقی مونده`}
         </p>
       </header>
 
@@ -216,10 +216,13 @@ function SongGame({ user, mode = 'daily' }) {
         <>
           <div className="guess-row">
             <SearchBox disabled={busy} onChoose={handleGuess} />
-            <button type="button" className="skip-button" disabled={busy} onClick={handleSkip}>
-              {skipLabel}
-              {skipCost > 0 && <span className="skip-cost"> −{faNumber(skipCost)}</span>}
-            </button>
+            {/* رد کردن از حدس‌ها جداست؛ توی مرحله‌ی آخر دیگه جایی برای رد کردن نیست */}
+            {game.skipsLeft > 0 && (
+              <button type="button" className="skip-button" disabled={busy} onClick={handleSkip}>
+                {skipLabel}
+                {skipCost > 0 && <span className="skip-cost"> −{faNumber(skipCost)}</span>}
+              </button>
+            )}
           </div>
           {nextSongButton}
         </>

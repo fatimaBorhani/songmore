@@ -224,3 +224,23 @@ test('بازی تمرینی مهمان با ثبت‌نام به حساب منت
   assert.equal(profile.practiceGames, 0)
   assert.deepEqual(profile.activity, [])
 })
+
+test('تمرینی: رد کردن‌ها از ۵ حدس کم نمی‌کنن و رد کردن پنجم خطا می‌ده', async () => {
+  const b = newBrowser()
+  await b.game()
+  const song = currentSong(b)
+  let state
+  for (let i = 0; i < 4; i++) state = (await b.skip()).body
+  assert.equal(state.skipsLeft, 0)
+  assert.equal(state.guessesLeft, 5)
+  assert.equal(state.clips.length, 5)
+  const fifth = await b.skip()
+  assert.equal(fifth.status, 400)
+  assert.equal(fifth.body.error, 'NO_SKIPS_LEFT')
+  const wrong = SONGS.find((s) => s !== song)
+  for (let i = 0; i < 4; i++) state = (await b.guess(wrong)).body
+  assert.equal(state.finished, false) // ۴ حدس + ۴ رد کردن
+  state = (await b.guess(wrong)).body
+  assert.equal(state.finished, true)
+  assert.equal(state.answer.title, TITLES[song])
+})

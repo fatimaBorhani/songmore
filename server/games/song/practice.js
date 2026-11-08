@@ -1,7 +1,7 @@
 // بازی تمرینی حدس آهنگ: نامحدود، آهنگ تصادفی بدون تکرار، بدون امتیاز و لیگ.
 // فقط تعداد بازی‌های تموم‌شده توی «فعالیت» پروفایل می‌شمرن.
 import { db } from '../../core/db.js'
-import { MAX_GUESSES } from './scoring.js'
+import { isGameFinished, moveError } from './scoring.js'
 import { buildGameState } from './guesses.js'
 import { pickDailySong } from './dailySong.js'
 
@@ -17,9 +17,7 @@ function gameGuesses(gameId) {
     .all(gameId)
 }
 
-export function isFinished(guesses) {
-  return guesses.length >= MAX_GUESSES || guesses.some((g) => g.result === 'correct')
-}
+export const isFinished = isGameFinished
 
 // آهنگ بعدی: از آهنگ‌هایی که توی این دور نیومدن، به جز آهنگ امروزِ مسابقه‌ای (که جوابش لو نره).
 // وقتی همه اومدن دور بعد شروع می‌شه (و آهنگ قبلی پشت‌سرهم تکرار نمی‌شه).
@@ -71,8 +69,10 @@ export function startNext(playerKey, date) {
 }
 
 export function addPracticeGuess(game, guessText, result) {
-  const count = gameGuesses(game.id).length
-  if (count >= MAX_GUESSES) throw new Error('GAME_OVER')
+  const existing = gameGuesses(game.id)
+  const error = moveError(existing, result) // GAME_OVER یا NO_SKIPS_LEFT
+  if (error) throw new Error(error)
+  const count = existing.length
   db.prepare(
     'INSERT INTO practice_guesses (game_id, guess_number, guess_text, result, created_at) VALUES (?, ?, ?, ?, ?)'
   ).run(game.id, count + 1, guessText, result, Date.now())

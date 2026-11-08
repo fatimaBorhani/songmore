@@ -99,17 +99,32 @@ test('روند کامل یه بازی: present بعد incorrect بعد رد کر
   assert.equal('answer' in state, false)
   assert.equal(state.clips.length, 1) // حدس غلط مرحله‌ی بعد رو باز نمی‌کنه
 
-  // حدس ۳ تا ۵: رد کردن؛ هر رد کردن یه مرحله باز می‌کنه
-  res = await fetch(`${baseUrl}/api/song/skip`, { method: 'POST', headers })
-  state = await res.json()
+  // رد کردن‌ها از حدس‌ها جدان: هر رد کردن یه مرحله باز می‌کنه ولی از ۵ فرصت حدس کم نمی‌کنه
+  const skip = async () => (await fetch(`${baseUrl}/api/song/skip`, { method: 'POST', headers })).json()
+  state = await skip()
   assert.equal(state.clips.length, 2)
-  for (let i = 0; i < 2; i++) {
-    res = await fetch(`${baseUrl}/api/song/skip`, { method: 'POST', headers })
+  assert.equal(state.guessesLeft, 3)
+  for (let i = 0; i < 3; i++) state = await skip()
+  assert.equal(state.clips.length, 5) // ۴ بار رد کردن = همه‌ی مراحل باز
+  assert.equal(state.skipsLeft, 0)
+  assert.equal(state.guessesLeft, 3) // با ۴ تا رد کردن، فرصت‌های حدس دست‌نخورده موند
+  assert.equal(state.finished, false)
+
+  // رد کردن پنجم دیگه جایی نداره
+  res = await fetch(`${baseUrl}/api/song/skip`, { method: 'POST', headers })
+  assert.equal(res.status, 400)
+  assert.equal((await res.json()).error, 'NO_SKIPS_LEFT')
+
+  // سه حدس غلط دیگه: حدس پنجمِ واقعی بازی رو تموم می‌کنه
+  for (let i = 0; i < 3; i++) {
+    res = await fetch(`${baseUrl}/api/song/guess`, {
+      method: 'POST', headers, body: JSON.stringify({ songId: 'song-C', label: 'Ba To' }),
+    })
     state = await res.json()
   }
 
   assert.equal(state.finished, true)
-  assert.equal(state.guesses.length, 5)
+  assert.equal(state.guesses.length, 9) // ۵ حدس + ۴ رد کردن
   assert.equal(state.guessesLeft, 0)
   assert.equal(state.answer.title, 'Neghab') // الان دیگه باید جواب بیاد
   assert.equal(state.clips.length, 5) // همه‌ی مراحل باز شده

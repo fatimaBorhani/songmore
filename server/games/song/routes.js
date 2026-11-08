@@ -95,6 +95,10 @@ songRouter.post('/skip', (req, res) => {
     return res.status(400).json({ error: 'GAME_OVER' })
   }
 
+  if (stateBefore.skipsLeft <= 0) {
+    return res.status(400).json({ error: 'NO_SKIPS_LEFT' })
+  }
+
   addGuess(req.playerKey, date, '(رد شد)', 'skipped')
   res.json(getGameState(req.playerKey, date, songId))
 })

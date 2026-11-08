@@ -156,9 +156,7 @@ function SongGame({ user, mode = 'daily' }) {
   const unlocked = game.clips.length
   const lastClip = game.clips[unlocked - 1]
   const extraSeconds = unlocked < STAGES.length ? STAGES[unlocked] - STAGES[unlocked - 1] : 0
-  const skipLabel = extraSeconds ? `رد کردن +${faSeconds(extraSeconds)} ث` : 'رد کردن'
-  // رد کردن چند امتیاز از «ارزش الان» کم می‌کنه
-  const skipCost = game.finished || practice ? 0 : game.worthNow - game.worthAfterSkip
+  const skipTime = `+${faSeconds(extraSeconds)}s`
 
   return (
     <main className="game-page">
@@ -195,9 +193,21 @@ function SongGame({ user, mode = 'daily' }) {
             <SearchBox disabled={busy} onChoose={handleGuess} />
             {/* رد کردن از حدس‌ها جداست؛ توی مرحله‌ی آخر دیگه جایی برای رد کردن نیست */}
             {game.skipsLeft > 0 && (
-              <button type="button" className="skip-button" disabled={busy} onClick={handleSkip}>
-                {skipLabel}
-                {skipCost > 0 && <span className="skip-cost"> −{faNumber(skipCost)}</span>}
+              <button
+                type="button"
+                className="skip-button"
+                disabled={busy}
+                onClick={handleSkip}
+                aria-label={`رد کردن و شنیدن ${faSeconds(extraSeconds)} ثانیه‌ی بیشتر`}
+              >
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 5l9 7-9 7z" />
+                  <path d="M19 5v14" />
+                </svg>
+                {/* dir=ltr تا «+» سمت چپ عدد بمونه (توی راست‌به‌چپ جابه‌جا می‌شد) */}
+                <span className="skip-time" dir="ltr">
+                  {skipTime}
+                </span>
               </button>
             )}
           </div>

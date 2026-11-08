@@ -12,7 +12,7 @@ import './shared/shared.css'
 
 // پوسته‌ی سایت: سربرگ مشترک (اسم سایت + ورود) و صفحه‌ها
 //   /      صفحه‌ی اول (انتخاب بازی)
-//   /song  بازی حدس آهنگ
+//   /song  بازی حدس آهنگ (مسابقه‌ای)، /song/practice (تمرینی)
 //   /word  بازی واژه‌یاب
 //   /profile  حساب کاربری (آمار و تقویم فعالیت)
 function App() {
@@ -43,7 +43,8 @@ function App() {
       {authChecked && (
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/song" element={<SongGame user={user} />} />
+          <Route path="/song" element={<SongGame key="daily" user={user} mode="daily" />} />
+          <Route path="/song/practice" element={<SongGame key="practice" user={user} mode="practice" />} />
           <Route path="/word" element={<WordGame user={user} />} />
           <Route path="/profile" element={<ProfilePage user={user} onUserChange={setUser} />} />
           <Route path="*" element={<NotFoundPage />} />

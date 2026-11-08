@@ -9,10 +9,11 @@ import { faMonthYear } from './calendar.js'
 import './profile.css'
 
 // آمار بازی آهنگ به شکل لیست «اسم / عدد»
-function statRows(stats) {
+function statRows(stats, practiceGames) {
   const winPercent = stats.played ? Math.round((stats.wins / stats.played) * 100) : 0
   return [
-    ['بازی‌ها', faNumber(stats.played)],
+    ['بازی‌های مسابقه‌ای', faNumber(stats.played)],
+    ['بازی‌های تمرینی', faNumber(practiceGames)],
     ['درصد برد', `${faNumber(winPercent)}٪`],
     ['رکورد فعلی', faNumber(stats.currentStreak)],
     ['بهترین رکورد', faNumber(stats.maxStreak)],
@@ -131,7 +132,7 @@ function ProfilePage({ user, onUserChange }) {
             <ProfileCalendar today={data.today} activity={data.activity} />
             <section className="profile-card profile-stats" aria-label="آمار">
               <dl>
-                {statRows(data.stats).map(([label, value]) => (
+                {statRows(data.stats, data.practiceGames).map(([label, value]) => (
                   <div key={label}>
                     <dt>{label}</dt>
                     <dd>{value}</dd>

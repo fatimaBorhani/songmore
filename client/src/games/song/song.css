@@ -527,3 +527,49 @@
   font-size: 15px;
   color: var(--text-soft);
 }
+
+/* انتخاب حالت بازی: مسابقه‌ای / تمرینی */
+.mode-switch-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.mode-switch {
+  width: 100%;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 16px;
+  background: #111113;
+  border: 1px solid #1f1f23;
+}
+
+.mode-switch a {
+  flex: 1;
+  min-height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-soft);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.mode-switch a:hover {
+  color: var(--text);
+}
+
+.mode-switch a[aria-current='page'] {
+  background: #27272a;
+  color: #fff;
+  font-weight: 700;
+}
+
+.mode-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}

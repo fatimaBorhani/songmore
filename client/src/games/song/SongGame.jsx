@@ -1,5 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
-import { fetchMyStats, getGame, getTodayLeaderboard, sendGuess, sendSkip } from './api.js'
+import {
+  fetchMyStats,
+  getGame,
+  getPracticeGame,
+  getTodayLeaderboard,
+  nextPracticeGame,
+  sendGuess,
+  sendPracticeGuess,
+  sendPracticeSkip,
+  sendSkip,
+} from './api.js'
 import { getStats, recordResult } from './stats.js'
 import { STAGES } from './stages.js'
 import { faNumber, faSeconds } from '../../shared/format.js'
@@ -7,6 +17,7 @@ import WavePlayer from './components/WavePlayer.jsx'
 import SearchBox from './components/SearchBox.jsx'
 import GuessHistory from './components/GuessHistory.jsx'
 import GameOver from './components/GameOver.jsx'
+import ModeSwitch from './components/ModeSwitch.jsx'
 import AnimatedNumber from '../../shared/components/AnimatedNumber.jsx'
 import Leaderboard from '../../shared/components/Leaderboard.jsx'
 import StatsPanel from '../../shared/components/StatsPanel.jsx'
@@ -14,9 +25,11 @@ import { playWinSound } from './audioPlayer.js'
 import { SITE_NAME } from '../../shared/site.js'
 import './song.css'
 
-// صفحه‌ی بازی حدس آهنگ (آدرس /song)
+// صفحه‌ی بازی حدس آهنگ: مسابقه‌ای (آدرس /song) و تمرینی (آدرس /song/practice)
 // user: کاربر واردشده یا null (از App میاد، چون ورود بین همه‌ی بازی‌ها مشترکه)
-function SongGame({ user }) {
+// mode: 'daily' (مسابقه‌ای، روزی یه آهنگ و امتیاز) یا 'practice' (تمرینی، نامحدود و بدون امتیاز)
+function SongGame({ user, mode = 'daily' }) {
+  const practice = mode === 'practice'
   const [game, setGame] = useState(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -43,7 +56,7 @@ function SongGame({ user }) {
   function loadGame() {
     setError('')
     stopCelebration()
-    getGame()
+    ;(practice ? getPracticeGame : getGame)()
       .then((data) => {
         setGame(data)
         setTestMode(Boolean(data.testMode))
@@ -51,11 +64,13 @@ function SongGame({ user }) {
       .catch(() => setError('سرور در دسترس نیست. اول سرور رو روشن کن.'))
   }
 
+  // هر حالت (مسابقه‌ای/تمرینی) یه نمونه‌ی جداست (key توی App)، پس mode توی یه نمونه عوض نمی‌شه
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(loadGame, [])
 
   useEffect(() => {
-    document.title = `حدس آهنگ · ${SITE_NAME}`
-  }, [])
+    document.title = `${practice ? 'حدس آهنگ (تمرینی)' : 'حدس آهنگ'} · ${SITE_NAME}`
+  }, [practice])
 
   // اگه صفحه بسته شد، تایمر جشن نمونه
   useEffect(() => () => clearTimeout(celebrateTimer.current), [])
@@ -65,7 +80,8 @@ function SongGame({ user }) {
   // وقتی بازی تموم می‌شه آمار رو آپدیت کن:
   // کاربر واردشده -> از سرور بگیر؛ مهمان -> توی مرورگر ثبت کن (فقط یه بار برای هر روز)
   useEffect(() => {
-    if (!game?.finished) return
+    // آمار و لیگ فقط برای بازی مسابقه‌ایه؛ تمرین جایی ثبت نمی‌شه
+    if (!game?.finished || practice) return
     if (user) {
       fetchMyStats()
         .then(setMyStats)
@@ -74,7 +90,7 @@ function SongGame({ user }) {
     }
     const won = game.guesses.some((g) => g.result === 'correct')
     setStats(recordResult(game.date, won, game.score))
-  }, [game, user])
+  }, [game, user, practice])
 
   // بعد از ورود یا خروج، بازی امروز رو دوباره بگیر:
   // با ورود بازی حساب میاد (که بازی مهمان این مرورگر هم بهش منتقل شده)، با خروج بازی مهمان
@@ -93,7 +109,8 @@ function SongGame({ user }) {
     setBusy(true)
     setError('')
     try {
-      const updated = await sendGuess(song.id, `${song.title} - ${song.credit}`)
+      const label = `${song.title} - ${song.credit}`
+      const updated = await (practice ? sendPracticeGuess : sendGuess)(song.id, label)
       setGame(updated)
       if (updated.guesses.at(-1)?.result === 'correct') celebrate()
     } catch (e) {
@@ -108,7 +125,7 @@ function SongGame({ user }) {
     setBusy(true)
     setError('')
     try {
-      const updated = await sendSkip()
+      const updated = await (practice ? sendPracticeSkip : sendSkip)()
       setGame(updated)
     } catch (e) {
       setError(e.message)
@@ -117,8 +134,23 @@ function SongGame({ user }) {
     }
   }
 
-  // فقط توی حالت تست: دکمه‌ای که بدون رفرش، یه آهنگ جدید میاره
-  const nextSongButton = testMode && (
+  // تمرینی: بعد از تموم شدن بازی، آهنگ تصادفی بعدی
+  async function handleNextPractice() {
+    if (busy) return
+    setBusy(true)
+    setError('')
+    try {
+      stopCelebration()
+      setGame(await nextPracticeGame())
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  // فقط توی حالت تست: دکمه‌ای که بدون رفرش، یه آهنگ جدید میاره (فقط مسابقه‌ای)
+  const nextSongButton = testMode && !practice && (
     <button type="button" className="ghost-button" disabled={busy} onClick={loadGame}>
       آهنگ بعدی (تست)
     </button>
@@ -149,10 +181,12 @@ function SongGame({ user }) {
   const extraSeconds = unlocked < STAGES.length ? STAGES[unlocked] - STAGES[unlocked - 1] : 0
   const skipLabel = extraSeconds ? `رد کردن +${faSeconds(extraSeconds)} ث` : 'رد کردن'
   // رد کردن چند امتیاز از «ارزش الان» کم می‌کنه
-  const skipCost = game.finished ? 0 : game.worthNow - game.worthAfterSkip
+  const skipCost = game.finished || practice ? 0 : game.worthNow - game.worthAfterSkip
 
   return (
     <main className="game-page">
+      <ModeSwitch mode={mode} />
+
       <header className="game-header">
         <h1>بازی حدس آهنگ</h1>
         <p className="guesses-left">
@@ -162,7 +196,7 @@ function SongGame({ user }) {
 
       <GuessHistory guesses={game.guesses} celebrating={celebrating} />
 
-      {!game.finished && (
+      {!game.finished && !practice && (
         <div className="worth" aria-live="polite">
           <span className="worth-label">ارزش الان</span>
           <span className="worth-value">
@@ -201,14 +235,17 @@ function SongGame({ user }) {
             score={game.score}
             celebrating={celebrating}
             busy={busy}
-            onNext={testMode ? loadGame : undefined}
+            practice={practice}
+            onNext={practice ? handleNextPractice : testMode ? loadGame : undefined}
           />
-          {(user ? myStats : stats) && <StatsPanel stats={user ? myStats : stats} />}
-          <Leaderboard
-            user={user}
-            load={getTodayLeaderboard}
-            refreshKey={`${user ? user.id : 'guest'}-${game.date}-${game.score}`}
-          />
+          {!practice && (user ? myStats : stats) && <StatsPanel stats={user ? myStats : stats} />}
+          {!practice && (
+            <Leaderboard
+              user={user}
+              load={getTodayLeaderboard}
+              refreshKey={`${user ? user.id : 'guest'}-${game.date}-${game.score}`}
+            />
+          )}
         </>
       )}
     </main>

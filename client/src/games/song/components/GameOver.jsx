@@ -14,8 +14,9 @@ function buildShareText(guesses, score) {
 }
 
 // پیام پایان بازی: جواب، چند ثانیه طول کشید، و دکمه‌های کپی نتیجه و آهنگ بعدی.
-// onNext فقط توی حالت تست داده می‌شه؛ اگه نباشه دکمه‌ی «آهنگ بعدی» نمیاد.
-function GameOver({ answer, guesses, score, onNext, busy, celebrating }) {
+// onNext توی حالت تمرینی همیشه هست، توی مسابقه‌ای فقط توی حالت تست؛ اگه نباشه دکمه‌ی «آهنگ بعدی» نمیاد.
+// practice: بازی تمرینی امتیاز نداره، پس امتیاز و کپی نتیجه نمیاد
+function GameOver({ answer, guesses, score, onNext, busy, celebrating, practice }) {
   const correctGuess = guesses.find((g) => g.result === 'correct')
   const [copied, setCopied] = useState(false)
 
@@ -44,22 +45,26 @@ function GameOver({ answer, guesses, score, onNext, busy, celebrating }) {
     <section className="game-over">
       <h2 className={celebrating ? 'pop' : ''}>{correctGuess ? 'بردی!' : 'این دفعه نه'}</h2>
       {/* امتیاز؛ لحظه‌ی برد از صفر می‌شمره بالا */}
-      <p className={`final-score ${correctGuess ? '' : 'zero'}`}>
-        <span className="final-score-value">
-          <AnimatedNumber value={score ?? 0} from={celebrating ? 0 : (score ?? 0)} duration={1200} />
-        </span>
-        <span className="final-score-label">امتیاز</span>
-      </p>
+      {!practice && (
+        <p className={`final-score ${correctGuess ? '' : 'zero'}`}>
+          <span className="final-score-value">
+            <AnimatedNumber value={score ?? 0} from={celebrating ? 0 : (score ?? 0)} duration={1200} />
+          </span>
+          <span className="final-score-label">امتیاز</span>
+        </p>
+      )}
       <p className="answer">
         {answerText}
         {seconds !== null && ` · توی ${faSeconds(seconds)} ثانیه`}
       </p>
       <div className="game-over-actions">
-        <button type="button" className="primary" onClick={copyResult}>
-          {copied ? 'کپی شد' : 'کپی نتیجه'}
-        </button>
+        {!practice && (
+          <button type="button" className="primary" onClick={copyResult}>
+            {copied ? 'کپی شد' : 'کپی نتیجه'}
+          </button>
+        )}
         {onNext && (
-          <button type="button" className="secondary" disabled={busy} onClick={onNext}>
+          <button type="button" className={practice ? 'primary' : 'secondary'} disabled={busy} onClick={onNext}>
             آهنگ بعدی
           </button>
         )}

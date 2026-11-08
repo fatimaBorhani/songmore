@@ -17,12 +17,18 @@ function weekdayFromSaturday(dateString) {
   return (parse(dateString).getUTCDay() + 1) % 7
 }
 
-// رنگ هر روز: ۰ بازی نشده، ۱ باخت، ۲ تا ۴ برد با امتیاز کم تا زیاد
+// تعداد بازی‌های تموم‌شده‌ی یه روز (مسابقه‌ای + تمرینی)
+export function gamesOf(day) {
+  return day ? (day.daily ? 1 : 0) + day.practice : 0
+}
+
+// رنگ هر روز (مثل گیت‌هاب): ۰ بازی نشده، بعد هر چه بازی بیشتر روشن‌تر
 export function levelOf(day) {
-  if (!day) return 0
-  if (!day.won) return 1
-  if (day.score < 5000) return 2
-  if (day.score < 9000) return 3
+  const n = gamesOf(day)
+  if (n === 0) return 0
+  if (n === 1) return 1
+  if (n === 2) return 2
+  if (n <= 4) return 3
   return 4
 }
 
@@ -37,7 +43,7 @@ export function buildCalendar(today, activity, weeks = WEEKS) {
     const day = future ? undefined : byDate.get(date)
     cells.push({ date, future, day, level: levelOf(day) })
   }
-  return { cells, played: cells.filter((c) => c.day).length }
+  return { cells, activeDays: cells.filter((c) => c.day).length }
 }
 
 const dayFormat = new Intl.DateTimeFormat('fa-IR-u-ca-persian', { timeZone: 'UTC', day: 'numeric', month: 'long' })

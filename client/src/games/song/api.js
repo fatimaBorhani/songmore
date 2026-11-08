@@ -36,3 +36,22 @@ export function getTodayLeaderboard() {
 export function getProfile() {
   return call('/api/song/profile')
 }
+
+// ---------- حالت تمرینی (نامحدود، بدون امتیاز) ----------
+
+export function getPracticeGame() {
+  return call('/api/song/practice/game')
+}
+
+export function sendPracticeGuess(songId, label) {
+  return postJson('/api/song/practice/guess', { songId, label })
+}
+
+export function sendPracticeSkip() {
+  return postJson('/api/song/practice/skip')
+}
+
+// بازی تمرینی بعدی (فقط وقتی بازی فعلی تموم شده)
+export function nextPracticeGame() {
+  return postJson('/api/song/practice/next')
+}

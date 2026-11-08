@@ -236,11 +236,10 @@ function WordGame({ user }) {
   return (
     <main className={`word-page ${isDesktop ? 'desktop' : 'touch'}${showResult ? ' finished' : ''}`}>
       <div className="word-top">
-        <button type="button" className="icon-button" aria-label="راهنما" onClick={() => setShowHelp(true)}>
+        <button type="button" className="icon-button" aria-label="آموزش بازی" onClick={() => setShowHelp(true)}>
           <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="9" />
-            <path d="M9.6 9.2a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6" />
-            <path d="M12 17h.01" />
+            <path d="M9 18h6M10 21h4" />
+            <path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1.1 1.2 1.1 2V16h5v-.2c0-.8.5-1.5 1.1-2A6 6 0 0 0 12 3z" />
           </svg>
         </button>
         <div className="word-title">

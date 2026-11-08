@@ -76,7 +76,8 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
 - پر کردن دیتابیس بازی آهنگ: `cd server && npm run seed` (از songs.json + artists.json + clip_map.json؛ فقط آهنگ‌هایی که توی clip_map کلیپ دارن وارد بازی می‌شن)
 - ساخت کلیپ: `python3 tools/make_clips.py` (به ffmpeg نیاز داره؛ فقط آهنگ‌های جدید رو به clip_map.json اضافه می‌کنه)
 - خوندن ژانر و سال از تگ mp3ها: `python3 tools/read_song_tags.py` (با ffprobe؛ فقط می‌خونه و خروجی‌ش `tools/song_tags.csv` برای بررسی دستیه)
-- چک خواننده‌ها: `python3 tools/check_artist_tags.py` (با ffprobe؛ اسم خواننده‌ی تگ هر mp3 رو با `songs.json` مقایسه می‌کنه و آهنگ‌هایی که خواننده‌شون ناقصه پیدا می‌کنه؛ فقط می‌خونه و خروجی‌ش `tools/artist_tag_check.csv` برای بررسی دستیه)
+- چک خواننده‌ها: `python3 tools/check_artist_tags.py` (با ffprobe؛ اسم خواننده‌ی تگ هر mp3 رو با `songs.json` و `tools/artist_overrides.csv` مقایسه می‌کنه و آهنگ‌هایی که خواننده‌شون ناقصه پیدا می‌کنه؛ فقط می‌خونه و خروجی‌ش `tools/artist_tag_check.csv` برای بررسی دستیه؛ اسم سایت‌ها و `@کانال`‌های توی تگ رو نادیده می‌گیره)
+- اصلاح خواننده‌ی آهنگ‌ها: `tools/artist_overrides.csv` (ستون‌ها: song_id، title، add_artists مثل `sami-beigi:main; behzad-leito:main`، credit اختیاری، ignore_tag_names اختیاری فقط برای اسکریپت چک). `npm run seed` اینا رو روی `songs.json` اعمال می‌کنه و `songs.json` دست‌نخورده می‌مونه؛ فقط ردیف‌هایی که خودت تأیید کردی بنویس
 - ژانر و دهه‌ی آهنگ‌ها: `python3 tools/build_song_categories.py` (ژانر از روی خواننده از `tools/artist_genres.csv`، سال از `tools/song_tags.csv` مگر اینکه توی `tools/year_overrides.csv` دستی درست شده باشه؛ خروجی `tools/song_categories.csv` برای بررسی دستی)
 - کلاینت (پوشه‌ی `client/`): `npm run dev` (پورت 5173 روی 127.0.0.1؛ صفحه‌ی اول `/`، بازی آهنگ `/song`، واژه‌یاب `/word`)، `npm run build`، `npm run lint` (oxlint)
 - متغیرهای محیطی سرور: `PORT`، `CLIPS_DIR`، `DB_PATH` (پیش‌فرض `server/game.db`؛ تست‌ها `:memory:` می‌ذارن)
@@ -89,6 +90,7 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
   - `player.js`: «بازیکن» = اگه وارد شده `user:<id>`، وگرنه شناسه‌ی مرورگر (`req.playerKey`). موقع ثبت‌نام/ورود، بازی‌های مهمانِ همون مرورگر به حساب منتقل می‌شن (`claimGuestGames`)، مگر روزهایی که حساب خودش بازی داره
   - احراز هویت (`auth.js` و `authRoutes.js`): نام کاربری و رمز؛ رمز با `crypto.scrypt` خود Node هش می‌شه. APIها: `POST /api/auth/signup`، `POST /api/auth/login`، `POST /api/auth/logout`، `GET /api/auth/me`. نشست ورود توی کوکی جدای `songmore_auth` (فقط هش توکن توی جدول `auth_sessions`). بعد از ۱۰ تلاش ناموفق ورود از یه IP، تا ۱۵ دقیقه 429 برمی‌گرده (توی حافظه، با ری‌استارت سرور صفر می‌شه)
 - **بازی آهنگ (`server/games/song/`)**، APIها زیر `/api/song`: `game`، `search`، `guess`، `skip`، `stats`، `leaderboard/today`
+  - `artistOverrides.js`: خوندن `tools/artist_overrides.csv` و اضافه کردن خواننده‌های ناقص (و credit) به آهنگ‌ها موقع seed؛ آهنگ یا خواننده‌ی ناموجود خطا می‌ده
   - `dailySong.js` (تاریخ روز از `core/today.js` به وقت Asia/Tehran)؛ آهنگ هر تاریخ یه بار انتخاب (آهنگی که کمتر تکرار شده) و توی `daily_song` ذخیره می‌شه
   - حدس‌ها با (playerKey, date) توی ستون `session_id` جدول guesses ذخیره می‌شن
   - `scoring.js`: مراحل (`STAGES`)، فرمول امتیاز، `computeScore` (امتیاز بازی تموم‌شده) و `getWorth` (ارزش الان و ارزش بعد از رد کردن). `GET /api/song/game` وسط بازی `worthNow`/`worthAfterSkip` و آخر بازی `score` برمی‌گردونه

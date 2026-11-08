@@ -17,4 +17,12 @@ export const GAMES = [
     icon: 'grid',
     ready: true, // false = توی صفحه‌ی اول «به‌زودی» نشون داده می‌شه
   },
+  {
+    id: 'color',
+    path: '/color',
+    title: 'حافظه‌ی رنگ', // اسم موقت
+    description: 'یه رنگ رو چند ثانیه ببین، بعد از حافظه بسازش.',
+    icon: 'palette',
+    ready: true,
+  },
 ]

@@ -8,12 +8,14 @@ import NotFoundPage from './pages/NotFoundPage.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
 import SongGame from './games/song/SongGame.jsx'
 import WordGame from './games/word/WordGame.jsx'
+import ColorGame from './games/color/ColorGame.jsx'
 import './shared/shared.css'
 
 // پوسته‌ی سایت: سربرگ مشترک (اسم سایت + ورود) و صفحه‌ها
 //   /      صفحه‌ی اول (انتخاب بازی)
 //   /song  بازی حدس آهنگ (مسابقه‌ای)، /song/practice (تمرینی)
 //   /word  بازی واژه‌یاب
+//   /color  بازی حافظه‌ی رنگ
 //   /profile  حساب کاربری (آمار و تقویم فعالیت)
 function App() {
   const [user, setUser] = useState(null) // کاربر واردشده، یا null
@@ -46,6 +48,7 @@ function App() {
           <Route path="/song" element={<SongGame key="daily" user={user} mode="daily" />} />
           <Route path="/song/practice" element={<SongGame key="practice" user={user} mode="practice" />} />
           <Route path="/word" element={<WordGame user={user} />} />
+          <Route path="/color" element={<ColorGame user={user} />} />
           <Route path="/profile" element={<ProfilePage user={user} onUserChange={setUser} />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

@@ -1,0 +1,738 @@
+/* بازی حافظه‌ی رنگ (طرح «ب»): گوشی یه ستونه، از ۸۶۰ پیکسل به بالا دو ستونه */
+
+.color-page {
+  max-width: 680px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  /* کل ارتفاع صفحه منهای سربرگ سایت، تا دکمه‌ها پایین صفحه بشینن */
+  min-height: calc(100dvh - 76px);
+  padding: 8px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.color-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.color-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding-top: 6px;
+}
+
+.color-head h1 {
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.color-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.color-dots span {
+  width: 28px;
+  height: 8px;
+  border-radius: 4px;
+  background: #27272a;
+  transition: background 0.3s;
+}
+
+.color-dots span.done {
+  background: var(--accent);
+}
+
+.color-dots span.current {
+  background: var(--text);
+}
+
+/* ---------- دکمه ---------- */
+
+.color-btn {
+  width: 100%;
+  min-height: 56px;
+  border: none;
+  border-radius: 18px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.color-btn:hover:not(:disabled) {
+  background: #4040f0;
+}
+
+.color-btn.ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+  font-weight: 500;
+}
+
+.color-btn.ghost:hover:not(:disabled) {
+  background: var(--surface);
+}
+
+/* ---------- آماده و حفظ کردن ---------- */
+
+.color-card {
+  box-sizing: border-box;
+  border-radius: 28px;
+}
+
+.color-ready {
+  min-height: 300px;
+  padding: 28px 22px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.color-ready-round {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.color-ready-text {
+  max-width: 320px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.color-memorize {
+  height: min(400px, 52dvh);
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.color-ring {
+  position: relative;
+  width: 160px;
+  height: 160px;
+}
+
+.color-ring svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.color-ring-arc {
+  transition: stroke-dashoffset 0.1s linear;
+}
+
+.color-ring-number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 72px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* ---------- ساختن رنگ ---------- */
+
+.color-split {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.color-preview-col {
+  display: flex;
+  gap: 10px;
+}
+
+.color-hidden {
+  flex: 1;
+  box-sizing: border-box;
+  height: 120px;
+  border-radius: 22px;
+  background: #111113;
+  border: 1.5px dashed #3f3f46;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 8px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.color-hidden-mark {
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1;
+  color: #52525b;
+}
+
+.color-hidden-long {
+  display: none;
+}
+
+.color-preview {
+  flex: 2;
+  box-sizing: border-box;
+  height: 120px;
+  padding: 14px 16px;
+  border-radius: 22px;
+  display: flex;
+  align-items: flex-end;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.color-panel-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.color-panel-col > .color-btn {
+  margin-top: auto;
+}
+
+.color-panel {
+  box-sizing: border-box;
+  padding: 20px 18px;
+  border-radius: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.color-sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.color-slider label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #c9c9cf;
+}
+
+.color-slider label b {
+  color: var(--text);
+}
+
+.color-range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  border-radius: 15px;
+  background: var(--track);
+  outline: none;
+  cursor: pointer;
+}
+
+.color-range:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.color-range:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.color-range::-webkit-slider-runnable-track {
+  height: 30px;
+  border-radius: 15px;
+  background: transparent;
+}
+
+.color-range::-moz-range-track {
+  height: 30px;
+  border-radius: 15px;
+  background: transparent;
+}
+
+.color-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 38px;
+  height: 38px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: #fff;
+  border: 0;
+  box-shadow:
+    0 0 0 3px rgba(9, 9, 11, 0.55),
+    0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.color-range::-moz-range-thumb {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #fff;
+  border: 0;
+  box-shadow:
+    0 0 0 3px rgba(9, 9, 11, 0.55),
+    0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- نتیجه‌ی دور ---------- */
+
+.color-compare {
+  --circle: min(220px, 28dvh); /* روی گوشی‌های کوتاه کوچیک‌تر می‌شه تا دکمه توی صفحه جا بشه */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding-top: 8px;
+}
+
+/* صفحه راست‌به‌چپه: اولین نیمه (رنگ اصلی) سمت راست می‌افته */
+.color-circle {
+  width: var(--circle);
+  height: var(--circle);
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  box-shadow:
+    0 0 0 6px var(--card),
+    0 0 0 7px #3f3f46;
+  animation: color-pop 0.5s ease-out;
+}
+
+.color-circle > div {
+  flex: 1;
+}
+
+.color-labels {
+  width: calc(var(--circle) + 60px);
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.color-score-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.color-score-col > .color-btn {
+  margin-top: auto;
+}
+
+.color-score-card {
+  box-sizing: border-box;
+  padding: 20px;
+  border-radius: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.color-score-row,
+.color-total-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.color-score-row > span:first-child {
+  font-size: 14px;
+  color: #c9c9cf;
+}
+
+.color-score-value {
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.color-score-value small,
+.color-total-row small,
+.color-summary-score small {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text-soft);
+}
+
+.color-bar {
+  height: 10px;
+  border-radius: 5px;
+  background: #27272a;
+}
+
+.color-bar > div {
+  height: 100%;
+  border-radius: 5px;
+  background: var(--accent);
+  animation: color-grow 0.7s ease-out;
+}
+
+.color-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.color-chips li {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #111113;
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: #c9c9cf;
+}
+
+.color-total-row {
+  display: none; /* فقط روی دسکتاپ (طرح گوشی نداره) */
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.color-total-row b {
+  font-size: 18px;
+  color: var(--text);
+}
+
+/* ---------- خلاصه‌ی بازی ---------- */
+
+.color-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.color-summary-total {
+  padding: 22px 20px;
+  background: #14143a;
+  border: 1px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-summary-label {
+  font-size: 14px;
+  color: #d4d4ff;
+}
+
+.color-summary-score {
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.color-summary-total .color-bar {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.color-summary-total .color-bar > div {
+  background: #fff;
+}
+
+.color-rounds {
+  list-style: none;
+  margin: 0;
+  padding: 4px 18px;
+  border-radius: 22px;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.color-rounds li {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.color-rounds li:last-child {
+  border-bottom: none;
+}
+
+.color-mini-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+}
+
+.color-mini-circle i {
+  flex: 1;
+}
+
+.color-round-name {
+  flex: 1;
+  font-size: 14px;
+  color: #c9c9cf;
+}
+
+.color-rounds b {
+  font-size: 17px;
+}
+
+.color-summary-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.color-next-game {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.color-next-game b {
+  color: var(--text);
+}
+
+.color-toast {
+  position: fixed;
+  top: 76px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes color-pop {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+}
+
+@keyframes color-grow {
+  from {
+    width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .color-circle,
+  .color-bar > div {
+    animation: none;
+  }
+
+  .color-ring-arc {
+    transition: none;
+  }
+}
+
+/* ---------- دسکتاپ ---------- */
+
+@media (min-width: 860px) {
+  .color-page {
+    max-width: 1040px;
+    padding: 8px 24px 48px;
+    gap: 22px;
+  }
+
+  .color-head h1 {
+    font-size: 28px;
+  }
+
+  .color-dots {
+    gap: 8px;
+  }
+
+  .color-dots span {
+    width: 36px;
+  }
+
+  .color-ready,
+  .color-memorize,
+  .color-summary {
+    width: 100%;
+    max-width: 680px;
+    align-self: center;
+  }
+
+  .color-memorize {
+    height: 400px;
+  }
+
+  .color-ring {
+    width: 190px;
+    height: 190px;
+  }
+
+  .color-ring-number {
+    font-size: 88px;
+  }
+
+  .color-split {
+    flex: 0 1 auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  /* ساختن: ستون راست = رنگ تو + رنگ اصلیِ پنهان، ستون چپ = یه کارت با اسلایدرها و دکمه */
+  .color-preview-col {
+    flex: 1 1 420px;
+    min-width: 0;
+    flex-direction: column-reverse;
+    gap: 14px;
+  }
+
+  .color-preview {
+    flex: 1;
+    height: auto;
+    min-height: 320px;
+    padding: 20px 22px;
+    border-radius: 32px;
+    font-size: 16px;
+  }
+
+  .color-hidden {
+    flex: none;
+    height: 84px;
+    flex-direction: row;
+    gap: 12px;
+    font-size: 14px;
+  }
+
+  .color-hidden-mark {
+    font-size: 32px;
+  }
+
+  .color-hidden-short {
+    display: none;
+  }
+
+  .color-hidden-long {
+    display: inline;
+  }
+
+  .color-panel-col,
+  .color-score-col {
+    flex: 1 1 380px;
+    min-width: 0;
+    box-sizing: border-box;
+    border-radius: 28px;
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+
+  .color-panel-col {
+    padding: 26px 24px;
+    gap: 22px;
+  }
+
+  .color-panel,
+  .color-score-card {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  .color-sliders {
+    gap: 22px;
+  }
+
+  .color-slider label {
+    font-size: 15px;
+  }
+
+  /* نتیجه: دایره‌ی بزرگ‌تر کنار کارت امتیاز */
+  .color-result {
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+  }
+
+  .color-compare {
+    --circle: 320px;
+    flex: 0 1 380px;
+    gap: 16px;
+  }
+
+  .color-total-row {
+    display: flex;
+  }
+
+  .color-circle {
+    box-shadow:
+      0 0 0 8px var(--card),
+      0 0 0 9px #3f3f46;
+  }
+
+  .color-labels {
+    font-size: 14px;
+  }
+
+  .color-score-col {
+    max-width: 460px;
+    padding: 28px 26px;
+    gap: 18px;
+  }
+
+  .color-score-card {
+    gap: 18px;
+  }
+
+  .color-score-value {
+    font-size: 56px;
+  }
+
+  .color-bar {
+    height: 12px;
+    border-radius: 6px;
+  }
+
+  .color-chips li {
+    padding: 5px 12px;
+    font-size: 13px;
+  }
+}

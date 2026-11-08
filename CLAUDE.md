@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # پروژه: سایت بازی‌های روزانه‌ی فارسی
 
 ## هدف
-یه سایت با چند بازی روزانه؛ صفحه‌ی اول بازی رو انتخاب می‌کنی. بازی اول «حدس آهنگ» (شبیه Songless): هر روز یه آهنگ، کلیپ‌های کوتاه (از ۰.۱۵ تا ۱۵ ثانیه) و حداکثر ۵ حدس. بازی دوم: وردل فارسی با اسم موقت «واژه‌یاب» (`/word`؛ اسم Wordle و ظاهر نیویورک‌تایمز رو کپی نکن).
+یه سایت با چند بازی روزانه؛ صفحه‌ی اول بازی رو انتخاب می‌کنی. بازی اول «حدس آهنگ» (شبیه Songless): هر روز یه آهنگ، کلیپ‌های کوتاه (از ۰.۱۵ تا ۱۵ ثانیه) و حداکثر ۵ حدس. بازی دوم: وردل فارسی با اسم موقت «واژه‌یاب» (`/word`؛ اسم Wordle و ظاهر نیویورک‌تایمز رو کپی نکن). بازی سوم: «حافظه‌ی رنگ» (`/color`، اسم موقت): چند ثانیه یه رنگ رو می‌بینی و بعد از حافظه با اسلایدرهای HSB بازسازیش می‌کنی.
 
 ## استک
 - فرانت: React + Vite + react-router (JavaScript، نه TypeScript)، راست‌به‌چپ، فونت Vazirmatn از npm (@fontsource/vazirmatn)
@@ -21,13 +21,15 @@ client/src/
   games/index.js    فهرست بازی‌ها (کارت‌های صفحه‌ی اول از روی همینه)
   games/song/       همه‌چیزِ بازی حدس آهنگ (SongGame.jsx، api.js، اجزا، song.css)
   games/word/       همه‌چیزِ بازی واژه‌یاب (WordGame.jsx، letters.js، timing.js، اجزا، word.css)
-  shared/           مشترک بین بازی‌ها: api.js (درخواست + ورود)، format.js، site.js (اسم سایت)، اجزای ورود/آمار/جدول امتیاز، shared.css
+  games/color/      همه‌چیزِ بازی حافظه‌ی رنگ (ColorGame.jsx، color.js، api.js، اجزا، color.css)
+  shared/           مشترک بین بازی‌ها: api.js (درخواست + ورود)، format.js، site.js (اسم سایت)، اجزای ورود/جدول امتیاز/شمارش معکوس (`Countdown.jsx`)، shared.css
 server/
   index.js          اپ Express: میان‌افزارهای مشترک + وصل کردن API هر بازی زیر مسیر خودش
   core/             مشترک: db.js، session.js، auth.js، authRoutes.js، player.js، normalize.js، today.js (تاریخ تهران)
   games/song/       بازی حدس آهنگ: routes.js، scoring.js، guesses.js، guessLogic.js، dailySong.js، search.js، playerStats.js، activity.js، leaderboard.js، artistOverrides.js، seed.js
   games/word/       بازی واژه‌یاب: routes.js، letters.js، evaluate.js، game.js، dailyWord.js
-  test/core/، test/song/ و test/word/   تست‌ها، هم‌شکل همون پوشه‌ها
+  games/color/      بازی حافظه‌ی رنگ: routes.js، colorMath.js، scoring.js، daily.js، game.js
+  test/core/، test/song/، test/word/ و test/color/   تست‌ها، هم‌شکل همون پوشه‌ها
 tools/   اسکریپت‌های پایتون
 data/    songs.json و artists.json (خروجی اسکریپت‌های خودم؛ فقط بخون، دستی ویرایش نکن)
 data/audio/  آهنگ‌های اصلی (توی git نمیره)
@@ -55,6 +57,13 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
 - مثل بازی آهنگ، رنگ‌ها روی سرور حساب می‌شن و جواب فقط آخر بازی به کلاینت میرسه
 - آموزش بازی (`HelpDialog.jsx`) سه اسلایده؛ فقط بار اول ورود خودش باز می‌شه (کلید `songmore_word_help_seen` توی localStorage) و بعدش فقط با دکمه‌ی چراغ بالای صفحه
 - کیبورد: چیدمان استاندارد فارسی از چپ به راست (`KEY_ROWS` توی `client/src/games/word/letters.js`). روی کامپیوتر با کیبورد خود کامپیوتر تایپ می‌شه و کیبورد کوچیک زیر صفحه هم قابل کلیکه (`mode="map"`؛ برای عیب‌یابی کیبورد: آدرس `/word?debug`)، روی گوشی دکمه‌های لمسی. اگه زبان سیستم انگلیسی باشه، حرف از جای کلید (`event.code`) پیدا می‌شه
+
+## قوانین حافظه‌ی رنگ
+- روزانه: هر روز ۵ رنگ (HSB) برای همه یکیه. رنگ‌ها تصادفی‌ان و موقع اولین درخواست امروز ساخته و توی `color_daily` ذخیره می‌شن (از قبل قابل حدس نیستن؛ رنگ‌مایه‌ها حدود ۷۲ درجه از هم فاصله دارن). اشباع ۳۵ تا ۹۵ و روشنی ۴۵ تا ۹۵
+- هر دور: «آماده‌ام» -> ۵ ثانیه حفظ کردن (شمارش معکوس، بعدش رنگ ناپدید می‌شه) -> ساختن با سه اسلایدر رنگ‌مایه (۰ تا ۳۶۰)، اشباع و روشنی (۰ تا ۱۰۰) -> نتیجه. بعد از ۵ دور خلاصه‌ی بازی
+- امتیاز هر دور از ۱۰ (جمع از ۵۰): `۱۰ × e^(−ΔE/۲۵)` با یه رقم اعشار؛ ΔE فاصله‌ی ادراکی CIE76 بین دو رنگ توی Lab (`colorMath.js`). همه‌ی حساب‌ها روی سروره
+- رنگ اصلی هر دور فقط بعد از ثبت حدس همون دور توی وضعیت بازی میاد. رنگ دور جاری فقط با `POST /api/color/start` داده می‌شه و دورهای بعد هیچ‌وقت زودتر لو نمی‌رن (خود رنگ دور جاری موقع حفظ کردن توی مرورگر هست، پس با ابزار توسعه‌دهنده قابل دیدنه؛ این توی ماهیت بازیه)
+- اختلاف هر مولفه (رنگ‌مایه با کوتاه‌ترین مسیر روی دایره) به‌شکل «رنگ‌مایه ۶° کم/زیاد» نشون داده می‌شه؛ منفی یعنی رنگ بازیکن کمتر بوده
 
 ## جستجو
 - وقتی کاربر اسم یه خواننده رو بنویسه، همه‌ی آهنگ‌های اون خواننده (اصلی + همکاری/feat) بیاد؛ اول آهنگ‌هایی که اصلی‌ان
@@ -105,6 +114,10 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
   - `GET /api/song/profile` (فقط کاربر واردشده، وگرنه 401): `{ today, username, memberSince, stats, activity, practiceGames, rank }`. `activity.js` فعالیت ۷۵ روز اخیر رو برمی‌گردونه: `{ date, daily: {score, won} یا null، practice: تعداد }` (فقط بازی‌های تموم‌شده)؛ `rank` فقط اگه امروز مسابقه‌ای رو تموم کرده
   - بازی تمرینی (`practice.js`، `practiceRoutes.js`)، APIها زیر `/api/song/practice`: `game`، `guess`، `skip`، `next`. جدول‌های `practice_games` (آهنگ و دور هر بازی) و `practice_guesses`؛ `buildGameState(..., { withScore: false })` وضعیت بدون امتیاز می‌سازه
   - حالت تست (`npm run dev` = `--random-song`): هر بار باز کردن بازی، آهنگ تصادفی جدید و پاک شدن بازی امروز همون بازیکن
+- **بازی حافظه‌ی رنگ (`server/games/color/`)**، APIها زیر `/api/color`: `GET game`، `POST start` (رنگ دور جاری: `{ round, color }`)، `POST guess` (`{ h, s, b }`، عدد صحیح)
+  - جدول‌ها: `color_daily` (رنگ‌های روز) و `color_guesses` (رنگ بازیکن هر دور؛ امتیاز ذخیره نمی‌شه). `claimGuestGames` این جدول رو هم به حساب منتقل می‌کنه
+  - `GET game`: `{ date, roundCount, memorizeSeconds, completed, finished, rounds: [{ round, target, guess, deltaE, score, diff }], total, maxTotal, testMode }`. خطاها: `GAME_OVER`، `INVALID_COLOR`
+  - حالت تست (همون `--random-song`): هر بار باز کردن صفحه بازی امروز از اول و با رنگ‌های تازه شروع می‌شه و دکمه‌ی «بازی دوباره (تست)» میاد
 - **بازی واژه‌یاب (`server/games/word/`)**، APIها زیر `/api/word`: `GET game` و `POST guess` (`{ word }`)
   - حدس‌ها توی جدول `word_guesses` (player_key, date, guess_number, word)؛ رنگ‌ها ذخیره نمی‌شن و هر بار از روی جواب حساب می‌شن. `claimGuestGames` این جدول رو هم به حساب منتقل می‌کنه
   - `game.js` وضعیت بازی رو می‌سازه (جواب فقط وقتی `finished`). خطاها: `WORD_LENGTH`، `INVALID_LETTERS`، `GAME_OVER`
@@ -112,6 +125,7 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
 - **کلاینت**
   - بازی آهنگ: `ModeSwitch.jsx` بالای صفحه بین `/song` و `/song/practice` عوض می‌کنه؛ هر دو حالت همون `SongGame` با پراپ `mode` هستن (با `key` جدا، تا بازی با عوض شدن حالت دوباره لود بشه)
   - `App.jsx`: سربرگ مشترک و مسیرها؛ کاربر واردشده رو یه بار می‌گیره و به صفحه‌ی هر بازی می‌ده (`user`). صفحه‌ی بازی با عوض شدن کاربر بازی رو دوباره می‌گیره
+  - حافظه‌ی رنگ: `ColorGame.jsx` ماشین حالت‌هاست (`loading`، `ready`، `memorize`، `recreate`، `result`، `summary`)؛ اجزا توی `components/` (Dots، ReadyCard، MemorizeCard، Sliders، RecreateView، ResultView، SummaryView). رنگ متن روی رنگ‌ها با `readableOn` (کنتراست WCAG) انتخاب می‌شه. گوشی یه ستونه و از ۸۶۰ پیکسل دو ستونه
   - صفحه‌ی حساب (`/profile`): اسم کاربر توی سربرگ لینک به همین صفحه‌ست و خروج از حساب فقط اینجاست. تقویم ۱۰ هفته (هر ستون یه هفته از شنبه تا جمعه، تاریخ‌ها رشته‌ی تهران از سرور) مثل گیت‌هاب: رنگ هر روز = تعداد بازی‌های اون روز (مسابقه‌ای + تمرینی)، ۰ بازی نشده تا ۴ برای ۵ بازی یا بیشتر (`levelOf` توی `calendar.js`). آمار واژه‌یاب هنوز نیست (تب «به‌زودی»)
   - `shared/api.js` آدرس سرور رو از `window.location.hostname:3001` می‌سازه (نه localhost ثابت) تا کوکی نشست بین هاست‌ها گم نشه؛ همه‌ی درخواست‌ها با `credentials: 'include'`. API هر بازی توی `games/<بازی>/api.js`
   - بازی آهنگ: `audioPlayer.js` پخش کلیپ‌ها با Web Audio (از هر نقطه تا آخر مرحله)، `WavePlayer.jsx` کارت موج که از مرحله‌ی دوم با کشیدن موس/انگشت یا کلیدهای جهت جای پخش رو عوض می‌کنه (موقع کشیدن صدا نیست، با ول کردن پخش می‌شه)

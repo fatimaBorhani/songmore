@@ -57,7 +57,7 @@ function WordGame({ user }) {
   const isDesktop = useIsDesktop()
   // حالت عیب‌یابی: آدرس /word?debug؛ آخرین کلیدی که به صفحه رسیده و دلیل حرف نشستن یا ننشستنش رو نشون می‌ده
   const debug = new URLSearchParams(window.location.search).has('debug')
-  const [lastKey, setLastKey] = useState(null)
+  const [keyLog, setKeyLog] = useState([]) // چند کلید آخر (Shift و Win و ... نادیده گرفته می‌شن تا عکس گرفتن جاشون رو نگیره)
   const sending = useRef(false) // جلوی دو بار ثبت با دو Enter پشت سر هم رو می‌گیره
   const timers = useRef([])
 
@@ -161,8 +161,8 @@ function WordGame({ user }) {
   // تایپ با کیبورد خود کامپیوتر (و کیبوردهای بلوتوثی روی گوشی)
   useEffect(() => {
     function onKeyDown(e) {
-      if (debug) {
-        setLastKey({
+      if (debug && !['Meta', 'OS', 'Shift', 'Control', 'Alt', 'AltGraph', 'CapsLock'].includes(e.key)) {
+        const entry = {
           key: e.key,
           code: e.code,
           mods: ['ctrl', 'alt', 'shift', 'meta'].filter((m) => e[`${m}Key`]).join('+') || '-',
@@ -170,7 +170,8 @@ function WordGame({ user }) {
           letter: letterFromKeyEvent(e) ?? '(هیچ)',
           help: showHelp,
           locked,
-        })
+        }
+        setKeyLog((log) => [entry, ...log].slice(0, 5))
       }
       if (showHelp) {
         if (e.key === 'Escape') closeHelp()
@@ -311,8 +312,10 @@ function WordGame({ user }) {
 
       {debug && (
         <pre className="word-debug" dir="ltr">
-          {lastKey
-            ? `key: ${JSON.stringify(lastKey.key)}\ncode: ${lastKey.code}\nmodifiers: ${lastKey.mods}\ntarget: ${lastKey.target}\nletter: ${lastKey.letter}\nhelp open: ${lastKey.help}\nlocked: ${lastKey.locked}`
+          {keyLog.length
+            ? keyLog
+                .map((k, i) => `${i === 0 ? '>' : ' '} key=${JSON.stringify(k.key)} code=${k.code} mods=${k.mods} target=${k.target} letter=${k.letter}${i === 0 ? `\n  help open=${k.help} locked=${k.locked}` : ''}`)
+                .join('\n')
             : 'یه کلید بزن...'}
         </pre>
       )}

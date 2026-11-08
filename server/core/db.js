@@ -72,6 +72,27 @@ db.exec(`
     expires_at INTEGER NOT NULL
   );
 
+  -- بازی‌های تمرینی حدس آهنگ (نامحدود، بدون امتیاز و لیگ؛ فقط توی فعالیت پروفایل می‌شمارن)
+  -- cycle: هر دور، آهنگ‌ها تکرار نمی‌شن؛ وقتی همه‌ی آهنگ‌ها اومدن دور بعد شروع می‌شه
+  CREATE TABLE IF NOT EXISTS practice_games (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    player_key TEXT NOT NULL,
+    song_id TEXT NOT NULL REFERENCES songs(id),
+    cycle INTEGER NOT NULL DEFAULT 1,
+    date TEXT NOT NULL,
+    created_at INTEGER NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS idx_practice_games_player ON practice_games (player_key, id);
+
+  CREATE TABLE IF NOT EXISTS practice_guesses (
+    game_id INTEGER NOT NULL REFERENCES practice_games(id) ON DELETE CASCADE,
+    guess_number INTEGER NOT NULL,
+    guess_text TEXT NOT NULL,
+    result TEXT NOT NULL CHECK (result IN ('correct', 'present', 'incorrect', 'skipped')),
+    created_at INTEGER NOT NULL,
+    PRIMARY KEY (game_id, guess_number)
+  );
+
   -- حدس‌های بازی واژه‌یاب؛ رنگ حرف‌ها ذخیره نمی‌شه و هر بار از روی کلمه‌ی جواب حساب می‌شه
   CREATE TABLE IF NOT EXISTS word_guesses (
     player_key TEXT NOT NULL,

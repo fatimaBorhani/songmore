@@ -7,12 +7,17 @@ import { buildSongArtistsMap, evaluateGuess } from './guessLogic.js'
 import { addGuess, getGameState } from './guesses.js'
 import { getPlayerStats } from './playerStats.js'
 import { getActivity } from './activity.js'
+import { practiceRouter } from './practiceRoutes.js'
+import { countFinishedPracticeGames } from './practice.js'
 import { getDailyLeaderboard } from './leaderboard.js'
 
 // حالت تست: با هر بار باز کردن صفحه، بازی از نو و با یه آهنگ تصادفی جدید شروع می‌شه
 export const RANDOM_SONG_MODE = process.argv.includes('--random-song')
 
 export const songRouter = express.Router()
+
+// بازی تمرینی: /api/song/practice/...
+songRouter.use('/practice', practiceRouter)
 
 songRouter.get('/game', (req, res) => {
   const date = getTodayDateString()
@@ -52,6 +57,7 @@ songRouter.get('/profile', (req, res) => {
     memberSince: row ? `${row.created_at.replace(' ', 'T')}Z` : null,
     stats: getPlayerStats(req.playerKey),
     activity: getActivity(req.playerKey, today),
+    practiceGames: countFinishedPracticeGames(req.playerKey),
     rank: board.me ? { rank: board.me.rank, totalPlayers: board.totalPlayers } : null,
   })
 })

@@ -95,7 +95,7 @@ test('بعد از برد امروز: آمار، فعالیت و رتبه', async
   const { body } = await b.profile()
   assert.equal(body.stats.played, 1)
   assert.equal(body.stats.totalScore, 10000)
-  assert.deepEqual(body.activity, [{ date: TODAY, score: 10000, won: true }])
+  assert.deepEqual(body.activity, [{ date: TODAY, daily: { score: 10000, won: true }, practice: 0 }])
   assert.equal(body.rank.rank >= 1, true)
   assert.equal(body.rank.totalPlayers >= 1, true)
 })
@@ -111,7 +111,7 @@ test('بازی نیمه‌تموم توی فعالیت نمیاد، باخت م�
   await loser.signup('loser_user')
   await loser.game()
   for (let i = 0; i < 5; i++) await loser.guess('song-C')
-  assert.deepEqual((await loser.profile()).body.activity, [{ date: TODAY, score: 0, won: false }])
+  assert.deepEqual((await loser.profile()).body.activity, [{ date: TODAY, daily: { score: 0, won: false }, practice: 0 }])
 })
 
 test('getActivity: فقط بازی‌های ۷۵ روز اخیر، مرتب از قدیم به جدید', () => {
@@ -125,7 +125,7 @@ test('getActivity: فقط بازی‌های ۷۵ روز اخیر، مرتب از
   add(minusDays(TODAY, 10), ['incorrect', 'incorrect', 'incorrect', 'incorrect', 'incorrect'])
   const activity = getActivity(key, TODAY)
   assert.deepEqual(
-    activity.map((a) => [a.date, a.won]),
+    activity.map((a) => [a.date, a.daily.won]),
     [[minusDays(TODAY, 10), false], [minusDays(TODAY, 3), true]]
   )
 })

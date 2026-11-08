@@ -29,13 +29,18 @@ export function addGuess(sessionId, date, guessText, result) {
 // وضعیت کامل بازی امروز برای این بازیکن: حدس‌ها، کلیپ‌های بازشده، و فقط اگه
 // بازی تموم شده باشه (برد یا ۵ حدس) جواب هم اضافه می‌شه.
 export function getGameState(sessionId, date, dailySongId) {
-  const guesses = getGuesses(sessionId, date)
+  return buildGameState(getGuesses(sessionId, date), dailySongId, { date })
+}
+
+// ساختن وضعیت بازی از روی لیست حدس‌ها (مشترک بین بازی مسابقه‌ای و تمرینی).
+// withScore: false یعنی بدون امتیاز و «ارزش الان» (بازی تمرینی امتیاز نداره)
+export function buildGameState(guesses, songId, { date, withScore = true } = {}) {
   const finished = guesses.length >= MAX_GUESSES || guesses.some((g) => g.result === 'correct')
   // فقط «رد کردن» مرحله‌ی بعد رو باز می‌کنه؛ حدس غلط زمان کلیپ رو زیاد نمی‌کنه
   const skips = guesses.filter((g) => g.result === 'skipped').length
   const unlockedCount = finished ? STAGES.length : Math.min(skips + 1, STAGES.length)
 
-  const clipRows = db.prepare('SELECT stage, file_name FROM clips WHERE song_id = ?').all(dailySongId)
+  const clipRows = db.prepare('SELECT stage, file_name FROM clips WHERE song_id = ?').all(songId)
   const clipByStage = Object.fromEntries(clipRows.map((r) => [r.stage, r.file_name]))
   const clips = STAGES.slice(0, unlockedCount).map((stage) => ({
     stage,
@@ -50,17 +55,19 @@ export function getGameState(sessionId, date, dailySongId) {
     clips,
   }
 
-  if (finished) {
-    state.score = computeScore(guesses)
-  } else {
-    // ارزش الان و ارزش بعد از رد کردن؛ از جواب هیچی لو نمی‌ده
-    Object.assign(state, getWorth(guesses))
+  if (withScore) {
+    if (finished) {
+      state.score = computeScore(guesses)
+    } else {
+      // ارزش الان و ارزش بعد از رد کردن؛ از جواب هیچی لو نمی‌ده
+      Object.assign(state, getWorth(guesses))
+    }
   }
 
   if (finished) {
     state.answer = db
       .prepare('SELECT title, alt_title AS altTitle, credit FROM songs WHERE id = ?')
-      .get(dailySongId)
+      .get(songId)
   }
 
   return state

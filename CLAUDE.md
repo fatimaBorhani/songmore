@@ -17,7 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## ساختار پوشه‌ها
 client/src/
   App.jsx           پوسته‌ی سایت: سربرگ مشترک (اسم سایت + ورود) و مسیرها (react-router)
-  pages/            صفحه‌ی اول (انتخاب بازی) و «پیدا نشد»
+  pages/            صفحه‌ی اول (انتخاب بازی)، «پیدا نشد» و حساب کاربری (ProfilePage.jsx، ProfileCalendar.jsx، calendar.js، profile.css)
   games/index.js    فهرست بازی‌ها (کارت‌های صفحه‌ی اول از روی همینه)
   games/song/       همه‌چیزِ بازی حدس آهنگ (SongGame.jsx، api.js، اجزا، song.css)
   games/word/       همه‌چیزِ بازی واژه‌یاب (WordGame.jsx، letters.js، timing.js، اجزا، word.css)
@@ -25,7 +25,7 @@ client/src/
 server/
   index.js          اپ Express: میان‌افزارهای مشترک + وصل کردن API هر بازی زیر مسیر خودش
   core/             مشترک: db.js، session.js، auth.js، authRoutes.js، player.js، normalize.js، today.js (تاریخ تهران)
-  games/song/       بازی حدس آهنگ: routes.js، scoring.js، guesses.js، guessLogic.js، dailySong.js، search.js، playerStats.js، leaderboard.js، seed.js
+  games/song/       بازی حدس آهنگ: routes.js، scoring.js، guesses.js، guessLogic.js، dailySong.js، search.js، playerStats.js، activity.js، leaderboard.js، artistOverrides.js، seed.js
   games/word/       بازی واژه‌یاب: routes.js، letters.js، evaluate.js، game.js، dailyWord.js
   test/core/، test/song/ و test/word/   تست‌ها، هم‌شکل همون پوشه‌ها
 tools/   اسکریپت‌های پایتون
@@ -90,7 +90,7 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
   - `session.js`: شناسه‌ی مرورگر توی کوکی `songmore_session`
   - `player.js`: «بازیکن» = اگه وارد شده `user:<id>`، وگرنه شناسه‌ی مرورگر (`req.playerKey`). موقع ثبت‌نام/ورود، بازی‌های مهمانِ همون مرورگر به حساب منتقل می‌شن (`claimGuestGames`)، مگر روزهایی که حساب خودش بازی داره
   - احراز هویت (`auth.js` و `authRoutes.js`): نام کاربری و رمز؛ رمز با `crypto.scrypt` خود Node هش می‌شه. APIها: `POST /api/auth/signup`، `POST /api/auth/login`، `POST /api/auth/logout`، `GET /api/auth/me`. نشست ورود توی کوکی جدای `songmore_auth` (فقط هش توکن توی جدول `auth_sessions`). بعد از ۱۰ تلاش ناموفق ورود از یه IP، تا ۱۵ دقیقه 429 برمی‌گرده (توی حافظه، با ری‌استارت سرور صفر می‌شه)
-- **بازی آهنگ (`server/games/song/`)**، APIها زیر `/api/song`: `game`، `search`، `guess`، `skip`، `stats`، `leaderboard/today`
+- **بازی آهنگ (`server/games/song/`)**، APIها زیر `/api/song`: `game`، `search`، `guess`، `skip`، `stats`، `leaderboard/today`، `profile`
   - `artistOverrides.js`: خوندن `tools/artist_overrides.csv` و اضافه کردن خواننده‌های ناقص (و credit) به آهنگ‌ها موقع seed؛ آهنگ یا خواننده‌ی ناموجود خطا می‌ده
   - `dailySong.js` (تاریخ روز از `core/today.js` به وقت Asia/Tehran)؛ آهنگ هر تاریخ یه بار انتخاب (آهنگی که کمتر تکرار شده) و توی `daily_song` ذخیره می‌شه
   - حدس‌ها با (playerKey, date) توی ستون `session_id` جدول guesses ذخیره می‌شن
@@ -98,6 +98,7 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
   - `guesses.js` ساخت وضعیت بازی برای کلاینت رو داره — اینجاست که باید مطمئن بود جواب قبل از پایان بازی لو نمی‌ره. `guessLogic.js` نتیجه‌ی حدس (correct/present/incorrect) رو حساب می‌کنه؛ `search.js` (با `core/normalize.js`) جستجو رو انجام می‌ده
   - `playerStats.js` و `GET /api/song/stats`: آمار کاربر واردشده از روی حدس‌ها (روی همه‌ی دستگاه‌ها یکیه)؛ مهمان‌ها آمار رو توی localStorage دارن (`client/src/games/song/stats.js`)
   - `leaderboard.js` و `GET /api/song/leaderboard/today`: جدول امتیاز امروز (فقط کاربرهای واردشده‌ای که تموم کردن؛ مساوی‌ها با زمان تموم کردن از ستون `created_at` جدول guesses)
+  - `GET /api/song/profile` (فقط کاربر واردشده، وگرنه 401): `{ today, username, memberSince, stats, activity, rank }`. `activity.js` بازی‌های تموم‌شده‌ی ۷۵ روز اخیر رو برمی‌گردونه (`{date, score, won}`)؛ `rank` فقط اگه امروز بازی رو تموم کرده
   - حالت تست (`npm run dev` = `--random-song`): هر بار باز کردن بازی، آهنگ تصادفی جدید و پاک شدن بازی امروز همون بازیکن
 - **بازی واژه‌یاب (`server/games/word/`)**، APIها زیر `/api/word`: `GET game` و `POST guess` (`{ word }`)
   - حدس‌ها توی جدول `word_guesses` (player_key, date, guess_number, word)؛ رنگ‌ها ذخیره نمی‌شن و هر بار از روی جواب حساب می‌شن. `claimGuestGames` این جدول رو هم به حساب منتقل می‌کنه
@@ -105,6 +106,7 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
   - حالت تست (همون `--random-song`): هر بار باز کردن صفحه بازی امروز از اول شروع می‌شه و دکمه‌ی «بازی دوباره (تست)» میاد
 - **کلاینت**
   - `App.jsx`: سربرگ مشترک و مسیرها؛ کاربر واردشده رو یه بار می‌گیره و به صفحه‌ی هر بازی می‌ده (`user`). صفحه‌ی بازی با عوض شدن کاربر بازی رو دوباره می‌گیره
+  - صفحه‌ی حساب (`/profile`): اسم کاربر توی سربرگ لینک به همین صفحه‌ست و خروج از حساب فقط اینجاست. تقویم ۱۰ هفته (هر ستون یه هفته از شنبه تا جمعه، تاریخ‌ها رشته‌ی تهران از سرور) با رنگ‌ها: ۰ بازی نشده، ۱ باخت، ۲ تا ۴ برد با امتیاز کم تا زیاد (`levelOf` توی `calendar.js`). آمار واژه‌یاب هنوز نیست (تب «به‌زودی»)
   - `shared/api.js` آدرس سرور رو از `window.location.hostname:3001` می‌سازه (نه localhost ثابت) تا کوکی نشست بین هاست‌ها گم نشه؛ همه‌ی درخواست‌ها با `credentials: 'include'`. API هر بازی توی `games/<بازی>/api.js`
   - بازی آهنگ: `audioPlayer.js` پخش کلیپ‌ها با Web Audio (از هر نقطه تا آخر مرحله)، `WavePlayer.jsx` کارت موج که از مرحله‌ی دوم با کشیدن موس/انگشت یا کلیدهای جهت جای پخش رو عوض می‌کنه (موقع کشیدن صدا نیست، با ول کردن پخش می‌شه)
   - روی سرور واقعی، هاست باید همه‌ی آدرس‌های ناشناخته رو به `index.html` برگردونه (برای react-router)؛ سرور dev خود Vite این کار رو می‌کنه

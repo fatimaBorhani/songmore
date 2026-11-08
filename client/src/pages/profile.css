@@ -1,0 +1,391 @@
+/* صفحه‌ی حساب کاربری (طرح «ج»): گوشی یه ستونه، از ۸۶۰ پیکسل به بالا ستون کناری + محتوا */
+
+.profile-page {
+  max-width: 1120px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 10px 16px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.profile-guest {
+  max-width: 520px;
+  align-items: center;
+  text-align: center;
+  padding-top: 40px;
+  gap: 16px;
+}
+
+.profile-guest h1 {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.profile-guest p {
+  color: var(--text-soft);
+}
+
+/* ---------- سربرگ پروفایل (گوشی) / ستون کناری (دسکتاپ) ---------- */
+
+.profile-side {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.profile-avatar {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 16px;
+  background: #27272a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.profile-id h1 {
+  font-size: 22px;
+  font-weight: 900;
+  text-align: right;
+}
+
+.profile-id p {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.profile-rank-card {
+  display: none;
+}
+
+.desktop-only {
+  display: none;
+}
+
+/* ---------- محتوا ---------- */
+
+.profile-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.profile-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 16px;
+  background: #111113;
+  border: 1px solid #1f1f23;
+}
+
+.profile-tabs button {
+  flex: 1;
+  min-height: 44px;
+  padding: 0 24px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.profile-tabs button[aria-pressed='true'] {
+  background: #27272a;
+  color: #fff;
+  font-weight: 700;
+}
+
+.profile-panels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-card {
+  box-sizing: border-box;
+  border-radius: 20px;
+  background: #141416;
+  border: 1px solid #1f1f23;
+}
+
+.profile-soon {
+  padding: 28px 16px;
+  text-align: center;
+  color: var(--text-soft);
+}
+
+/* ---------- تقویم ---------- */
+
+.profile-calendar {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-calendar-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.profile-calendar-head h2 {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.profile-calendar-head span {
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+/* ۱۰ ستون (هفته)، ۷ ردیف (شنبه تا جمعه)؛ در راست‌به‌چپ قدیمی‌ترین هفته سمت راسته */
+.heatmap {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-template-rows: repeat(7, auto);
+  grid-auto-flow: column;
+  gap: 4px;
+}
+
+.heatmap i,
+.heatmap-legend i {
+  display: block;
+  border-radius: 6px;
+}
+
+.heatmap i {
+  aspect-ratio: 1;
+}
+
+.lv0 {
+  background: #1f1f23;
+}
+.lv1 {
+  background: #16164a;
+}
+.lv2 {
+  background: #24249a;
+}
+.lv3 {
+  background: #3030e6;
+}
+.lv4 {
+  background: #8f8fff;
+}
+
+.heatmap i.future {
+  opacity: 0.35;
+}
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+.heatmap-legend i {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.heatmap-legend-gap {
+  margin-right: 8px;
+}
+
+/* ---------- آمار ---------- */
+
+.profile-stats {
+  padding: 4px 16px;
+}
+
+.profile-stats dl {
+  margin: 0;
+}
+
+.profile-stats dl > div {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1f1f23;
+}
+
+.profile-stats dt {
+  font-size: 14px;
+  color: #c9c9cf;
+}
+
+.profile-stats dd {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.profile-stats .total {
+  min-height: 48px;
+  border-bottom: none;
+}
+
+.profile-stats .total dt {
+  color: #d4d4ff;
+}
+
+.profile-stats .total dd {
+  font-size: 20px;
+  color: #b4b4ff;
+}
+
+.profile-logout {
+  min-height: 48px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: #c9c9cf;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.profile-logout:hover {
+  background: var(--surface);
+}
+
+/* ---------- دسکتاپ ---------- */
+
+@media (min-width: 860px) {
+  .profile-page {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 16px 24px 48px;
+  }
+
+  .profile-side {
+    flex: 0 0 280px;
+    box-sizing: border-box;
+    padding: 28px 22px 22px;
+    border-radius: 24px;
+    background: var(--card);
+    border: 1px solid #27272a;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .profile-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    border: 3px solid var(--accent);
+    font-size: 42px;
+  }
+
+  .profile-id {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .profile-id h1 {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .profile-rank-inline {
+    display: none;
+  }
+
+  .profile-rank-card {
+    width: 100%;
+    margin-top: 12px;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #14143a;
+    box-shadow: inset 0 0 0 1px var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .profile-rank-card span {
+    font-size: 13px;
+    color: #d4d4ff;
+  }
+
+  .profile-rank-card b {
+    font-size: 20px;
+    font-weight: 900;
+  }
+
+  .profile-rank-card small {
+    font-size: 13px;
+    font-weight: 400;
+    color: #d4d4ff;
+  }
+
+  .desktop-only {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  .mobile-only {
+    display: none;
+  }
+
+  .profile-content {
+    gap: 16px;
+  }
+
+  .profile-tabs {
+    align-self: flex-start;
+  }
+
+  .profile-tabs button {
+    flex: none;
+    padding: 0 28px;
+  }
+
+  .profile-panels {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .profile-calendar {
+    flex: 1 1 340px;
+    max-width: 420px;
+  }
+
+  .profile-stats {
+    flex: 1 1 280px;
+    padding: 4px 18px;
+  }
+
+  .profile-stats dl > div {
+    min-height: 50px;
+  }
+
+  .profile-stats .total {
+    min-height: 56px;
+  }
+
+  .profile-stats .total dd {
+    font-size: 24px;
+  }
+}

@@ -31,3 +31,8 @@ export async function fetchMyStats() {
 export function getTodayLeaderboard() {
   return call('/api/song/leaderboard/today')
 }
+
+// اطلاعات صفحه‌ی حساب کاربری (آمار، فعالیت تقویم، رتبه‌ی امروز)؛ فقط برای کاربر واردشده
+export function getProfile() {
+  return call('/api/song/profile')
+}

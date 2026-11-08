@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { login, logout, signup } from '../api.js'
+import { NavLink } from 'react-router'
+import { login, signup } from '../api.js'
 
 // متن فارسی برای کدهای خطای سرور
 const ERROR_TEXT = {
@@ -42,23 +43,16 @@ function AuthPanel({ user, onUserChange }) {
     }
   }
 
-  async function handleLogout() {
-    try {
-      await logout()
-    } finally {
-      onUserChange(null)
-    }
-  }
-
+  // وارد شده: اسمش لینک به صفحه‌ی حسابه (خروج از حساب هم اونجاست)
   if (user) {
     return (
       <div className="auth-bar">
-        <span className="auth-user">
-          سلام، <bdi>{user.username}</bdi>
-        </span>
-        <button type="button" className="auth-link" onClick={handleLogout}>
-          خروج
-        </button>
+        <NavLink to="/profile" className="auth-chip">
+          <span className="auth-chip-avatar" aria-hidden="true">
+            {user.username[0].toUpperCase()}
+          </span>
+          <bdi>{user.username}</bdi>
+        </NavLink>
       </div>
     )
   }

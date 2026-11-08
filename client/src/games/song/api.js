@@ -21,12 +21,6 @@ export function clipUrl(fileName) {
   return `${API_URL}/clips/${fileName}`
 }
 
-// آمار کاربر واردشده از سرور (روی همه‌ی دستگاه‌ها یکیه)
-export async function fetchMyStats() {
-  const data = await call('/api/song/stats')
-  return data.stats
-}
-
 // جدول امتیاز امروز
 export function getTodayLeaderboard() {
   return call('/api/song/leaderboard/today')

@@ -55,6 +55,9 @@ function WordGame({ user }) {
   const [winRow, setWinRow] = useState(-1) // ردیف برنده که داره جشن می‌گیره
   const [showHelp, setShowHelp] = useState(() => !helpSeenBefore())
   const isDesktop = useIsDesktop()
+  // حالت عیب‌یابی: آدرس /word?debug؛ آخرین کلیدی که به صفحه رسیده و دلیل حرف نشستن یا ننشستنش رو نشون می‌ده
+  const debug = new URLSearchParams(window.location.search).has('debug')
+  const [lastKey, setLastKey] = useState(null)
   const sending = useRef(false) // جلوی دو بار ثبت با دو Enter پشت سر هم رو می‌گیره
   const timers = useRef([])
 
@@ -158,6 +161,17 @@ function WordGame({ user }) {
   // تایپ با کیبورد خود کامپیوتر (و کیبوردهای بلوتوثی روی گوشی)
   useEffect(() => {
     function onKeyDown(e) {
+      if (debug) {
+        setLastKey({
+          key: e.key,
+          code: e.code,
+          mods: ['ctrl', 'alt', 'shift', 'meta'].filter((m) => e[`${m}Key`]).join('+') || '-',
+          target: e.target instanceof Element ? e.target.tagName : '?',
+          letter: letterFromKeyEvent(e) ?? '(هیچ)',
+          help: showHelp,
+          locked,
+        })
+      }
       if (showHelp) {
         if (e.key === 'Escape') closeHelp()
         return
@@ -293,6 +307,14 @@ function WordGame({ user }) {
         </>
       ) : (
         <Keyboard mode="touch" statuses={statuses} onLetter={addLetter} onEnter={submit} onDelete={removeLetter} />
+      )}
+
+      {debug && (
+        <pre className="word-debug" dir="ltr">
+          {lastKey
+            ? `key: ${JSON.stringify(lastKey.key)}\ncode: ${lastKey.code}\nmodifiers: ${lastKey.mods}\ntarget: ${lastKey.target}\nletter: ${lastKey.letter}\nhelp open: ${lastKey.help}\nlocked: ${lastKey.locked}`
+            : 'یه کلید بزن...'}
+        </pre>
       )}
 
       {showHelp && <HelpDialog onClose={closeHelp} />}

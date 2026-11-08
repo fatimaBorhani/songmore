@@ -5,6 +5,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { db } from '../../core/db.js'
+import { applyArtistOverrides, loadArtistOverrides } from './artistOverrides.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..', '..', '..') // ریشه‌ی پروژه
@@ -15,8 +16,13 @@ function readJson(relPath, fallback = null) {
   return JSON.parse(fs.readFileSync(full, 'utf-8'))
 }
 
-const songs = readJson('data/songs.json', [])
 const artists = readJson('data/artists.json', [])
+// خواننده‌های ناقصِ بعضی آهنگ‌ها از tools/artist_overrides.csv کامل می‌شن (songs.json دست نمی‌خوره)
+const songs = applyArtistOverrides(
+  readJson('data/songs.json', []),
+  loadArtistOverrides(path.join(ROOT, 'tools', 'artist_overrides.csv')),
+  artists
+)
 const clipMap = readJson('data/clip_map.json', {})
 
 const insertArtist = db.prepare(

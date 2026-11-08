@@ -1,21 +1,28 @@
 #!/usr/bin/env python3
 """
 check_artist_tags.py
-تگ «artist» توی خود فایل mp3 رو با لیست خواننده‌های همون آهنگ توی songs.json
-مقایسه می‌کنه و اگه تگ یه اسمی داشت که توی داده‌مون برای اون آهنگ ثبت نشده،
-گزارش می‌ده (مثلاً یه آهنگ که توی فایلش سه تا خواننده داره ولی توی songs.json
-فقط یکیشون ثبت شده).
+اسم خواننده‌های هر آهنگ رو از تگ داخل فایل mp3 می‌خونه و با خواننده‌های
+data/songs.json مقایسه می‌کنه تا آهنگ‌هایی که خواننده‌شون ناقصه پیدا بشن.
+(مثلاً «Bargard-Sijal.mp3» که توی تگ‌ش سامی بیگی و بهزاد لیتو هم هستن.)
 
-* فقط می‌خونه: songs.json/artists.json و فایل‌های آهنگ دست نمی‌خورن.
-* چون تگ «artist» گاهی فقط خواننده‌های اصلی رو داره (نه feat.ها)، فقط حالتی
-  رو گزارش می‌کنه که تگ یه اسمی داشته باشه که اصلاً توی داده‌ی اون آهنگ نیست؛
-  برعکسش (داده feat. داره ولی تگ نداره) طبیعیه و مشکل نیست.
+* فقط می‌خونه: songs.json، artists.json و فایل‌های آهنگ دست نمی‌خورن.
+* از ffprobe استفاده می‌کنه (همراه ffmpeg نصب می‌شه؛ کتابخونه‌ی جدید لازم نیست).
+* خروجی یه فایل CSV برای بررسی دستیه (با اکسل باز می‌شه):
+      tools/artist_tag_check.csv
+  هر ردیف یه آهنگه. ستون status می‌گه مشکل چیه، ستون approve رو خودت پر می‌کنی.
 
 اجرا از ریشه‌ی پروژه:
     python tools/check_artist_tags.py
-    python tools/check_artist_tags.py --limit 20     (فقط ۲۰ تا آهنگ، برای تست)
+    python tools/check_artist_tags.py --limit 5            (فقط ۵ تا آهنگ، برای تست)
+    python tools/check_artist_tags.py --audio-dir مسیر/پوشه (اگه آهنگ‌ها جای دیگه‌ان)
 
-خروجی: tools/artist_tag_mismatches.csv (فقط آهنگ‌هایی که مغایرت دارن)
+وضعیت‌ها (status):
+    ok               خواننده‌های تگ و songs.json یکی‌ان
+    missing_in_data  تگ خواننده‌ای داره که توی artists.json هست ولی برای این آهنگ ثبت نشده
+    new_artist       تگ اسمی داره که اصلاً توی artists.json نیست (خواننده‌ی جدید)
+    data_has_more    songs.json خواننده‌ای داره که توی تگ نیست (فقط برای اطلاع، پیشنهادی نداره)
+    no_tag           فایل تگ خواننده نداره
+    file_missing     فایل آهنگ پیدا نشد
 """
 
 import argparse
@@ -23,74 +30,158 @@ import csv
 import json
 import os
 import re
-import shutil
-import subprocess
 import sys
+
+# از همین پوشه‌ی tools اسکریپت خوندن تگ‌ها رو استفاده می‌کنیم
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from read_song_tags import find_ffprobe, read_tags  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SONGS_JSON = os.path.join(ROOT, "data", "songs.json")
 ARTISTS_JSON = os.path.join(ROOT, "data", "artists.json")
+CLIP_MAP_JSON = os.path.join(ROOT, "data", "clip_map.json")
 AUDIO_DIR = os.path.join(ROOT, "data", "audio")
-OUTPUT_CSV = os.path.join(ROOT, "tools", "artist_tag_mismatches.csv")
+OUTPUT_CSV = os.path.join(ROOT, "tools", "artist_tag_check.csv")
 
-SPLIT_PATTERN = re.compile(r"\s*(?:,|&|/|;|\bfeat\.?\b|\bft\.?\b|\band\b)\s*", re.IGNORECASE)
+# تگ‌هایی که اسم خواننده توشونه (با حروف کوچیک). «artist» خواننده‌ی اصلیه،
+# بقیه گاهی همه‌ی خواننده‌ها رو دارن.
+ARTIST_KEYS = ["artist", "tpe1", "artists", "album_artist", "albumartist", "tpe2"]
 
-
-def find_ffprobe():
-    path = shutil.which("ffprobe")
-    if not path:
-        print("✗ ffprobe پیدا نشد. ffmpeg رو نصب کن (ffprobe همراهش میاد).")
-        sys.exit(1)
-    return path
-
-
-def read_artist_tag(ffprobe, audio_path):
-    cmd = [ffprobe, "-v", "quiet", "-print_format", "json", "-show_format", audio_path]
-    result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
-    if result.returncode != 0:
-        return ""
-    try:
-        info = json.loads(result.stdout or "{}")
-    except json.JSONDecodeError:
-        return ""
-    tags = {k.lower(): v for k, v in (info.get("format", {}).get("tags") or {}).items()}
-    return (tags.get("artist") or "").strip()
+# جداکننده‌ی اسم‌ها توی یه تگ. «feat» جدا هست چون بعدش خواننده‌ی مهمانه.
+FEAT_RE = re.compile(r"\s*[\(\[]?\s*\b(?:feat\.?|ft\.?|featuring)\s+", re.IGNORECASE)
+SPLIT_RE = re.compile(
+    r"\s*(?:;|/|\\|,|،|&|\+|\s+x\s+|\s+and\s+|\s+و\s+)\s*",
+    re.IGNORECASE,
+)
 
 
-def split_names(raw):
-    names = [n.strip() for n in SPLIT_PATTERN.split(raw) if n.strip()]
-    return names
+def normalize(text):
+    """برای مقایسه‌ی اسم‌ها: حروف کوچیک، ي→ی، ك→ک، بدون نیم‌فاصله و اعراب."""
+    text = (text or "").lower()
+    text = text.replace("ي", "ی").replace("ك", "ک")
+    text = re.sub(r"[‌‍ـً-ٰٟ]", "", text)
+    text = re.sub(r"[\(\)\[\]\"'“”]", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
 
 
-def norm(text):
-    return re.sub(r"[^a-z0-9ا-ی]", "", (text or "").lower())
+def compact(text):
+    """نسخه‌ی فشرده: فاصله، نقطه و خط تیره هم حذف (BehzadLeito = Behzad Leito)."""
+    return re.sub(r"[\s.\-_]", "", normalize(text))
 
 
 def build_artist_index(artists):
-    """هر خواننده -> مجموعه‌ی همه‌ی اسم‌های نرمال‌شده‌ش (اصلی، فارسی، alias)."""
-    index = {}
+    """اسم‌های هر خواننده (انگلیسی، فارسی، alias) -> id، با دو روش مقایسه."""
+    exact, loose = {}, {}
     for a in artists:
-        names = {norm(a.get("name", "")), norm(a.get("persian", ""))}
-        names.update(norm(n) for n in a.get("aliases", []))
-        names.discard("")
-        index[a["id"]] = names
-    return index
+        names = [a["name"], a.get("persian") or ""] + list(a.get("aliases") or [])
+        for name in names:
+            if not name.strip():
+                continue
+            exact.setdefault(normalize(name), a["id"])
+            loose.setdefault(compact(name), a["id"])
+    return exact, loose
 
 
-def find_artist_by_name(name_norm, artists_by_id, artist_index):
-    for artist_id, names in artist_index.items():
-        if name_norm in names or any(name_norm in n or n in name_norm for n in names if n):
-            return artist_id
-    return None
+def find_artist_id(name, exact, loose):
+    return exact.get(normalize(name)) or loose.get(compact(name))
+
+
+def split_tag_names(raw, protected):
+    """
+    متن تگ رو به [(اسم, نقش)] تبدیل می‌کنه.
+    protected: اسم‌هایی که خودشون جداکننده دارن (مثل «Kamran & Hooman») و نباید بشکنن.
+    نقش: main، یا featured برای اسم‌های بعد از feat / ft.
+    """
+    text = raw
+    holders = {}
+    # اسم‌های دارای جداکننده رو موقتاً با یه علامت عوض می‌کنیم تا شکسته نشن
+    for i, name in enumerate(sorted(protected, key=len, reverse=True)):
+        pattern = re.compile(re.escape(name), re.IGNORECASE)
+        if pattern.search(text):
+            key = f"\x00{i}\x00"
+            holders[key] = name
+            text = pattern.sub(key, text)
+
+    main_part, *feat_parts = FEAT_RE.split(text)
+    result = []
+    for part, role in [(main_part, "main")] + [(p, "featured") for p in feat_parts]:
+        for piece in SPLIT_RE.split(part):
+            piece = piece.strip(" ()[]")
+            for key, name in holders.items():
+                piece = piece.replace(key, name)
+            if piece:
+                result.append((piece, role))
+    return result
+
+
+def tag_artist_names(tags, protected):
+    """همه‌ی اسم‌های خواننده‌ی یه فایل: [(اسم، نقش)] بدون تکرار، با ترتیب تگ‌ها."""
+    seen, result, raw_parts = set(), [], []
+    for key in ARTIST_KEYS:
+        raw = (tags.get(key) or "").strip()
+        if not raw:
+            continue
+        raw_parts.append(raw)
+        for name, role in split_tag_names(raw, protected):
+            marker = normalize(name)
+            if marker not in seen:
+                seen.add(marker)
+                result.append((name, role))
+    return result, " | ".join(dict.fromkeys(raw_parts))
+
+
+def check_song(song, tags, exact, loose, protected, artist_by_id):
+    """وضعیت یه آهنگ رو با مقایسه‌ی تگ و songs.json حساب می‌کنه."""
+    current = {a["id"]: a["role"] for a in song.get("artists", [])}
+    names, raw = tag_artist_names(tags, protected)
+
+    tag_ids, unknown = {}, []
+    for name, role in names:
+        artist_id = find_artist_id(name, exact, loose)
+        if artist_id:
+            # اگه یه خواننده هم main هم featured دیده شد، main می‌مونه
+            if tag_ids.get(artist_id) != "main":
+                tag_ids[artist_id] = role
+        else:
+            unknown.append(name)
+
+    to_add = [(i, r) for i, r in tag_ids.items() if i not in current]
+    only_in_data = [i for i in current if i not in tag_ids]
+
+    if not names:
+        status = "no_tag"
+    elif to_add:
+        status = "missing_in_data"
+    elif unknown:
+        status = "new_artist"
+    elif only_in_data:
+        status = "data_has_more"
+    else:
+        status = "ok"
+
+    def label(ids):
+        return "; ".join(f"{i} ({artist_by_id[i]['name']})" if i in artist_by_id else i for i in ids)
+
+    return {
+        "status": status,
+        "tag_raw": raw,
+        "tag_artists": "; ".join(n for n, _ in names),
+        "to_add": "; ".join(f"{i}:{r}" for i, r in to_add),
+        "to_add_names": label([i for i, _ in to_add]),
+        "new_artists": "; ".join(unknown),
+        "only_in_data": label(only_in_data),
+    }
+
+
+# مشکل‌دارها اول بیان (بعد از این ترتیب، آهنگ‌های توی بازی جلوترن)
+STATUS_ORDER = ["missing_in_data", "new_artist", "no_tag", "data_has_more", "file_missing", "ok"]
 
 
 def main():
-    if hasattr(sys.stdout, "reconfigure"):
-        sys.stdout.reconfigure(encoding="utf-8")
-    parser = argparse.ArgumentParser(description="تگ artist فایل‌ها رو با songs.json مقایسه می‌کنه")
-    parser.add_argument("--audio-dir", default=AUDIO_DIR)
-    parser.add_argument("--output", default=OUTPUT_CSV)
-    parser.add_argument("--limit", type=int, default=0)
+    parser = argparse.ArgumentParser(description="مقایسه‌ی خواننده‌های تگ mp3 با songs.json")
+    parser.add_argument("--audio-dir", default=AUDIO_DIR, help="پوشه‌ی آهنگ‌های اصلی")
+    parser.add_argument("--output", default=OUTPUT_CSV, help="مسیر فایل CSV خروجی")
+    parser.add_argument("--limit", type=int, default=0, help="فقط چند تا آهنگ اول (برای تست)")
     args = parser.parse_args()
 
     ffprobe = find_ffprobe()
@@ -98,62 +189,69 @@ def main():
         songs = json.load(f)
     with open(ARTISTS_JSON, encoding="utf-8") as f:
         artists = json.load(f)
-
-    artists_by_id = {a["id"]: a for a in artists}
-    artist_index = build_artist_index(artists)
-
-    songs_with_audio = [s for s in songs if os.path.isfile(os.path.join(args.audio_dir, s.get("file_name", "")))]
+    in_game = set()
+    if os.path.isfile(CLIP_MAP_JSON):
+        with open(CLIP_MAP_JSON, encoding="utf-8") as f:
+            in_game = set(json.load(f))
     if args.limit:
-        songs_with_audio = songs_with_audio[: args.limit]
+        songs = songs[: args.limit]
+
+    artist_by_id = {a["id"]: a for a in artists}
+    exact, loose = build_artist_index(artists)
+    # اسم‌هایی که خودشون جداکننده دارن (مثل «Kamran & Hooman»)
+    protected = [
+        n
+        for a in artists
+        for n in [a["name"], a.get("persian") or ""] + list(a.get("aliases") or [])
+        if n and SPLIT_RE.search(n)
+    ]
 
     rows = []
-    for i, song in enumerate(songs_with_audio, start=1):
-        audio_path = os.path.join(args.audio_dir, song["file_name"])
-        tag = read_artist_tag(ffprobe, audio_path)
-        if not tag:
-            continue
+    for i, song in enumerate(songs, start=1):
+        audio_path = os.path.join(args.audio_dir, song.get("file_name", ""))
+        row = {
+            "id": song["id"],
+            "title": song.get("title", ""),
+            "credit": song.get("credit", ""),
+            "in_game": "yes" if song["id"] in in_game else "no",
+            "status": "",
+            "current_artists": "; ".join(f"{a['id']}:{a['role']}" for a in song.get("artists", [])),
+            "tag_raw": "",
+            "tag_artists": "",
+            "to_add": "",
+            "to_add_names": "",
+            "new_artists": "",
+            "only_in_data": "",
+            "approve": "",
+        }
+        if not song.get("file_name") or not os.path.isfile(audio_path):
+            row["status"] = "file_missing"
+        else:
+            tags = read_tags(ffprobe, audio_path) or {}
+            row.update(check_song(song, tags, exact, loose, protected, artist_by_id))
+        rows.append(row)
+        if i % 50 == 0:
+            print(f"  {i} از {len(songs)} آهنگ خونده شد...")
 
-        # اسم همه‌ی خواننده‌های همین آهنگ که توی داده‌مون ثبته
-        linked_ids = [a["id"] for a in song.get("artists", [])]
-        known_names = set()
-        for artist_id in linked_ids:
-            known_names |= artist_index.get(artist_id, set())
-        # اسم خود آهنگ هم اضافه کن (گاهی توی تگ چیزی مثل "Title - Artist" میاد)
-        known_names.add(norm(song.get("title", "")))
+    rows.sort(key=lambda r: (r["in_game"] != "yes", STATUS_ORDER.index(r["status"]), r["title"].lower()))
 
-        missing = []
-        for candidate in split_names(tag):
-            cand_norm = norm(candidate)
-            if not cand_norm or cand_norm in known_names:
-                continue
-            if any(cand_norm in n or n in cand_norm for n in known_names if n):
-                continue
-            existing_id = find_artist_by_name(cand_norm, artists_by_id, artist_index)
-            status = f"توی artists.json هست ({existing_id}) ولی به این آهنگ وصل نیست" if existing_id else "توی artists.json هم نیست"
-            missing.append(f"{candidate} [{status}]")
-
-        if missing:
-            rows.append({
-                "id": song["id"],
-                "title": song.get("title", ""),
-                "file_name": song["file_name"],
-                "current_credit": song.get("credit", ""),
-                "tag_artist": tag,
-                "missing_from_data": "; ".join(missing),
-            })
-
-        if i % 25 == 0:
-            print(f"  {i} از {len(songs_with_audio)} آهنگ بررسی شد...")
-
+    # utf-8-sig تا اکسل حروف فارسی رو درست نشون بده
     with open(args.output, "w", newline="", encoding="utf-8-sig") as f:
-        fieldnames = ["id", "title", "file_name", "current_credit", "tag_artist", "missing_from_data"]
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=list(rows[0].keys()) if rows else ["id"])
         writer.writeheader()
         writer.writerows(rows)
 
+    counts = {s: sum(1 for r in rows if r["status"] == s) for s in STATUS_ORDER}
     print()
-    print(f"✓ {len(songs_with_audio)} آهنگ بررسی شد")
-    print(f"⚠ {len(rows)} آهنگ مغایرت دارن (تگ یه خواننده داره که توی songs.json نیست)")
+    print(f"✓ {len(rows)} آهنگ بررسی شد ({sum(1 for r in rows if r['in_game'] == 'yes')} تاش توی بازیه)")
+    for status in STATUS_ORDER:
+        if counts[status]:
+            print(f"  {status}: {counts[status]}")
+    problems = [r for r in rows if r["status"] == "missing_in_data"]
+    if problems:
+        print("  نمونه‌ی آهنگ‌هایی که خواننده‌شون ناقصه:")
+        for r in problems[:8]:
+            print(f"    {r['title']} ({r['credit']}) ← {r['to_add_names']}")
     print(f"  خروجی: {args.output}")
 
 

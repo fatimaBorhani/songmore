@@ -7,6 +7,8 @@ data/songs.json مقایسه می‌کنه تا آهنگ‌هایی که خوا�
 
 * فقط می‌خونه: songs.json، artists.json و فایل‌های آهنگ دست نمی‌خورن.
 * از ffprobe استفاده می‌کنه (همراه ffmpeg نصب می‌شه؛ کتابخونه‌ی جدید لازم نیست).
+* اصلاح‌هایی که قبلاً توی tools/artist_overrides.csv تأیید شدن حساب می‌شن و دوباره «ناقص» نشون داده نمی‌شن.
+* اسم سایت‌ها و @کانال‌هایی که بعضی فایل‌ها توی تگ دارن نادیده گرفته می‌شن.
 * خروجی یه فایل CSV برای بررسی دستیه (با اکسل باز می‌شه):
       tools/artist_tag_check.csv
   هر ردیف یه آهنگه. ستون status می‌گه مشکل چیه، ستون approve رو خودت پر می‌کنی.
@@ -42,6 +44,8 @@ ARTISTS_JSON = os.path.join(ROOT, "data", "artists.json")
 CLIP_MAP_JSON = os.path.join(ROOT, "data", "clip_map.json")
 AUDIO_DIR = os.path.join(ROOT, "data", "audio")
 OUTPUT_CSV = os.path.join(ROOT, "tools", "artist_tag_check.csv")
+# اصلاح‌های تأییدشده‌ی دستی؛ همون فایلی که seed.js می‌خونه
+OVERRIDES_CSV = os.path.join(ROOT, "tools", "artist_overrides.csv")
 
 # تگ‌هایی که اسم خواننده توشونه (با حروف کوچیک). «artist» خواننده‌ی اصلیه،
 # بقیه گاهی همه‌ی خواننده‌ها رو دارن.
@@ -50,9 +54,13 @@ ARTIST_KEYS = ["artist", "tpe1", "artists", "album_artist", "albumartist", "tpe2
 # جداکننده‌ی اسم‌ها توی یه تگ. «feat» جدا هست چون بعدش خواننده‌ی مهمانه.
 FEAT_RE = re.compile(r"\s*[\(\[]?\s*\b(?:feat\.?|ft\.?|featuring)\s+", re.IGNORECASE)
 SPLIT_RE = re.compile(
-    r"\s*(?:;|/|\\|,|،|&|\+|\s+x\s+|\s+and\s+|\s+و\s+)\s*",
+    r"\s*(?:;|/|\\|\||,|،|&|\+|\s+x\s+|\s+and\s+|\s+و\s+)\s*",
     re.IGNORECASE,
 )
+# بعضی سایت‌ها اسم خودشون رو توی تگ می‌ذارن («Zedbazi [ Listen2Music.ir ]»، «Ali @RozMusic.com»)
+# اینا خواننده نیستن و حذف می‌شن
+HANDLE_RE = re.compile(r"@\S*")
+DOMAIN_RE = re.compile(r"\S+\.(?:com|ir|net|org|info|co)\b\S*", re.IGNORECASE)
 
 
 def normalize(text):
@@ -92,7 +100,7 @@ def split_tag_names(raw, protected):
     protected: اسم‌هایی که خودشون جداکننده دارن (مثل «Kamran & Hooman») و نباید بشکنن.
     نقش: main، یا featured برای اسم‌های بعد از feat / ft.
     """
-    text = raw
+    text = DOMAIN_RE.sub("", HANDLE_RE.sub("", raw))
     holders = {}
     # اسم‌های دارای جداکننده رو موقتاً با یه علامت عوض می‌کنیم تا شکسته نشن
     for i, name in enumerate(sorted(protected, key=len, reverse=True)):
@@ -130,9 +138,36 @@ def tag_artist_names(tags, protected):
     return result, " | ".join(dict.fromkeys(raw_parts))
 
 
-def check_song(song, tags, exact, loose, protected, artist_by_id):
-    """وضعیت یه آهنگ رو با مقایسه‌ی تگ و songs.json حساب می‌کنه."""
+def load_overrides(path):
+    """
+    اصلاح‌های تأییدشده: {song_id: {"add": [(artist_id, role), ...], "ignore": {اسم‌هایی که توی تگ هستن ولی اشتباهن}}}
+    (فایل نبود = خالی)
+    """
+    result = {}
+    if not os.path.isfile(path):
+        return result
+    with open(path, encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            pairs = []
+            for part in (row.get("add_artists") or "").split(";"):
+                part = part.strip()
+                if part:
+                    artist_id, _, role = part.partition(":")
+                    pairs.append((artist_id.strip(), role.strip() or "main"))
+            ignore = {
+                normalize(n) for n in (row.get("ignore_tag_names") or "").split(";") if n.strip()
+            }
+            if row.get("song_id"):
+                result[row["song_id"].strip()] = {"add": pairs, "ignore": ignore}
+    return result
+
+
+def check_song(song, tags, exact, loose, protected, artist_by_id, overrides):
+    """وضعیت یه آهنگ رو با مقایسه‌ی تگ و songs.json (بعد از اصلاح‌های تأییدشده) حساب می‌کنه."""
     current = {a["id"]: a["role"] for a in song.get("artists", [])}
+    override = overrides.get(song["id"], {"add": [], "ignore": set()})
+    for artist_id, role in override["add"]:
+        current.setdefault(artist_id, role)
     names, raw = tag_artist_names(tags, protected)
 
     tag_ids, unknown = {}, []
@@ -142,7 +177,7 @@ def check_song(song, tags, exact, loose, protected, artist_by_id):
             # اگه یه خواننده هم main هم featured دیده شد، main می‌مونه
             if tag_ids.get(artist_id) != "main":
                 tag_ids[artist_id] = role
-        else:
+        elif normalize(name) not in override["ignore"]:
             unknown.append(name)
 
     to_add = [(i, r) for i, r in tag_ids.items() if i not in current]
@@ -181,6 +216,7 @@ def main():
     parser = argparse.ArgumentParser(description="مقایسه‌ی خواننده‌های تگ mp3 با songs.json")
     parser.add_argument("--audio-dir", default=AUDIO_DIR, help="پوشه‌ی آهنگ‌های اصلی")
     parser.add_argument("--output", default=OUTPUT_CSV, help="مسیر فایل CSV خروجی")
+    parser.add_argument("--overrides", default=OVERRIDES_CSV, help="فایل اصلاح‌های تأییدشده")
     parser.add_argument("--limit", type=int, default=0, help="فقط چند تا آهنگ اول (برای تست)")
     args = parser.parse_args()
 
@@ -196,6 +232,7 @@ def main():
     if args.limit:
         songs = songs[: args.limit]
 
+    overrides = load_overrides(args.overrides)
     artist_by_id = {a["id"]: a for a in artists}
     exact, loose = build_artist_index(artists)
     # اسم‌هایی که خودشون جداکننده دارن (مثل «Kamran & Hooman»)
@@ -215,7 +252,14 @@ def main():
             "credit": song.get("credit", ""),
             "in_game": "yes" if song["id"] in in_game else "no",
             "status": "",
-            "current_artists": "; ".join(f"{a['id']}:{a['role']}" for a in song.get("artists", [])),
+            "current_artists": "; ".join(
+                [f"{a['id']}:{a['role']}" for a in song.get("artists", [])]
+                + [
+                    f"{i}:{r}"
+                    for i, r in overrides.get(song["id"], {"add": []})["add"]
+                    if i not in {a["id"] for a in song.get("artists", [])}
+                ]
+            ),
             "tag_raw": "",
             "tag_artists": "",
             "to_add": "",
@@ -228,7 +272,7 @@ def main():
             row["status"] = "file_missing"
         else:
             tags = read_tags(ffprobe, audio_path) or {}
-            row.update(check_song(song, tags, exact, loose, protected, artist_by_id))
+            row.update(check_song(song, tags, exact, loose, protected, artist_by_id, overrides))
         rows.append(row)
         if i % 50 == 0:
             print(f"  {i} از {len(songs)} آهنگ خونده شد...")

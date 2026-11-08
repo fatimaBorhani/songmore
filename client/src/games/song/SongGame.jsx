@@ -16,6 +16,7 @@ import SearchBox from './components/SearchBox.jsx'
 import GuessHistory from './components/GuessHistory.jsx'
 import GameOver from './components/GameOver.jsx'
 import ModeSwitch from './components/ModeSwitch.jsx'
+import BackLink from '../../shared/components/BackLink.jsx'
 import AnimatedNumber from '../../shared/components/AnimatedNumber.jsx'
 import Leaderboard from '../../shared/components/Leaderboard.jsx'
 import { playWinSound } from './audioPlayer.js'
@@ -160,6 +161,7 @@ function SongGame({ user, mode = 'daily' }) {
 
   return (
     <main className="game-page">
+      <BackLink />
       <ModeSwitch mode={mode} />
 
       <header className="game-header">

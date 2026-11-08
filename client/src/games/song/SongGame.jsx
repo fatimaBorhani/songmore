@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import {
-  fetchMyStats,
   getGame,
   getPracticeGame,
   getTodayLeaderboard,
@@ -10,7 +9,6 @@ import {
   sendPracticeSkip,
   sendSkip,
 } from './api.js'
-import { getStats, recordResult } from './stats.js'
 import { STAGES } from './stages.js'
 import { faNumber, faSeconds } from '../../shared/format.js'
 import WavePlayer from './components/WavePlayer.jsx'
@@ -20,7 +18,6 @@ import GameOver from './components/GameOver.jsx'
 import ModeSwitch from './components/ModeSwitch.jsx'
 import AnimatedNumber from '../../shared/components/AnimatedNumber.jsx'
 import Leaderboard from '../../shared/components/Leaderboard.jsx'
-import StatsPanel from '../../shared/components/StatsPanel.jsx'
 import { playWinSound } from './audioPlayer.js'
 import { SITE_NAME } from '../../shared/site.js'
 import './song.css'
@@ -33,8 +30,6 @@ function SongGame({ user, mode = 'daily' }) {
   const [game, setGame] = useState(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
-  const [stats, setStats] = useState(getStats) // آمار مهمان (توی همین مرورگر)
-  const [myStats, setMyStats] = useState(null) // آمار کاربر واردشده (از سرور)
   const [testMode, setTestMode] = useState(false)
   const [celebrating, setCelebrating] = useState(false) // جشن حدس درست در حال نمایشه؟
   const celebrateTimer = useRef(null)
@@ -75,23 +70,6 @@ function SongGame({ user, mode = 'daily' }) {
   // اگه صفحه بسته شد، تایمر جشن نمونه
   useEffect(() => () => clearTimeout(celebrateTimer.current), [])
 
-  // اول کار ببین کاربر قبلاً وارد شده یا نه (کوکی ورود)
-
-  // وقتی بازی تموم می‌شه آمار رو آپدیت کن:
-  // کاربر واردشده -> از سرور بگیر؛ مهمان -> توی مرورگر ثبت کن (فقط یه بار برای هر روز)
-  useEffect(() => {
-    // آمار و لیگ فقط برای بازی مسابقه‌ایه؛ تمرین جایی ثبت نمی‌شه
-    if (!game?.finished || practice) return
-    if (user) {
-      fetchMyStats()
-        .then(setMyStats)
-        .catch(() => {})
-      return
-    }
-    const won = game.guesses.some((g) => g.result === 'correct')
-    setStats(recordResult(game.date, won, game.score))
-  }, [game, user, practice])
-
   // بعد از ورود یا خروج، بازی امروز رو دوباره بگیر:
   // با ورود بازی حساب میاد (که بازی مهمان این مرورگر هم بهش منتقل شده)، با خروج بازی مهمان
   const userId = user ? user.id : null
@@ -99,7 +77,6 @@ function SongGame({ user, mode = 'daily' }) {
   useEffect(() => {
     if (lastUserId.current === userId) return // اولین بار یا بدون تغییر
     lastUserId.current = userId
-    setMyStats(null)
     loadGame()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId])
@@ -241,7 +218,6 @@ function SongGame({ user, mode = 'daily' }) {
             practice={practice}
             onNext={practice ? handleNextPractice : testMode ? loadGame : undefined}
           />
-          {!practice && (user ? myStats : stats) && <StatsPanel stats={user ? myStats : stats} />}
           {!practice && (
             <Leaderboard
               user={user}

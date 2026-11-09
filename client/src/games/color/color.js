@@ -56,7 +56,8 @@ export function sliderTracks({ h, s, b }) {
 
 // امتیاز با رقم فارسی: ۱۰ یا ۸٫۴
 export function faScore(n) {
-  return faNumber(n, Number.isInteger(n) ? 0 : 1)
+  // مثل dialed.gg دو رقم اعشار (۹٫۸۲)؛ عدد صحیح بدون اعشار
+  return faNumber(n, Number.isInteger(n) ? 0 : 2)
 }
 
 // «رنگ‌مایه ۶° کم»: اختلاف رنگ تو با رنگ اصلی (منفی یعنی رنگ تو کمتر بوده)

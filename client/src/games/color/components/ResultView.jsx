@@ -6,11 +6,12 @@ import { useCountUp } from '../useCountUp.js'
 
 // یه جمله‌ی کوتاه برای امتیاز
 function scoreMessage(score) {
-  if (score >= 9.5) return 'اینقدر نزدیکه که ترسناکه!'
-  if (score >= 8.5) return 'خیلی نزدیک بود!'
-  if (score >= 7) return 'خوب بود.'
-  if (score >= 5) return 'بد نبود.'
-  if (score >= 3) return 'یه کم دور بود.'
+  if (score >= 9.8) return 'اینقدر نزدیکه که ترسناکه!'
+  if (score >= 9.5) return 'تقریباً عین خودشه!'
+  if (score >= 9) return 'خیلی نزدیک بود!'
+  if (score >= 8) return 'خوب بود.'
+  if (score >= 6) return 'بد نبود.'
+  if (score >= 4) return 'یه کم دور بود.'
   return 'این دفعه نه.'
 }
 

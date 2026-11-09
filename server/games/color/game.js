@@ -18,7 +18,7 @@ export function clearColorGame(playerKey, date) {
 export function getColorState(playerKey, date) {
   const targets = getDailyColors(date)
   const rounds = getGuesses(playerKey, date).map((g) => evaluateRound(targets[g.round - 1], g, g.round))
-  const total = Math.round(rounds.reduce((sum, r) => sum + r.score, 0) * 10) / 10
+  const total = Math.round(rounds.reduce((sum, r) => sum + r.score, 0) * 100) / 100
   return {
     date,
     roundCount: ROUNDS,

@@ -1,8 +1,8 @@
 // تست ریاضی رنگ، امتیازدهی و ساخت رنگ‌های روز
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { colorDistance, deltaE, hsbToRgb, rgbToLab } from '../../games/color/colorMath.js'
-import { evaluateRound, hueDiff, ROUNDS, scoreFromDeltaE } from '../../games/color/scoring.js'
+import { colorDistance, deltaE, deltaE2000, hsbToRgb, rgbToLab } from '../../games/color/colorMath.js'
+import { evaluateRound, hueDiff, ROUNDS, scoreColor } from '../../games/color/scoring.js'
 import { generateColors } from '../../games/color/daily.js'
 import { parseColorInput } from '../../games/color/game.js'
 
@@ -40,16 +40,26 @@ test('فاصله‌ی رنگ‌ها: یکی = ۰، سیاه و سفید = ۱۰۰
   assert.ok(colorDistance(orange, other) < colorDistance(orange, { h: 200, s: 73, b: 85 }))
 })
 
-test('امتیاز از روی فاصله: ۰ می‌شه ۱۰ و هر چه دورتر کمتر', () => {
-  assert.equal(scoreFromDeltaE(0), 10)
-  assert.equal(scoreFromDeltaE(5), 8.2)
-  assert.equal(scoreFromDeltaE(10), 6.7)
-  assert.equal(scoreFromDeltaE(25), 3.7)
-  assert.equal(scoreFromDeltaE(100), 0.2)
+test('CIEDE2000: نمونه‌های جدول استاندارد (Sharma و همکاران)', () => {
+  near(deltaE2000([50, 2.6772, -79.7751], [50, 0, -82.7485]), 2.0425, 0.0001)
+  near(deltaE2000([50, -1.3802, -84.2814], [50, 0, -82.7485]), 1.0, 0.0001)
+  near(deltaE2000([50, 2.5, 0], [73, 25, -18]), 27.1492, 0.0001)
+  near(deltaE2000([22.7233, 20.0904, -46.694], [23.0331, 14.973, -42.5619]), 2.0373, 0.0001)
+  assert.equal(deltaE2000([60, 10, 10], [60, 10, 10]), 0)
+})
+
+test('امتیاز مثل dialed.gg: نمونه‌ی واقعی و ترتیب درست', () => {
+  const t = { h: 30, s: 70, b: 80 }
+  assert.equal(scoreColor(t, t), 10)
+  // نمونه‌ی عکس سایت dialed.gg: H149 S100 B23 در برابر H153 S100 B26 -> ۹٫۸۲
+  assert.equal(scoreColor({ h: 149, s: 100, b: 23 }, { h: 153, s: 100, b: 26 }), 9.82)
+  assert.equal(scoreColor(t, { h: 34, s: 76, b: 77 }), 9.64)
+  assert.equal(scoreColor(t, { h: 70, s: 70, b: 80 }), 3.94)
+  // تا ۹۰ درجه هر چه رنگ‌مایه دورتر، امتیاز کمتر (خیلی دورتر از اون، خود فرمول dialed دقیقاً یکنواخت نیست)
   let last = 10
-  for (let d = 1; d <= 120; d++) {
-    const s = scoreFromDeltaE(d)
-    assert.ok(s <= last && s >= 0, `d=${d}`)
+  for (let dh = 0; dh <= 90; dh += 5) {
+    const s = scoreColor(t, { h: t.h + dh, s: t.s, b: t.b })
+    assert.ok(s <= last && s >= 0, `dh=${dh}`)
     last = s
   }
 })

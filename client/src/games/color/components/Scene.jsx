@@ -1,14 +1,11 @@
-// چیدمان مشترک سه مرحله (حفظ کردن، ساختن، نتیجه): «صحنه»ی رنگی با اندازه‌ی ثابت + کارت پایین/کنار + دکمه
-// چون اندازه‌ها همیشه یکیه، با عوض شدن مرحله صفحه نمی‌پره
-function Scene({ stage, children, action }) {
+// قاب تمام‌صفحه‌ی مشترک سه مرحله (حفظ کردن، ساختن، نتیجه): رنگ کل صفحه رو پر می‌کنه
+// و توی هر سه مرحله یه اندازه‌ست. panel: کارت پایین صفحه (اسلایدرها یا امتیاز) که روی رنگ میاد
+function Scene({ label, background, ink, children, panel }) {
   return (
-    <div className="color-scene">
-      {stage}
-      <div className="color-side">
-        <section className="color-side-card">{children}</section>
-        {action}
-      </div>
-    </div>
+    <section className="color-full" aria-label={label} style={{ background, color: ink }}>
+      {children}
+      {panel && <div className="color-panel">{panel}</div>}
+    </section>
   )
 }
 

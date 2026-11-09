@@ -181,15 +181,22 @@ function ColorGame({ user }) {
         />
       )}
       {phase === 'memorize' && target && (
-        <MemorizeCard color={target} hsb={hsb} secondsLeft={secondsLeft} totalSeconds={game.memorizeSeconds} />
+        <MemorizeCard
+          color={target}
+          secondsLeft={secondsLeft}
+          totalSeconds={game.memorizeSeconds}
+          round={game.completed + 1}
+          roundCount={game.roundCount}
+        />
       )}
-      {phase === 'recreate' && <RecreateView hsb={hsb} onChange={setHsb} onSubmit={submitGuess} busy={busy} />}
+      {phase === 'recreate' && <RecreateView hsb={hsb} onChange={setHsb} onSubmit={submitGuess} busy={busy} error={error} />}
       {phase === 'result' && result && (
         <ResultView result={result} game={game} last={game.finished} busy={busy} onNext={nextRound} />
       )}
       {phase === 'summary' && <SummaryView game={game} onShare={share} testMode={game.testMode} onReplay={loadGame} />}
 
-      {error && <p className="error">{error}</p>}
+      {/* موقع ساختن خطا توی کارت پایین صفحه نشون داده می‌شه (صفحه‌ی تمام‌صفحه روی اینجاست) */}
+      {error && phase !== 'recreate' && <p className="error">{error}</p>}
       {notice && (
         <p className="color-toast" role="status">
           {notice}

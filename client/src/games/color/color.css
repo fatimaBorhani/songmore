@@ -114,143 +114,105 @@
 }
 
 
-.color-ring {
-  position: relative;
-  width: 160px;
-  height: 160px;
-}
 
-.color-ring svg {
-  position: absolute;
+
+
+
+/* ---------- قاب تمام‌صفحه: حفظ کردن، ساختن و نتیجه ----------
+   رنگ کل صفحه (حتی روی سربرگ سایت) رو پر می‌کنه و توی هر سه مرحله یه اندازه‌ست */
+
+.color-full {
+  position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
+  z-index: 30;
+  overflow: hidden;
 }
 
-.color-ring-arc {
-  transition: stroke-dashoffset 0.1s linear;
-}
-
-.color-ring-number {
+/* نوار باریک کنار راست که از بالا خالی می‌شه */
+.color-timebar {
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 72px;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: calc(8px + env(safe-area-inset-right, 0px));
+  background: color-mix(in srgb, currentColor 20%, transparent);
+}
+
+.color-timebar > div {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: currentColor;
+  transition: height 0.1s linear;
+}
+
+.color-corner-number {
+  position: absolute;
+  top: calc(20px + env(safe-area-inset-top, 0px));
+  left: calc(24px + env(safe-area-inset-left, 0px));
+  font-size: 76px;
   font-weight: 900;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
-/* ---------- صحنه‌ی مشترک: حفظ کردن، ساختن و نتیجه ---------- */
-
-.color-scene {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.color-stage {
-  position: relative;
-  box-sizing: border-box;
-  flex-shrink: 0;
-  height: min(320px, 38dvh);
-  min-height: 200px;
-  border-radius: 28px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.color-stage.split {
-  align-items: stretch;
-}
-
-/* صفحه راست‌به‌چپه: اولین نیمه (رنگ اصلی) سمت راست می‌افته */
-.color-stage-half {
-  flex: 1;
-  position: relative;
-}
-
-.color-stage-pill {
+.color-pill {
   position: absolute;
-  top: 14px;
-  right: 16px;
-  padding: 4px 12px;
+  padding: 4px 14px;
   border-radius: 999px;
   background: rgba(9, 9, 11, 0.85);
   color: var(--text);
   font-size: 12px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
-.color-stage-pill.bottom {
-  top: auto;
-  bottom: 14px;
+.color-pill-top {
+  top: calc(16px + env(safe-area-inset-top, 0px));
+  right: calc(16px + env(safe-area-inset-right, 0px));
 }
 
-.color-stage-name {
-  position: absolute;
-  bottom: 14px;
-  right: 16px;
-  font-size: 16px;
-  font-weight: 900;
+.color-pill-bottom {
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  left: calc(24px + env(safe-area-inset-left, 0px));
 }
 
-.color-side {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.color-side > .color-btn {
-  margin-top: auto;
-}
-
-.color-side-card {
-  flex: 1;
-  position: relative;
-  box-sizing: border-box;
-  min-height: 236px;
-  padding: 18px;
-  border-radius: 24px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* اسلایدرهای قفل‌شده‌ی موقع حفظ کردن */
-.color-dim {
-  opacity: 0.28;
-  pointer-events: none;
-}
-
-.color-overlay {
+.color-halves {
   position: absolute;
   inset: 0;
   display: flex;
+}
+
+.color-halves > div {
+  flex: 1;
+  position: relative;
+}
+
+/* کارت پایین صفحه روی رنگ (اسلایدرها یا امتیاز) */
+.color-panel {
+  position: absolute;
+  left: calc(12px + env(safe-area-inset-left, 0px));
+  right: calc(12px + env(safe-area-inset-right, 0px));
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  max-height: calc(100% - 80px);
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 16px;
+  border-radius: 24px;
+  background: rgba(9, 9, 11, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--text);
+  display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 0 28px;
-  text-align: center;
+  gap: 14px;
 }
 
-.color-overlay-title {
-  font-size: 18px;
-  font-weight: 900;
-}
-
-.color-overlay-text {
-  font-size: 13px;
-  color: var(--text-soft);
+.color-panel-error {
+  color: #ff8a8a;
+  font-size: 14px;
 }
 
 .sr-only {
@@ -261,6 +223,7 @@
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
 
 /* ---------- ساختن رنگ ---------- */
 
@@ -361,11 +324,6 @@
 
 
 
-.color-score-card {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
 
 .color-score-row,
 .color-total-row {
@@ -550,7 +508,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .color-ring-arc {
+  .color-timebar > div {
     transition: none;
   }
 }
@@ -582,65 +540,34 @@
     align-self: center;
   }
 
-  .color-ring {
-    width: 190px;
-    height: 190px;
+  .color-corner-number {
+    top: 32px;
+    left: 40px;
+    font-size: 110px;
   }
 
-  .color-ring-number {
-    font-size: 88px;
+  .color-timebar {
+    width: 12px;
   }
 
-  /* صحنه ۴۸۰×۴۸۰ کنار یه کارت ۴۸۰×۴۸۰ که اسلایدرها/امتیاز و دکمه توشه */
-  .color-scene {
-    flex: 0 0 auto;
-    flex-direction: row;
-    justify-content: center;
-    align-items: stretch;
-    gap: 32px;
-  }
-
-  .color-stage {
-    flex: 0 0 480px;
-    height: 480px;
-    border-radius: 32px;
-  }
-
-  .color-stage-pill {
-    top: 18px;
-    right: 20px;
-    padding: 5px 14px;
+  .color-pill {
+    padding: 5px 16px;
     font-size: 13px;
   }
 
-  .color-stage-pill.bottom {
-    top: auto;
-    bottom: 18px;
+  .color-pill-bottom {
+    bottom: 32px;
+    left: 40px;
   }
 
-  .color-stage-name {
-    bottom: 18px;
-    right: 22px;
-    font-size: 17px;
-  }
-
-  .color-side {
-    flex: 0 0 480px;
-    height: 480px;
-    box-sizing: border-box;
-    padding: 28px;
-    border-radius: 32px;
-    background: var(--card);
-    border: 1px solid var(--border);
+  /* کارت پایین سمت راست صفحه، زیر برچسب بالا */
+  .color-panel {
+    left: auto;
+    right: 44px;
+    bottom: 32px;
+    width: 400px;
+    padding: 24px;
     gap: 18px;
-  }
-
-  .color-side-card {
-    min-height: 0;
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    background: none;
   }
 
   .color-sliders {
@@ -655,9 +582,6 @@
     display: flex;
   }
 
-  .color-score-card {
-    gap: 18px;
-  }
 
   .color-score-value {
     font-size: 56px;

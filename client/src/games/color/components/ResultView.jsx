@@ -1,7 +1,7 @@
 // نتیجه‌ی یه دور: همون کارت دو نیمه می‌شه (بالا رنگ تو با امتیاز، پایین رنگ اصلی)؛
-// امتیاز آروم و ریز ریز بالا می‌ره. اختلاف هر مولفه و جمع زیر کارت میان
+// امتیاز آروم و ریز ریز بالا می‌ره. جمع امتیاز زیر کارت میاد
 import { faDigits, faNumber } from '../../../shared/format.js'
-import { diffChips, faScore, hsbToCss, readableOn } from '../color.js'
+import { faScore, hsbToCss, readableOn } from '../color.js'
 import { useCountUp } from '../useCountUp.js'
 
 // یه جمله‌ی کوتاه برای امتیاز
@@ -65,11 +65,6 @@ function ResultView({ result, game, last, busy, onNext }) {
       </section>
 
       <div className="color-under">
-        <ul className="color-chips">
-          {diffChips(result.diff).map((text) => (
-            <li key={text}>{text}</li>
-          ))}
-        </ul>
         <span className="color-under-total">
           جمع تا حالا <b>{faScore(total)}</b> از {faNumber(game.completed * 10)}
         </span>

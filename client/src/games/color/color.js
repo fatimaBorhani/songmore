@@ -60,16 +60,6 @@ export function faScore(n) {
   return faNumber(n, Number.isInteger(n) ? 0 : 2)
 }
 
-// «رنگ‌مایه ۶° کم»: اختلاف رنگ تو با رنگ اصلی (منفی یعنی رنگ تو کمتر بوده)
-function diffText(label, value, unit) {
-  if (value === 0) return `${label} درست`
-  return `${label} ${faNumber(Math.abs(value))}${unit} ${value < 0 ? 'کم' : 'زیاد'}`
-}
-
-export function diffChips(diff) {
-  return [diffText('رنگ‌مایه', diff.h, '°'), diffText('اشباع', diff.s, '٪'), diffText('روشنی', diff.b, '٪')]
-}
-
 // متن اشتراک نتیجه‌ی بازی، بدون لو دادن رنگ‌ها
 export function shareText(game, title) {
   const scores = game.rounds.map((r) => faScore(r.score)).join(' · ')

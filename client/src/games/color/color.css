@@ -213,7 +213,14 @@
   transition: width 0.05s linear;
 }
 
-/* اسلایدرها پایین کارت، روی رنگ */
+/* قاب کارت رنگ و کارت اسلایدرها؛ کارت رنگ همیشه وسط می‌مونه */
+.color-scene {
+  position: relative;
+  width: min(560px, 100%);
+  margin: 0 auto;
+}
+
+/* اسلایدرها: روی صفحه‌ی کوچیک پایین کارت، روی رنگ */
 .color-panel {
   position: absolute;
   left: 12px;
@@ -242,6 +249,27 @@
 
 .color-panel .color-btn {
   min-height: 50px;
+}
+
+/* صفحه‌ی بزرگ: اسلایدرها کنار کارت رنگ، توی جای خالی سمت راست (کارت رنگ وسط می‌مونه) */
+@media (min-width: 1240px) {
+  .color-panel {
+    left: calc(100% + 24px);
+    right: auto;
+    bottom: 0;
+    width: 320px;
+    padding: 22px;
+    border-radius: 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    gap: 16px;
+  }
+
+  .color-panel .color-sliders {
+    gap: 14px;
+  }
 }
 
 .color-panel-error {

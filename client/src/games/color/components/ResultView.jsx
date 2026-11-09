@@ -1,5 +1,5 @@
 // نتیجه‌ی یه دور: همون کارت دو نیمه می‌شه (بالا رنگ تو با امتیاز، پایین رنگ اصلی)؛
-// امتیاز آروم و ریز ریز بالا می‌ره. جمع امتیاز زیر کارت میاد
+// امتیاز آروم و ریز ریز بالا می‌ره
 import { faDigits, faNumber } from '../../../shared/format.js'
 import { faScore, hsbToCss, readableOn } from '../color.js'
 import { useCountUp } from '../useCountUp.js'
@@ -19,8 +19,6 @@ const hsbText = (c) => faDigits(`H${c.h} S${c.s} B${c.b}`)
 
 function ResultView({ result, game, last, busy, onNext }) {
   const score = useCountUp(result.score)
-  // جمع هم از جمع قبل از این دور تا جمع جدید می‌شمره
-  const total = useCountUp(game.total, { from: game.total - result.score })
   return (
     <>
       <section className="color-stage color-result-stage" aria-label="مقایسه‌ی رنگ‌ها">
@@ -63,12 +61,6 @@ function ResultView({ result, game, last, busy, onNext }) {
           </button>
         </div>
       </section>
-
-      <div className="color-under">
-        <span className="color-under-total">
-          جمع تا حالا <b>{faScore(total)}</b> از {faNumber(game.completed * 10)}
-        </span>
-      </div>
     </>
   )
 }

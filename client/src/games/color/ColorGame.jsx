@@ -12,6 +12,15 @@ import { isMuted, playHide, playScore, playTick, setMuted, unlockSound } from '.
 import './color.css'
 
 const GAME_TITLE = 'حافظه‌ی رنگ' // اسم موقت
+const INTRO_KEY = 'songmore_color_intro_seen' // توضیح بازی فقط بار اول نشون داده می‌شه
+
+function wasIntroSeen() {
+  try {
+    return localStorage.getItem(INTRO_KEY) === '1'
+  } catch {
+    return false
+  }
+}
 
 const ERROR_TEXT = {
   GAME_OVER: 'بازی امروز تموم شده.',
@@ -31,6 +40,7 @@ function ColorGame({ user }) {
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [muted, setMutedState] = useState(isMuted) // صدا خاموشه؟
+  const [introSeen, setIntroSeen] = useState(wasIntroSeen)
   const timer = useRef(null)
   const noticeTimer = useRef(null)
 
@@ -87,6 +97,14 @@ function ColorGame({ user }) {
   async function startRound() {
     if (busy) return
     unlockSound() // مرورگر فقط بعد از کلیک اجازه‌ی صدا می‌ده
+    if (!introSeen) {
+      setIntroSeen(true)
+      try {
+        localStorage.setItem(INTRO_KEY, '1')
+      } catch {
+        // اگه مرورگر اجازه نده مهم نیست
+      }
+    }
     setBusy(true)
     setError('')
     try {
@@ -137,9 +155,11 @@ function ColorGame({ user }) {
     }
   }
 
+  // بعد از نتیجه: دور بعد یکراست شروع می‌شه (کارت «آماده» فقط اول بازیه)
   function nextRound() {
     setError('')
-    setPhase(game.finished ? 'summary' : 'ready')
+    if (game.finished) setPhase('summary')
+    else startRound()
   }
 
   function toggleSound() {
@@ -208,6 +228,7 @@ function ColorGame({ user }) {
           seconds={game.memorizeSeconds}
           busy={busy}
           onStart={startRound}
+          showIntro={!introSeen}
         />
       )}
       {phase === 'memorize' && target && (

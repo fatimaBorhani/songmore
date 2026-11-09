@@ -345,27 +345,6 @@
   outline-offset: 3px;
 }
 
-/* زیر کارت نتیجه: جمع امتیاز */
-.color-under {
-  width: min(560px, 100%);
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.color-under-total {
-  font-size: 14px;
-  color: var(--text-soft);
-}
-
-.color-under-total b {
-  font-size: 17px;
-  color: var(--text);
-}
-
 .sr-only {
   position: absolute;
   width: 1px;

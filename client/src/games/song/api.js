@@ -17,6 +17,11 @@ export function sendSkip() {
   return postJson('/api/song/skip')
 }
 
+// نمایش جواب (فقط وقتی رد کردن‌ها تموم شده)
+export function sendGiveUp() {
+  return postJson('/api/song/giveup')
+}
+
 export function clipUrl(fileName) {
   return `${API_URL}/clips/${fileName}`
 }
@@ -43,6 +48,10 @@ export function sendPracticeGuess(songId, label) {
 
 export function sendPracticeSkip() {
   return postJson('/api/song/practice/skip')
+}
+
+export function sendPracticeGiveUp() {
+  return postJson('/api/song/practice/giveup')
 }
 
 // بازی تمرینی بعدی (فقط وقتی بازی فعلی تموم شده)

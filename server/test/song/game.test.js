@@ -115,6 +115,19 @@ test('روند کامل یه بازی: present بعد incorrect بعد رد کر
   assert.equal(res.status, 400)
   assert.equal((await res.json()).error, 'NO_SKIPS_LEFT')
 
+  // نمایش جواب: بعد از تموم شدن رد کردن‌ها مجازه، بازی با امتیاز صفر تموم می‌شه و جواب میاد
+  // (روی یه بازیکن جدا، تا ادامه‌ی این تست دست نخوره)
+  const other = { ...headers, Cookie: 'songmore_session=giveup-player' }
+  res = await fetch(`${baseUrl}/api/song/giveup`, { method: 'POST', headers: other })
+  assert.equal(res.status, 400)
+  assert.equal((await res.json()).error, 'SKIPS_LEFT')
+  for (let i = 0; i < 4; i++) await fetch(`${baseUrl}/api/song/skip`, { method: 'POST', headers: other })
+  res = await fetch(`${baseUrl}/api/song/giveup`, { method: 'POST', headers: other })
+  const gaveUp = await res.json()
+  assert.equal(gaveUp.finished, true)
+  assert.equal(gaveUp.score, 0)
+  assert.equal(gaveUp.answer.title, 'Neghab')
+
   // سه حدس غلط دیگه: حدس پنجمِ واقعی بازی رو تموم می‌کنه
   for (let i = 0; i < 3; i++) {
     res = await fetch(`${baseUrl}/api/song/guess`, {

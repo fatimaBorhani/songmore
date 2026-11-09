@@ -4,7 +4,9 @@ import {
   getPracticeGame,
   getTodayLeaderboard,
   nextPracticeGame,
+  sendGiveUp,
   sendGuess,
+  sendPracticeGiveUp,
   sendPracticeGuess,
   sendPracticeSkip,
   sendSkip,
@@ -105,6 +107,21 @@ function SongGame({ user, mode = 'daily' }) {
     try {
       const updated = await (practice ? sendPracticeSkip : sendSkip)()
       setGame(updated)
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  // وقتی رد کردن‌ها تموم شده: دیدن جواب (بازی با باخت تموم می‌شه)
+  async function handleGiveUp() {
+    if (busy) return
+    if (!window.confirm('جواب رو ببینی بازی تموم می‌شه و امتیازی نمی‌گیری. مطمئنی؟')) return
+    setBusy(true)
+    setError('')
+    try {
+      setGame(await (practice ? sendPracticeGiveUp : sendGiveUp)())
     } catch (e) {
       setError(e.message)
     } finally {
@@ -213,6 +230,12 @@ function SongGame({ user, mode = 'daily' }) {
               </button>
             )}
           </div>
+          {/* وقتی رد کردن‌ها تموم شد، می‌شه جواب رو دید */}
+          {game.skipsLeft === 0 && (
+            <button type="button" className="ghost-button" disabled={busy} onClick={handleGiveUp}>
+              نمایش جواب
+            </button>
+          )}
           {nextSongButton}
         </>
       )}

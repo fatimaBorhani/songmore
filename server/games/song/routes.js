@@ -102,3 +102,15 @@ songRouter.post('/skip', (req, res) => {
   addGuess(req.playerKey, date, '(رد شد)', 'skipped')
   res.json(getGameState(req.playerKey, date, songId))
 })
+
+// نمایش جواب: فقط وقتی همه‌ی رد کردن‌ها تموم شده؛ بازی با باخت تموم می‌شه
+songRouter.post('/giveup', (req, res) => {
+  const date = getTodayDateString()
+  const songId = pickDailySong(date)
+  try {
+    addGuess(req.playerKey, date, '(نمایش جواب)', 'gaveup')
+  } catch (e) {
+    return res.status(400).json({ error: e.message })
+  }
+  res.json(getGameState(req.playerKey, date, songId))
+})

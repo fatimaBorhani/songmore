@@ -7,7 +7,7 @@ const RESULT_LABEL = {
 // فقط حدس‌های واقعی رو نشون می‌ده؛ «رد کردن»ها فقط روی نوار پخش دیده می‌شن
 // celebrating: وقتی تازه درست حدس زده، ردیف درست یه بار نبض می‌زنه
 function GuessHistory({ guesses, celebrating }) {
-  const realGuesses = guesses.filter((g) => g.result !== 'skipped')
+  const realGuesses = guesses.filter((g) => g.result !== 'skipped' && g.result !== 'gaveup')
   if (realGuesses.length === 0) return null
 
   return (

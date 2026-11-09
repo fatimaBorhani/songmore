@@ -40,3 +40,14 @@ practiceRouter.post('/skip', (req, res) => {
   addPracticeGuess(game, '(رد شد)', 'skipped')
   res.json(getPracticeState(game))
 })
+
+// نمایش جواب (فقط وقتی رد کردن‌ها تموم شده)
+practiceRouter.post('/giveup', (req, res) => {
+  const game = getCurrentGame(req.playerKey, getTodayDateString())
+  try {
+    addPracticeGuess(game, '(نمایش جواب)', 'gaveup')
+  } catch (e) {
+    return res.status(400).json({ error: e.message })
+  }
+  res.json(getPracticeState(game))
+})

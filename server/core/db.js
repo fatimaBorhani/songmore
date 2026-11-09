@@ -51,7 +51,7 @@ db.exec(`
     date TEXT NOT NULL,
     guess_number INTEGER NOT NULL,
     guess_text TEXT NOT NULL,
-    result TEXT NOT NULL CHECK (result IN ('correct', 'present', 'incorrect', 'skipped')),
+    result TEXT NOT NULL CHECK (result IN ('correct', 'present', 'incorrect', 'skipped', 'gaveup')),
     created_at INTEGER,
     PRIMARY KEY (session_id, date, guess_number)
   );
@@ -88,7 +88,7 @@ db.exec(`
     game_id INTEGER NOT NULL REFERENCES practice_games(id) ON DELETE CASCADE,
     guess_number INTEGER NOT NULL,
     guess_text TEXT NOT NULL,
-    result TEXT NOT NULL CHECK (result IN ('correct', 'present', 'incorrect', 'skipped')),
+    result TEXT NOT NULL CHECK (result IN ('correct', 'present', 'incorrect', 'skipped', 'gaveup')),
     created_at INTEGER NOT NULL,
     PRIMARY KEY (game_id, guess_number)
   );
@@ -131,4 +131,19 @@ db.exec(`
 const guessColumns = db.prepare('PRAGMA table_info(guesses)').all().map((c) => c.name)
 if (!guessColumns.includes('created_at')) {
   db.exec('ALTER TABLE guesses ADD COLUMN created_at INTEGER')
+}
+
+// ارتقای دیتابیس‌های قدیمی: نتیجه‌ی «gaveup» (نمایش جواب) به CHECK جدول‌های حدس اضافه شده.
+// SQLite CHECK رو نمی‌شه عوض کرد، پس جدول رو با همون ستون‌ها دوباره می‌سازیم و داده‌ها رو کپی می‌کنیم.
+for (const table of ['guesses', 'practice_guesses']) {
+  const row = db.prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = ?").get(table)
+  if (row && !row.sql.includes("'gaveup'")) {
+    const newSql = row.sql
+      .replace("'skipped')", "'skipped', 'gaveup')")
+      .replace(`CREATE TABLE "${table}"`, `CREATE TABLE ${table}`)
+    db.exec(`ALTER TABLE ${table} RENAME TO ${table}_old`)
+    db.exec(newSql)
+    db.exec(`INSERT INTO ${table} SELECT * FROM ${table}_old`)
+    db.exec(`DROP TABLE ${table}_old`)
+  }
 }

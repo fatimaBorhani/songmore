@@ -5,7 +5,7 @@ import { stageValue, computeScore, getWorth, STAGES } from '../../games/song/sco
 
 // حدس‌ها از روی یه رشته: s = رد کردن، x = غلط، p = خواننده درسته، c = درست
 function g(pattern) {
-  const map = { s: 'skipped', x: 'incorrect', p: 'present', c: 'correct' }
+  const map = { s: 'skipped', x: 'incorrect', p: 'present', c: 'correct', g: 'gaveup' }
   return [...pattern].map((ch, i) => ({ guess_number: i + 1, result: map[ch] }))
 }
 
@@ -65,4 +65,15 @@ test('رد کردن و حدس جدا شمرده می‌شن: ۴ رد کردن + 
   assert.equal(moveError(g('ssss'), 'incorrect'), null) // حدس همیشه مجازه تا ۵ تا
   assert.equal(moveError(g('xxxxx'), 'skipped'), 'GAME_OVER')
   assert.equal(moveError(g('c'), 'incorrect'), 'GAME_OVER')
+})
+
+test('نمایش جواب: فقط بعد از تموم شدن رد کردن‌ها، بازی با باخت و امتیاز صفر تموم می‌شه', async () => {
+  const { isGameFinished, moveError, countRealGuesses } = await import('../../games/song/scoring.js')
+  assert.equal(moveError(g('sss'), 'gaveup'), 'SKIPS_LEFT')
+  assert.equal(moveError(g('ssss'), 'gaveup'), null)
+  assert.equal(moveError(g('ssssx'), 'gaveup'), null)
+  assert.equal(moveError(g('ssssg'), 'incorrect'), 'GAME_OVER')
+  assert.equal(isGameFinished(g('ssssg')), true)
+  assert.equal(countRealGuesses(g('ssssxg')), 1)
+  assert.equal(computeScore(g('ssssg')), 0)
 })

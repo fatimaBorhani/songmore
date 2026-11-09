@@ -3,7 +3,7 @@ import { STAGES } from '../stages.js'
 import { faNumber, faSeconds } from '../../../shared/format.js'
 import AnimatedNumber from '../../../shared/components/AnimatedNumber.jsx'
 
-const RESULT_EMOJI = { correct: '🟩', present: '🟨', incorrect: '🟥', skipped: '⬜' }
+const RESULT_EMOJI = { correct: '🟩', present: '🟨', incorrect: '🟥', skipped: '⬜', gaveup: '🏳️' }
 
 // هر تلاش یه مربع، به ترتیب (رد کردن‌ها هم ⬜)؛ بدون اسم آهنگ
 function buildShareText(guesses, score) {
@@ -16,6 +16,7 @@ function buildShareText(guesses, score) {
 // practice: بازی تمرینی امتیاز نداره، پس امتیاز و کپی نتیجه نمیاد
 function GameOver({ answer, guesses, score, onNext, busy, celebrating, practice }) {
   const correctGuess = guesses.find((g) => g.result === 'correct')
+  const gaveUp = guesses.some((g) => g.result === 'gaveup')
   const [copied, setCopied] = useState(false)
 
   async function copyResult() {
@@ -41,7 +42,7 @@ function GameOver({ answer, guesses, score, onNext, busy, celebrating, practice 
 
   return (
     <section className="game-over">
-      <h2 className={celebrating ? 'pop' : ''}>{correctGuess ? 'بردی!' : 'این دفعه نه'}</h2>
+      <h2 className={celebrating ? 'pop' : ''}>{correctGuess ? 'بردی!' : gaveUp ? 'جواب این بود' : 'این دفعه نه'}</h2>
       {/* امتیاز؛ لحظه‌ی برد از صفر می‌شمره بالا */}
       {!practice && (
         <p className={`final-score ${correctGuess ? '' : 'zero'}`}>

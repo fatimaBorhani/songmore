@@ -1,13 +1,10 @@
-// قاب تمام‌صفحه‌ی مشترک سه مرحله (حفظ کردن، ساختن، نتیجه): یه قاب مشکی دور تا دور صفحه
-// و رنگ توی یه کادر گرد داخلش؛ اندازه‌ی رنگ توی هر سه مرحله یکیه.
-// panel: کارت پایین صفحه (اسلایدرها یا امتیاز) که روی رنگ میاد
+// کارت رنگ مشترک سه مرحله (حفظ کردن، ساختن، نتیجه): وسط صفحه و توی هر سه مرحله یه اندازه
+// panel: کارت تیره‌ی پایین کارت (اسلایدرها) که روی رنگ میاد
 function Scene({ label, background, ink, children, panel }) {
   return (
-    <section className="color-full" aria-label={label}>
-      <div className="color-canvas" style={{ background, color: ink }}>
-        {children}
-        {panel && <div className="color-panel">{panel}</div>}
-      </div>
+    <section className="color-stage" aria-label={label} style={{ background, color: ink }}>
+      {children}
+      {panel && <div className="color-panel">{panel}</div>}
     </section>
   )
 }

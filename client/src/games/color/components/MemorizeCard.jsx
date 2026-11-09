@@ -1,4 +1,4 @@
-// دور حفظ کردن: رنگ کل صفحه رو پر می‌کنه؛ عدد ثانیه‌ها گوشه و یه نوار باریک کنار صفحه که خالی می‌شه
+// دور حفظ کردن: کارت رنگ با شماره‌ی دور، ثانیه‌شمار درشت (با یه رقم اعشار) و نوار زمان پایین کارت
 import { faNumber } from '../../../shared/format.js'
 import { hsbToCss, readableOn } from '../color.js'
 import Scene from './Scene.jsx'
@@ -7,15 +7,16 @@ function MemorizeCard({ color, secondsLeft, totalSeconds, round, roundCount }) {
   const remaining = Math.max(0, Math.min(1, secondsLeft / totalSeconds))
   return (
     <Scene label="رنگ برای حفظ کردن" background={hsbToCss(color)} ink={readableOn(color)}>
+      <span className="color-round">
+        {faNumber(round)} / {faNumber(roundCount)}
+      </span>
+      <span className="color-big" role="timer" aria-label={`${faNumber(Math.ceil(secondsLeft))} ثانیه`}>
+        {faNumber(Math.floor(secondsLeft * 10) / 10, 1)}
+      </span>
+      <span className="color-corner-label">رنگ اصلی رو حفظ کن</span>
       <div className="color-timebar" aria-hidden="true">
-        <div style={{ height: `${remaining * 100}%` }} />
+        <div style={{ width: `${remaining * 100}%` }} />
       </div>
-      <span className="color-corner-number" role="timer" aria-label={`${faNumber(Math.ceil(secondsLeft))} ثانیه`}>
-        {faNumber(Math.ceil(secondsLeft))}
-      </span>
-      <span className="color-pill color-pill-bottom">
-        رنگ اصلی · دور {faNumber(round)} از {faNumber(roundCount)}
-      </span>
     </Scene>
   )
 }

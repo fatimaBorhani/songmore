@@ -8,6 +8,7 @@ import RecreateView from './components/RecreateView.jsx'
 import ResultView from './components/ResultView.jsx'
 import SummaryView from './components/SummaryView.jsx'
 import { SITE_NAME } from '../../shared/site.js'
+import { isMuted, playHide, playScore, playTick, setMuted, unlockSound } from './sound.js'
 import './color.css'
 
 const GAME_TITLE = 'حافظه‌ی رنگ' // اسم موقت
@@ -29,6 +30,7 @@ function ColorGame({ user }) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
+  const [muted, setMutedState] = useState(isMuted) // صدا خاموشه؟
   const timer = useRef(null)
   const noticeTimer = useRef(null)
 
@@ -84,6 +86,7 @@ function ColorGame({ user }) {
   // شروع دور: رنگ رو از سرور می‌گیریم و شمارش معکوس شروع می‌شه؛ آخرش رنگ ناپدید می‌شه
   async function startRound() {
     if (busy) return
+    unlockSound() // مرورگر فقط بعد از کلیک اجازه‌ی صدا می‌ده
     setBusy(true)
     setError('')
     try {
@@ -95,15 +98,21 @@ function ColorGame({ user }) {
       setSecondsLeft(total)
       setPhase('memorize')
       stopTimer()
+      playTick(total)
+      let lastWhole = total // برای تیک هر ثانیه
       timer.current = setInterval(() => {
         const left = Math.max(0, (end - Date.now()) / 1000)
         setSecondsLeft(left)
+        const whole = Math.ceil(left)
+        if (whole < lastWhole && whole > 0) playTick(whole)
+        lastWhole = whole
         if (left <= 0) {
           stopTimer()
+          playHide()
           setTarget(null)
           setPhase('recreate')
         }
-      }, 100)
+      }, 50)
     } catch (e) {
       setError(ERROR_TEXT[e.message] || e.message)
     } finally {
@@ -119,6 +128,7 @@ function ColorGame({ user }) {
       const updated = await sendColorGuess(hsb)
       setGame(updated)
       setPhase('result')
+      playScore(updated.rounds.at(-1).score)
     } catch (e) {
       setError(ERROR_TEXT[e.message] || e.message)
       if (e.message === 'GAME_OVER') loadGame()
@@ -130,6 +140,11 @@ function ColorGame({ user }) {
   function nextRound() {
     setError('')
     setPhase(game.finished ? 'summary' : 'ready')
+  }
+
+  function toggleSound() {
+    setMuted(!muted)
+    setMutedState(!muted)
   }
 
   async function share() {
@@ -168,7 +183,22 @@ function ColorGame({ user }) {
     <main className="color-page">
       <header className="color-head">
         <h1>{GAME_TITLE}</h1>
-        <Dots total={game.roundCount} completed={game.completed} current={current} />
+        <div className="color-head-row">
+          <Dots total={game.roundCount} completed={game.completed} current={current} />
+          <button
+            type="button"
+            className="color-sound"
+            onClick={toggleSound}
+            aria-pressed={!muted}
+            aria-label={muted ? 'روشن کردن صدا' : 'خاموش کردن صدا'}
+            title={muted ? 'صدا خاموشه' : 'صدا روشنه'}
+          >
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11 5L6 9H3v6h3l5 4z" />
+              {muted ? <path d="M16 9l5 6M21 9l-5 6" /> : <path d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13" />}
+            </svg>
+          </button>
+        </div>
       </header>
 
       {phase === 'ready' && (
@@ -189,13 +219,21 @@ function ColorGame({ user }) {
           roundCount={game.roundCount}
         />
       )}
-      {phase === 'recreate' && <RecreateView hsb={hsb} onChange={setHsb} onSubmit={submitGuess} busy={busy} error={error} />}
+      {phase === 'recreate' && <RecreateView
+          hsb={hsb}
+          onChange={setHsb}
+          onSubmit={submitGuess}
+          busy={busy}
+          error={error}
+          round={game.completed + 1}
+          roundCount={game.roundCount}
+        />}
       {phase === 'result' && result && (
         <ResultView result={result} game={game} last={game.finished} busy={busy} onNext={nextRound} />
       )}
       {phase === 'summary' && <SummaryView game={game} onShare={share} testMode={game.testMode} onReplay={loadGame} />}
 
-      {/* موقع ساختن خطا توی کارت پایین صفحه نشون داده می‌شه (صفحه‌ی تمام‌صفحه روی اینجاست) */}
+      {/* موقع ساختن خطا توی کارت اسلایدرها نشون داده می‌شه */}
       {error && phase !== 'recreate' && <p className="error">{error}</p>}
       {notice && (
         <p className="color-toast" role="status">

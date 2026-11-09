@@ -1,13 +1,15 @@
-// دور ساختن: رنگ تو با همون اندازه‌ی رنگ اصلی کل صفحه رو پر می‌کنه؛ اسلایدرها پایین صفحه روی رنگ‌ان
-import { hsbToCss } from '../color.js'
+// دور ساختن: همون کارت، این بار با رنگ تو (زنده با اسلایدرها عوض می‌شه)؛ اسلایدرها پایین کارت
+import { faNumber } from '../../../shared/format.js'
+import { hsbToCss, readableOn } from '../color.js'
 import Scene from './Scene.jsx'
 import Sliders from './Sliders.jsx'
 
-function RecreateView({ hsb, onChange, onSubmit, busy, error }) {
+function RecreateView({ hsb, onChange, onSubmit, busy, error, round, roundCount }) {
   return (
     <Scene
       label="رنگ تو"
       background={hsbToCss(hsb)}
+      ink={readableOn(hsb)}
       panel={
         <>
           <Sliders hsb={hsb} onChange={onChange} disabled={busy} />
@@ -18,7 +20,10 @@ function RecreateView({ hsb, onChange, onSubmit, busy, error }) {
         </>
       }
     >
-      <span className="color-pill color-pill-top">رنگ تو · رنگ اصلی پنهانه</span>
+      <span className="color-round">
+        {faNumber(round)} / {faNumber(roundCount)}
+      </span>
+      <span className="color-corner-end">رنگ تو</span>
     </Scene>
   )
 }

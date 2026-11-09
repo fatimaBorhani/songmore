@@ -118,100 +118,110 @@
 
 
 
-/* ---------- قاب تمام‌صفحه: حفظ کردن، ساختن و نتیجه ----------
-   رنگ کل صفحه (حتی روی سربرگ سایت) رو پر می‌کنه و توی هر سه مرحله یه اندازه‌ست */
+/* ---------- کارت رنگ: حفظ کردن، ساختن و نتیجه ----------
+   وسط صفحه، توی هر سه مرحله یه اندازه (مثل dialed.gg)؛ سربرگ سایت دیده می‌شه */
 
-/* قاب مشکی دور تا دور صفحه */
-.color-full {
-  position: fixed;
-  inset: 0;
-  z-index: 30;
-  box-sizing: border-box;
-  padding: calc(10px + env(safe-area-inset-top, 0px)) calc(10px + env(safe-area-inset-right, 0px))
-    calc(10px + env(safe-area-inset-bottom, 0px)) calc(10px + env(safe-area-inset-left, 0px));
-  background: var(--bg);
+.color-head-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-/* خود رنگ: کادر گرد داخل قاب */
-.color-canvas {
+.color-sound {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.color-sound[aria-pressed='true'] {
+  color: var(--text);
+}
+
+.color-stage,
+.color-ready {
   position: relative;
-  height: 100%;
+  box-sizing: border-box;
+  width: min(560px, 100%);
+  height: clamp(420px, calc(100dvh - 250px), 580px);
+  margin: 0 auto;
   border-radius: 28px;
   overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
 }
 
-/* نوار باریک کنار راست که از بالا خالی می‌شه */
-.color-timebar {
+.color-round {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  width: 8px;
-  background: color-mix(in srgb, currentColor 20%, transparent);
+  top: 22px;
+  inset-inline-start: 24px;
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0.75;
 }
 
-.color-timebar > div {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: currentColor;
-  transition: height 0.1s linear;
-}
-
-.color-corner-number {
-  position: absolute;
-  top: 20px;
-  left: 24px;
-  font-size: 76px;
+/* عدد درشت گوشه‌ی بالا: ثانیه‌شمار یا امتیاز */
+.color-big {
+  font-size: 84px;
   font-weight: 900;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
-.color-pill {
+.color-stage > .color-big {
   position: absolute;
-  padding: 4px 14px;
-  border-radius: 999px;
-  background: rgba(9, 9, 11, 0.85);
-  color: var(--text);
-  font-size: 12px;
+  top: 26px;
+  inset-inline-end: 26px;
+}
+
+.color-corner-label {
+  position: absolute;
+  bottom: 30px;
+  inset-inline-start: 24px;
+  font-size: 15px;
   font-weight: 700;
-  white-space: nowrap;
 }
 
-.color-pill-top {
-  top: 16px;
-  right: 16px;
-}
-
-.color-pill-bottom {
-  bottom: 24px;
-  left: 24px;
-}
-
-.color-halves {
+.color-corner-end {
   position: absolute;
-  inset: 0;
-  display: flex;
+  top: 20px;
+  inset-inline-end: 24px;
+  font-size: 15px;
+  font-weight: 900;
 }
 
-.color-halves > div {
-  flex: 1;
-  position: relative;
+/* نوار زمان پایین کارت که خالی می‌شه */
+.color-timebar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 8px;
+  background: color-mix(in srgb, currentColor 20%, transparent);
 }
 
-/* کارت پایین صفحه روی رنگ (اسلایدرها یا امتیاز) */
+.color-timebar > div {
+  height: 100%;
+  margin-inline-start: auto;
+  background: currentColor;
+  transition: width 0.05s linear;
+}
+
+/* اسلایدرها پایین کارت، روی رنگ */
 .color-panel {
   position: absolute;
   left: 12px;
   right: 12px;
   bottom: 12px;
-  max-height: calc(100% - 80px);
-  overflow-y: auto;
   box-sizing: border-box;
-  padding: 16px;
-  border-radius: 24px;
+  padding: 14px 16px 16px;
+  border-radius: 20px;
   background: rgba(9, 9, 11, 0.86);
   border: 1px solid rgba(255, 255, 255, 0.08);
   -webkit-backdrop-filter: blur(10px);
@@ -219,12 +229,113 @@
   color: var(--text);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+}
+
+.color-panel .color-sliders {
+  gap: 8px;
+}
+
+.color-panel .color-slider label {
+  margin-bottom: 4px;
+}
+
+.color-panel .color-btn {
+  min-height: 50px;
 }
 
 .color-panel-error {
   color: #ff8a8a;
   font-size: 14px;
+}
+
+/* نتیجه: بالا رنگ تو با امتیاز، پایین رنگ اصلی */
+.color-result-stage {
+  display: flex;
+  flex-direction: column;
+}
+
+.color-half {
+  position: relative;
+  flex: 1;
+  animation: fade-in 0.3s ease-out;
+}
+
+.color-score-head {
+  position: absolute;
+  top: 24px;
+  inset-inline-end: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.color-message {
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.color-half-label {
+  position: absolute;
+  bottom: 20px;
+  inset-inline-start: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+}
+
+.color-half-label span {
+  opacity: 0.7;
+}
+
+.color-half-label b {
+  font-size: 15px;
+}
+
+.color-next {
+  position: absolute;
+  bottom: 20px;
+  inset-inline-end: 24px;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: #09090b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.color-next:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* زیر کارت نتیجه: اختلاف هر مولفه و جمع */
+.color-under {
+  width: min(560px, 100%);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.color-under-total {
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.color-under-total b {
+  font-size: 17px;
+  color: var(--text);
 }
 
 .sr-only {
@@ -337,26 +448,9 @@
 
 
 
-.color-score-row,
-.color-total-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-}
 
-.color-score-row > span:first-child {
-  font-size: 14px;
-  color: #c9c9cf;
-}
 
-.color-score-value {
-  font-size: 40px;
-  font-weight: 900;
-  line-height: 1;
-}
 
-.color-score-value small,
-.color-total-row small,
 .color-summary-score small {
   font-size: 15px;
   font-weight: 400;
@@ -394,18 +488,7 @@
   color: #c9c9cf;
 }
 
-.color-total-row {
-  display: none; /* فقط روی دسکتاپ (طرح گوشی نداره) */
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-  font-size: 14px;
-  color: var(--text-soft);
-}
 
-.color-total-row b {
-  font-size: 18px;
-  color: var(--text);
-}
 
 /* ---------- خلاصه‌ی بازی ---------- */
 
@@ -545,66 +628,22 @@
     width: 36px;
   }
 
-  .color-ready,
   .color-summary {
     width: 100%;
     max-width: 680px;
     align-self: center;
   }
 
-  .color-full {
-    padding: 28px;
-  }
-
-  .color-canvas {
-    border-radius: 36px;
-  }
-
-  .color-corner-number {
-    top: 32px;
-    left: 40px;
-    font-size: 110px;
-  }
-
-  .color-timebar {
-    width: 12px;
-  }
-
-  .color-pill {
-    padding: 5px 16px;
-    font-size: 13px;
-  }
-
-  .color-pill-bottom {
-    bottom: 32px;
-    left: 40px;
-  }
-
-  /* کارت پایین سمت راست صفحه، زیر برچسب بالا */
-  .color-panel {
-    left: auto;
-    right: 28px;
-    bottom: 28px;
-    width: 400px;
-    padding: 24px;
-    gap: 18px;
-  }
-
   .color-sliders {
     gap: 22px;
   }
 
+  .color-panel .color-sliders {
+    gap: 10px;
+  }
+
   .color-slider label {
     font-size: 15px;
-  }
-
-  .color-total-row {
-    display: flex;
-  }
-
-
-  .color-score-value {
-    font-size: 56px;
   }
 
   .color-bar {

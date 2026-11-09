@@ -2,17 +2,19 @@
 import { faNumber } from '../../../shared/format.js'
 import Countdown from '../../../shared/components/Countdown.jsx'
 import { faScore, hsbToCss } from '../color.js'
+import { useCountUp } from '../useCountUp.js'
 
 function SummaryView({ game, onShare, testMode, onReplay }) {
+  const total = useCountUp(game.total, { duration: 1800 }) // جمع امتیاز آروم بالا می‌ره
   return (
     <div className="color-summary">
       <section className="color-card color-summary-total" aria-live="polite">
         <span className="color-summary-label">امتیاز امروز</span>
         <span className="color-summary-score">
-          {faScore(game.total)} <small>از {faNumber(game.maxTotal)}</small>
+          {faScore(total)} <small>از {faNumber(game.maxTotal)}</small>
         </span>
         <div className="color-bar" role="img" aria-label={`${faNumber(Math.round((game.total / game.maxTotal) * 100))} درصد`}>
-          <div style={{ width: `${(game.total / game.maxTotal) * 100}%` }} />
+          <div style={{ width: `${(total / game.maxTotal) * 100}%` }} />
         </div>
       </section>
 

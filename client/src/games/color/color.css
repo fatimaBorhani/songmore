@@ -113,13 +113,6 @@
   color: var(--text-soft);
 }
 
-.color-memorize {
-  height: min(400px, 52dvh);
-  min-height: 260px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 .color-ring {
   position: relative;
@@ -150,79 +143,135 @@
   line-height: 1;
 }
 
-/* ---------- ساختن رنگ ---------- */
+/* ---------- صحنه‌ی مشترک: حفظ کردن، ساختن و نتیجه ---------- */
 
-.color-split {
+.color-scene {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.color-preview-col {
+.color-stage {
+  position: relative;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  height: min(320px, 38dvh);
+  min-height: 200px;
+  border-radius: 28px;
+  overflow: hidden;
   display: flex;
-  gap: 10px;
+  align-items: center;
+  justify-content: center;
 }
 
-.color-hidden {
+.color-stage.split {
+  align-items: stretch;
+}
+
+/* صفحه راست‌به‌چپه: اولین نیمه (رنگ اصلی) سمت راست می‌افته */
+.color-stage-half {
   flex: 1;
+  position: relative;
+}
+
+.color-stage-pill {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(9, 9, 11, 0.85);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.color-stage-pill.bottom {
+  top: auto;
+  bottom: 14px;
+}
+
+.color-stage-name {
+  position: absolute;
+  bottom: 14px;
+  right: 16px;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.color-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.color-side > .color-btn {
+  margin-top: auto;
+}
+
+.color-side-card {
+  flex: 1;
+  position: relative;
   box-sizing: border-box;
-  height: 120px;
-  border-radius: 22px;
-  background: #111113;
-  border: 1.5px dashed #3f3f46;
+  min-height: 236px;
+  padding: 18px;
+  border-radius: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* اسلایدرهای قفل‌شده‌ی موقع حفظ کردن */
+.color-dim {
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+.color-overlay {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  padding: 0 8px;
+  gap: 6px;
+  padding: 0 28px;
   text-align: center;
-  font-size: 12px;
+}
+
+.color-overlay-title {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.color-overlay-text {
+  font-size: 13px;
   color: var(--text-soft);
 }
 
-.color-hidden-mark {
-  font-size: 36px;
-  font-weight: 900;
-  line-height: 1;
-  color: #52525b;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
-.color-hidden-long {
-  display: none;
-}
+/* ---------- ساختن رنگ ---------- */
 
-.color-preview {
-  flex: 2;
-  box-sizing: border-box;
-  height: 120px;
-  padding: 14px 16px;
-  border-radius: 22px;
-  display: flex;
-  align-items: flex-end;
-  font-size: 14px;
-  font-weight: 900;
-}
 
-.color-panel-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
 
-.color-panel-col > .color-btn {
-  margin-top: auto;
-}
 
-.color-panel {
-  box-sizing: border-box;
-  padding: 20px 18px;
-  border-radius: 24px;
-  background: var(--card);
-  border: 1px solid var(--border);
-}
+
+
+
+
+
 
 .color-sliders {
   display: flex;
@@ -305,57 +354,14 @@
 
 /* ---------- نتیجه‌ی دور ---------- */
 
-.color-compare {
-  --circle: min(220px, 28dvh); /* روی گوشی‌های کوتاه کوچیک‌تر می‌شه تا دکمه توی صفحه جا بشه */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  padding-top: 8px;
-}
 
 /* صفحه راست‌به‌چپه: اولین نیمه (رنگ اصلی) سمت راست می‌افته */
-.color-circle {
-  width: var(--circle);
-  height: var(--circle);
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  box-shadow:
-    0 0 0 6px var(--card),
-    0 0 0 7px #3f3f46;
-  animation: color-pop 0.5s ease-out;
-}
 
-.color-circle > div {
-  flex: 1;
-}
 
-.color-labels {
-  width: calc(var(--circle) + 60px);
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  color: var(--text-soft);
-}
 
-.color-score-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
 
-.color-score-col > .color-btn {
-  margin-top: auto;
-}
 
 .color-score-card {
-  box-sizing: border-box;
-  padding: 20px;
-  border-radius: 24px;
-  background: var(--card);
-  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -397,7 +403,7 @@
   height: 100%;
   border-radius: 5px;
   background: var(--accent);
-  animation: color-grow 0.7s ease-out;
+  transition: width 0.1s linear;
 }
 
 .color-chips {
@@ -543,32 +549,13 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
 }
 
-@keyframes color-pop {
-  from {
-    transform: scale(0.85);
-    opacity: 0;
-  }
-}
-
-@keyframes color-grow {
-  from {
-    width: 0;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .color-circle,
-  .color-bar > div {
-    animation: none;
-  }
-
   .color-ring-arc {
     transition: none;
   }
 }
 
 /* ---------- دسکتاپ ---------- */
-
 @media (min-width: 860px) {
   .color-page {
     max-width: 1040px;
@@ -589,15 +576,10 @@
   }
 
   .color-ready,
-  .color-memorize,
   .color-summary {
     width: 100%;
     max-width: 680px;
     align-self: center;
-  }
-
-  .color-memorize {
-    height: 400px;
   }
 
   .color-ring {
@@ -609,68 +591,52 @@
     font-size: 88px;
   }
 
-  .color-split {
-    flex: 0 1 auto;
+  /* صحنه ۴۸۰×۴۸۰ کنار یه کارت ۴۸۰×۴۸۰ که اسلایدرها/امتیاز و دکمه توشه */
+  .color-scene {
+    flex: 0 0 auto;
     flex-direction: row;
-    flex-wrap: wrap;
-    gap: 20px;
+    justify-content: center;
     align-items: stretch;
+    gap: 32px;
   }
 
-  /* ساختن: ستون راست = رنگ تو + رنگ اصلیِ پنهان، ستون چپ = یه کارت با اسلایدرها و دکمه */
-  .color-preview-col {
-    flex: 1 1 420px;
-    min-width: 0;
-    flex-direction: column-reverse;
-    gap: 14px;
-  }
-
-  .color-preview {
-    flex: 1;
-    height: auto;
-    min-height: 320px;
-    padding: 20px 22px;
+  .color-stage {
+    flex: 0 0 480px;
+    height: 480px;
     border-radius: 32px;
-    font-size: 16px;
   }
 
-  .color-hidden {
-    flex: none;
-    height: 84px;
-    flex-direction: row;
-    gap: 12px;
-    font-size: 14px;
+  .color-stage-pill {
+    top: 18px;
+    right: 20px;
+    padding: 5px 14px;
+    font-size: 13px;
   }
 
-  .color-hidden-mark {
-    font-size: 32px;
+  .color-stage-pill.bottom {
+    top: auto;
+    bottom: 18px;
   }
 
-  .color-hidden-short {
-    display: none;
+  .color-stage-name {
+    bottom: 18px;
+    right: 22px;
+    font-size: 17px;
   }
 
-  .color-hidden-long {
-    display: inline;
-  }
-
-  .color-panel-col,
-  .color-score-col {
-    flex: 1 1 380px;
-    min-width: 0;
+  .color-side {
+    flex: 0 0 480px;
+    height: 480px;
     box-sizing: border-box;
-    border-radius: 28px;
+    padding: 28px;
+    border-radius: 32px;
     background: var(--card);
     border: 1px solid var(--border);
+    gap: 18px;
   }
 
-  .color-panel-col {
-    padding: 26px 24px;
-    gap: 22px;
-  }
-
-  .color-panel,
-  .color-score-card {
+  .color-side-card {
+    min-height: 0;
     padding: 0;
     border: 0;
     border-radius: 0;
@@ -685,37 +651,8 @@
     font-size: 15px;
   }
 
-  /* نتیجه: دایره‌ی بزرگ‌تر کنار کارت امتیاز */
-  .color-result {
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
-  }
-
-  .color-compare {
-    --circle: 320px;
-    flex: 0 1 380px;
-    gap: 16px;
-  }
-
   .color-total-row {
     display: flex;
-  }
-
-  .color-circle {
-    box-shadow:
-      0 0 0 8px var(--card),
-      0 0 0 9px #3f3f46;
-  }
-
-  .color-labels {
-    font-size: 14px;
-  }
-
-  .color-score-col {
-    max-width: 460px;
-    padding: 28px 26px;
-    gap: 18px;
   }
 
   .color-score-card {

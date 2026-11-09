@@ -1,49 +1,58 @@
-// نتیجه‌ی یه دور: دایره‌ی دونیمه (راست رنگ اصلی، چپ رنگ تو)، امتیاز، نوار و اختلاف هر مولفه
+// نتیجه‌ی یه دور: صحنه دو نیمه می‌شه (راست رنگ اصلی، چپ رنگ تو)؛ امتیاز آروم و ریز ریز بالا می‌ره
 import { faNumber } from '../../../shared/format.js'
 import { diffChips, faScore, hsbToCss } from '../color.js'
+import { useCountUp } from '../useCountUp.js'
+import Scene from './Scene.jsx'
 
 function ResultView({ result, game, last, busy, onNext }) {
+  const score = useCountUp(result.score)
+  // جمع هم از جمع قبل از این دور تا جمع جدید می‌شمره
+  const total = useCountUp(game.total, { from: game.total - result.score })
   return (
-    <div className="color-split color-result">
-      <section className="color-compare" aria-label="مقایسه‌ی رنگ‌ها">
-        <div className="color-circle" role="img" aria-label="نیمه‌ی راست رنگ اصلی، نیمه‌ی چپ رنگ تو">
-          <div style={{ background: hsbToCss(result.target) }} />
-          <div style={{ background: hsbToCss(result.guess) }} />
-        </div>
-        <div className="color-labels">
-          <span>رنگ اصلی</span>
-          <span>رنگ تو</span>
-        </div>
-      </section>
-
-      <div className="color-score-col">
-        <section className="color-score-card" aria-label="امتیاز این دور" aria-live="polite">
-          <div className="color-score-row">
-            <span>امتیاز این دور</span>
-            <span className="color-score-value">
-              {faScore(result.score)} <small>از {faNumber(10)}</small>
-            </span>
+    <Scene
+      stage={
+        <section className="color-stage split" aria-label="مقایسه‌ی رنگ‌ها">
+          <div className="color-stage-half" style={{ background: hsbToCss(result.target) }}>
+            <span className="color-stage-pill bottom">رنگ اصلی</span>
           </div>
-          <div className="color-bar" role="img" aria-label={`${faNumber(Math.round(result.score * 10))} درصد`}>
-            <div style={{ width: `${result.score * 10}%` }} />
-          </div>
-          <ul className="color-chips">
-            {diffChips(result.diff).map((text) => (
-              <li key={text}>{text}</li>
-            ))}
-          </ul>
-          <div className="color-total-row">
-            <span>جمع تا حالا</span>
-            <b>
-              {faScore(game.total)} <small>از {faNumber(game.completed * 10)}</small>
-            </b>
+          <div className="color-stage-half" style={{ background: hsbToCss(result.guess) }}>
+            <span className="color-stage-pill bottom">رنگ تو</span>
           </div>
         </section>
+      }
+      action={
         <button type="button" className="color-btn" disabled={busy} onClick={onNext} autoFocus>
           {last ? 'دیدن نتیجه‌ی نهایی' : 'دور بعد'}
         </button>
+      }
+    >
+      <div className="color-score-card" aria-label="امتیاز این دور">
+        <div className="color-score-row">
+          <span>امتیاز این دور</span>
+          {/* خود عدد در حال شمارشه؛ برای صفحه‌خوان امتیاز نهایی جدا نوشته شده */}
+          <span className="color-score-value" aria-hidden="true">
+            {faScore(score)} <small>از {faNumber(10)}</small>
+          </span>
+          <span className="sr-only" role="status">
+            {faScore(result.score)} از {faNumber(10)}
+          </span>
+        </div>
+        <div className="color-bar" role="img" aria-label={`${faNumber(Math.round(result.score * 10))} درصد`}>
+          <div style={{ width: `${score * 10}%` }} />
+        </div>
+        <ul className="color-chips">
+          {diffChips(result.diff).map((text) => (
+            <li key={text}>{text}</li>
+          ))}
+        </ul>
+        <div className="color-total-row">
+          <span>جمع تا حالا</span>
+          <b>
+            {faScore(total)} <small>از {faNumber(game.completed * 10)}</small>
+          </b>
+        </div>
       </div>
-    </div>
+    </Scene>
   )
 }
 

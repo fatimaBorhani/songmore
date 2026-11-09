@@ -181,7 +181,7 @@ function ColorGame({ user }) {
         />
       )}
       {phase === 'memorize' && target && (
-        <MemorizeCard color={target} secondsLeft={secondsLeft} totalSeconds={game.memorizeSeconds} />
+        <MemorizeCard color={target} hsb={hsb} secondsLeft={secondsLeft} totalSeconds={game.memorizeSeconds} />
       )}
       {phase === 'recreate' && <RecreateView hsb={hsb} onChange={setHsb} onSubmit={submitGuess} busy={busy} />}
       {phase === 'result' && result && (

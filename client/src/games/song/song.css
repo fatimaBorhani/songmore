@@ -579,3 +579,101 @@
   color: var(--text-muted);
   text-align: center;
 }
+
+/* ---------- نمایش جواب ---------- */
+
+/* دکمه‌ی دیدن جواب هم‌شکل رد کردن؛ لبه‌ی روشن‌تر تا فرق داشته باشه */
+.giveup-button {
+  border-color: #3f3f46;
+}
+
+.giveup-button .skip-time {
+  font-size: 11px;
+  color: #c9c9cf;
+}
+
+.giveup-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  box-sizing: border-box;
+  padding: 24px;
+  background: rgba(9, 9, 11, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in 0.15s ease-out;
+}
+
+.giveup-dialog {
+  width: 100%;
+  max-width: 360px;
+  box-sizing: border-box;
+  padding: 26px 22px 22px;
+  border-radius: 28px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.giveup-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #14143a;
+  color: #8f8fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.giveup-dialog h2 {
+  margin: 6px 0 0;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.giveup-dialog p {
+  margin: 0 0 8px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-soft);
+}
+
+.giveup-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.giveup-actions button {
+  flex: 1;
+  min-height: 52px;
+  border-radius: 16px;
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.giveup-cancel {
+  border: 1px solid #3f3f46;
+  background: transparent;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.giveup-confirm {
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 900;
+}
+
+.giveup-confirm:disabled {
+  opacity: 0.6;
+}

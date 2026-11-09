@@ -17,6 +17,7 @@ import WavePlayer from './components/WavePlayer.jsx'
 import SearchBox from './components/SearchBox.jsx'
 import GuessHistory from './components/GuessHistory.jsx'
 import GameOver from './components/GameOver.jsx'
+import GiveUpDialog, { EyeIcon } from './components/GiveUpDialog.jsx'
 import ModeSwitch from './components/ModeSwitch.jsx'
 import BackLink from '../../shared/components/BackLink.jsx'
 import AnimatedNumber from '../../shared/components/AnimatedNumber.jsx'
@@ -31,6 +32,7 @@ import './song.css'
 function SongGame({ user, mode = 'daily' }) {
   const practice = mode === 'practice'
   const [game, setGame] = useState(null)
+  const [confirmGiveUp, setConfirmGiveUp] = useState(false) // پنجره‌ی تأیید نمایش جواب
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const [testMode, setTestMode] = useState(false)
@@ -117,11 +119,11 @@ function SongGame({ user, mode = 'daily' }) {
   // وقتی رد کردن‌ها تموم شده: دیدن جواب (بازی با باخت تموم می‌شه)
   async function handleGiveUp() {
     if (busy) return
-    if (!window.confirm('جواب رو ببینی بازی تموم می‌شه و امتیازی نمی‌گیری. مطمئنی؟')) return
     setBusy(true)
     setError('')
     try {
       setGame(await (practice ? sendPracticeGiveUp : sendGiveUp)())
+      setConfirmGiveUp(false)
     } catch (e) {
       setError(e.message)
     } finally {
@@ -211,6 +213,19 @@ function SongGame({ user, mode = 'daily' }) {
           <div className="guess-row">
             <SearchBox disabled={busy} onChoose={handleGuess} />
             {/* رد کردن از حدس‌ها جداست؛ توی مرحله‌ی آخر دیگه جایی برای رد کردن نیست */}
+            {game.skipsLeft === 0 && (
+              // وقتی رد کردن‌ها تموم شد، همون جای دکمه‌ی رد کردن، دکمه‌ی دیدن جواب میاد
+              <button
+                type="button"
+                className="skip-button giveup-button"
+                disabled={busy}
+                onClick={() => setConfirmGiveUp(true)}
+                aria-label="نمایش جواب"
+              >
+                <EyeIcon />
+                <span className="skip-time">جواب</span>
+              </button>
+            )}
             {game.skipsLeft > 0 && (
               <button
                 type="button"
@@ -230,17 +245,15 @@ function SongGame({ user, mode = 'daily' }) {
               </button>
             )}
           </div>
-          {/* وقتی رد کردن‌ها تموم شد، می‌شه جواب رو دید */}
-          {game.skipsLeft === 0 && (
-            <button type="button" className="ghost-button" disabled={busy} onClick={handleGiveUp}>
-              نمایش جواب
-            </button>
-          )}
           {nextSongButton}
         </>
       )}
 
       {error && <p className="error">{error}</p>}
+
+      {confirmGiveUp && !game.finished && (
+        <GiveUpDialog busy={busy} onConfirm={handleGiveUp} onCancel={() => setConfirmGiveUp(false)} />
+      )}
 
       {game.finished && (
         <>

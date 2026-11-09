@@ -10,7 +10,7 @@ export const MEMORIZE_SECONDS = 5 // چند ثانیه رنگ رو می‌بین
 // ۱) پایه از فاصله‌ی CIEDE2000: ۱۰ / (۱ + (ΔE/۲۵٫۲۵)^۱٫۵۵)  -> ΔE=۵: حدود ۹٫۲، ۱۰: ۸٫۱، ۲۵: ۵، ۵۰: ۲٫۶
 // ۲) جایزه: اگه رنگ‌مایه کمتر از ۲۵ درجه فرق داره (و رنگ خیلی خاکستری نیست)، تا یه چهارم فاصله تا ۱۰ اضافه می‌شه
 // ۳) جریمه: اگه رنگ‌مایه بیشتر از ۳۰ درجه فرق داره، تا ۱۵٪ امتیاز کم می‌شه
-// (dialed یه لرزش تصادفی خیلی کوچیک ±۰٫۰۴ هم اضافه می‌کنه؛ ما نداریم تا امتیاز قابل پیش‌بینی باشه)
+// ۴) لرزش کوچیک ±۰٫۰۴ (مثل dialed) تا امتیازها خیلی گرد و تکراری نباشن؛ بالای ۹٫۸ لرزش نداره
 export function scoreColor(target, guess) {
   const distance = colorDistance2000(target, guess)
   const base = MAX_ROUND_SCORE / (1 + (distance / 25.25) ** 1.55)
@@ -19,7 +19,20 @@ export function scoreColor(target, guess) {
   const bonus = (MAX_ROUND_SCORE - base) * Math.max(0, 1 - (hue / 25) ** 1.5) * Math.min(1, avgSat / 30) * 0.25
   const penalty = base * Math.max(0, (hue - 30) / 150) * Math.min(1, avgSat / 40) * 0.15
   const score = base + bonus - penalty
-  return Math.max(0, Math.min(MAX_ROUND_SCORE, Math.round(score * 100) / 100))
+  return Math.max(0, Math.min(MAX_ROUND_SCORE, Math.round((score + jitter(score, target, guess)) * 100) / 100))
+}
+
+// لرزش «تصادفی» ولی ثابت: از روی خود دو رنگ ساخته می‌شه (هش FNV-1a)،
+// پس برای یه جفت رنگ همیشه یکیه (مثل dialed.gg)
+function jitter(score, target, guess) {
+  if (score >= 9.8) return 0
+  const text = `${target.h}|${target.s}|${target.b}|${guess.h}|${guess.s}|${guess.b}`
+  let hash = 0x811c9dc5
+  for (let i = 0; i < text.length; i++) {
+    hash ^= text.charCodeAt(i)
+    hash = Math.imul(hash, 0x01000193)
+  }
+  return ((hash >>> 0) / 0xffffffff - 0.5) * 0.08
 }
 
 // اختلاف رنگ‌مایه‌ی تو با رنگ اصلی: کوتاه‌ترین مسیر روی دایره، بین -۱۸۰ تا ۱۸۰

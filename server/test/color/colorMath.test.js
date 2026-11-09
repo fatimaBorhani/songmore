@@ -53,15 +53,17 @@ test('امتیاز مثل dialed.gg: نمونه‌ی واقعی و ترتیب د
   assert.equal(scoreColor(t, t), 10)
   // نمونه‌ی عکس سایت dialed.gg: H149 S100 B23 در برابر H153 S100 B26 -> ۹٫۸۲
   assert.equal(scoreColor({ h: 149, s: 100, b: 23 }, { h: 153, s: 100, b: 26 }), 9.82)
-  assert.equal(scoreColor(t, { h: 34, s: 76, b: 77 }), 9.64)
-  assert.equal(scoreColor(t, { h: 70, s: 70, b: 80 }), 3.94)
+  assert.equal(scoreColor(t, { h: 34, s: 76, b: 77 }), 9.6) // ۹٫۶۴ + لرزش
+  assert.equal(scoreColor(t, { h: 70, s: 70, b: 80 }), 3.91) // ۳٫۹۴ + لرزش
   // تا ۹۰ درجه هر چه رنگ‌مایه دورتر، امتیاز کمتر (خیلی دورتر از اون، خود فرمول dialed دقیقاً یکنواخت نیست)
   let last = 10
   for (let dh = 0; dh <= 90; dh += 5) {
     const s = scoreColor(t, { h: t.h + dh, s: t.s, b: t.b })
-    assert.ok(s <= last && s >= 0, `dh=${dh}`)
+    assert.ok(s <= last + 0.08 && s >= 0, `dh=${dh}`) // لرزش تا ±۰٫۰۴
     last = s
   }
+  // لرزش برای یه جفت رنگ همیشه یکیه
+  assert.equal(scoreColor(t, { h: 50, s: 60, b: 70 }), scoreColor(t, { h: 50, s: 60, b: 70 }))
 })
 
 test('اختلاف رنگ‌مایه: کوتاه‌ترین مسیر روی دایره، علامت‌دار', () => {

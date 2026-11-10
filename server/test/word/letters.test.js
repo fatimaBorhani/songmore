@@ -44,3 +44,22 @@ test('لیست‌ها: جواب‌ها همه حدس مجازن و حروفشو�
     }
   }
 })
+
+test('فایل لیست با پایان خط ویندوزی (\\r\\n) هم درست خونده می‌شه', async () => {
+  const fs = await import('node:fs')
+  const dir = new URL('../../games/word/words/', import.meta.url)
+  const original = fs.readFileSync(new URL('valid_3.txt', dir), 'utf8')
+  try {
+    fs.writeFileSync(new URL('valid_3.txt', dir), original.replace(/\n/g, '\r\n'))
+    // یه پردازش جدید با فایل \r\n تا کش ماژول دخالت نکنه
+    const { execFileSync } = await import('node:child_process')
+    const out = execFileSync(
+      process.execPath,
+      ['--input-type=module', '-e', "import { validWords } from './games/word/wordLists.js'; console.log(validWords(3).has('دست'))"],
+      { cwd: new URL('../../', import.meta.url), encoding: 'utf8' }
+    )
+    assert.equal(out.trim(), 'true')
+  } finally {
+    fs.writeFileSync(new URL('valid_3.txt', dir), original)
+  }
+})

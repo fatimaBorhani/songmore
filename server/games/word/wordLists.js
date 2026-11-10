@@ -12,7 +12,8 @@ function load(kind, length) {
   const key = `${kind}_${length}`
   if (!cache.has(key)) {
     const text = fs.readFileSync(new URL(`./words/${key}.txt`, import.meta.url), 'utf8')
-    cache.set(key, text.split('\n').filter(Boolean))
+    // با \r\n هم کار کنه (توی ویندوز git ممکنه آخر هر خط \r بذاره)
+    cache.set(key, text.split(/\r?\n/).map((w) => w.trim()).filter(Boolean))
   }
   return cache.get(key)
 }

@@ -9,3 +9,6 @@ clips/
 ~$*
 
 __pycache__/
+
+# منبع‌های لیست کلمه‌ی واژه‌یاب (با git clone گرفته می‌شن؛ توضیحش بالای tools/build_word_lists.py)
+tools/wordlists/

@@ -2,6 +2,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { LETTERS, normalizeWord, validateWord } from '../../games/word/letters.js'
+import { answerWords, validWords } from '../../games/word/wordLists.js'
 
 test('۳۴ حرف، با آ و ئ', () => {
   assert.equal(LETTERS.size, 34)
@@ -15,14 +16,31 @@ test('ی و ک عربی، نیم‌فاصله و اعراب یکسان می‌ش
   assert.equal(normalizeWord(' پَرَنده '), 'پرنده')
 })
 
-test('کلمه‌ی ۵ حرفی فارسی قبوله، حتی اگه وجود نداشته باشه', () => {
-  assert.equal(validateWord('پرنده'), null)
-  assert.equal(validateWord('ضصثقف'), null)
+test('فقط کلمه‌های لیست قبولن', () => {
+  assert.equal(validateWord('پرنده', 5), null)
+  assert.equal(validateWord('دست', 3), null)
+  assert.equal(validateWord('کتاب', 4), null)
+  assert.equal(validateWord('ضصثقف', 5), 'NOT_IN_LIST')
+  assert.equal(validateWord('ضصث', 3), 'NOT_IN_LIST')
 })
 
 test('طول اشتباه یا حرف غیرفارسی رد می‌شه', () => {
-  assert.equal(validateWord('پرند'), 'WORD_LENGTH')
-  assert.equal(validateWord('پرندهها'), 'WORD_LENGTH')
-  assert.equal(validateWord('abcde'), 'INVALID_LETTERS')
-  assert.equal(validateWord('پرن۲ه'), 'INVALID_LETTERS')
+  assert.equal(validateWord('پرند', 5), 'WORD_LENGTH')
+  assert.equal(validateWord('دست', 5), 'WORD_LENGTH')
+  assert.equal(validateWord('پرندهها', 5), 'WORD_LENGTH')
+  assert.equal(validateWord('abcde', 5), 'INVALID_LETTERS')
+  assert.equal(validateWord('پرن۲ه', 5), 'INVALID_LETTERS')
+})
+
+test('لیست‌ها: جواب‌ها همه حدس مجازن و حروفشون از ۳۴ حرف بازیه', () => {
+  for (const length of [3, 4, 5]) {
+    const answers = answerWords(length)
+    assert.ok(answers.length >= 300, `جواب‌های ${length} حرفی کمه`)
+    const valid = validWords(length)
+    for (const word of answers) {
+      assert.ok(valid.has(word), word)
+      assert.equal(Array.from(word).length, length, word)
+      assert.ok(Array.from(word).every((ch) => LETTERS.has(ch)), word)
+    }
+  }
 })

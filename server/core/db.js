@@ -121,13 +121,23 @@ db.exec(`
   );
 
   -- حدس‌های بازی واژه‌یاب؛ رنگ حرف‌ها ذخیره نمی‌شه و هر بار از روی کلمه‌ی جواب حساب می‌شه
+  -- length: طول کلمه (۳، ۴ یا ۵)؛ هر روز برای هر طول یه بازی جدا داریم
   CREATE TABLE IF NOT EXISTS word_guesses (
     player_key TEXT NOT NULL,
     date TEXT NOT NULL,
     guess_number INTEGER NOT NULL,
     word TEXT NOT NULL,
     created_at INTEGER NOT NULL,
-    PRIMARY KEY (player_key, date, guess_number)
+    length INTEGER NOT NULL DEFAULT 5,
+    PRIMARY KEY (player_key, date, length, guess_number)
+  );
+
+  -- کلمه‌های روزانه‌ی واژه‌یاب: برای هر تاریخ و هر طول یه کلمه که برای همه یکیه
+  CREATE TABLE IF NOT EXISTS word_daily (
+    date TEXT NOT NULL,
+    length INTEGER NOT NULL,
+    word TEXT NOT NULL,
+    PRIMARY KEY (date, length)
   );
 `)
 
@@ -173,4 +183,23 @@ if (!guessColumnsNow.includes('slot')) {
 if (db.prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'daily_song'").get()) {
   db.exec('INSERT OR IGNORE INTO daily_songs (date, slot, song_id) SELECT date, 1, song_id FROM daily_song')
   db.exec('DROP TABLE daily_song')
+}
+
+// ارتقای دیتابیس‌های قدیمی: واژه‌یاب حالا هر روز ۳ بازی (۳، ۴ و ۵ حرفی) داره (ستون length).
+// کلید اصلی عوض می‌شه، پس جدول رو دوباره می‌سازیم؛ حدس‌های قبلی (که ۵ حرفی بودن) همون‌طور می‌مونن.
+const wordColumns = db.prepare('PRAGMA table_info(word_guesses)').all().map((c) => c.name)
+if (!wordColumns.includes('length')) {
+  db.exec('ALTER TABLE word_guesses RENAME TO word_guesses_old')
+  db.exec(`CREATE TABLE word_guesses (
+    player_key TEXT NOT NULL,
+    date TEXT NOT NULL,
+    guess_number INTEGER NOT NULL,
+    word TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    length INTEGER NOT NULL DEFAULT 5,
+    PRIMARY KEY (player_key, date, length, guess_number)
+  )`)
+  db.exec(`INSERT INTO word_guesses (player_key, date, guess_number, word, created_at, length)
+           SELECT player_key, date, guess_number, word, created_at, 5 FROM word_guesses_old`)
+  db.exec('DROP TABLE word_guesses_old')
 }

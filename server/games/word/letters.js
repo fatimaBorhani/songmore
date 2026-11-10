@@ -1,6 +1,5 @@
-// حروف و کلمه‌های بازی واژه‌یاب
-export const WORD_LENGTH = 5
-export const MAX_GUESSES = 6
+// حروف و کلمه‌های بازی واژه‌یاب (طول کلمه و تعداد حدس‌ها توی wordLists.js)
+import { validWords } from './wordLists.js'
 
 // ۳۴ حرف بازی: ۳۲ حرف الفبا + «آ» و «ئ» که حرف جدا حساب می‌شن (آ با ا یکی نیست)
 export const LETTERS = new Set(Array.from('اآبپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئ'))
@@ -27,11 +26,12 @@ export function normalizeWord(text) {
     .join('')
 }
 
-// اگه کلمه قابل قبول نیست کد خطا برمی‌گردونه، وگرنه null.
-// فعلاً هر ترکیب ۵ حرفی قبوله (حتی کلمه‌ای که وجود نداره)؛ بعداً با لیست کلمه‌ها چک می‌شه.
-export function validateWord(word) {
+// اگه حدس برای بازی با کلمه‌ی length حرفی قابل قبول نیست کد خطا برمی‌گردونه، وگرنه null.
+// فقط کلمه‌های لیست (لیلک) قبولن؛ بقیه NOT_IN_LIST.
+export function validateWord(word, length) {
   const letters = Array.from(word)
   if (letters.some((ch) => !LETTERS.has(ch))) return 'INVALID_LETTERS'
-  if (letters.length !== WORD_LENGTH) return 'WORD_LENGTH'
+  if (letters.length !== length) return 'WORD_LENGTH'
+  if (!validWords(length).has(word)) return 'NOT_IN_LIST'
   return null
 }

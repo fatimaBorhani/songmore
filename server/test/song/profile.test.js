@@ -5,6 +5,7 @@ import http from 'node:http'
 
 process.env.DB_PATH = ':memory:'
 process.env.NODE_ENV = 'test'
+process.env.DAILY_SONG_COUNT = '1' // این تست‌ها با روزی یه آهنگ ساده‌ترن؛ حالت ۳ آهنگ توی dailyThree.test.js
 
 const { db } = await import('../../core/db.js')
 const { getTodayDateString } = await import('../../games/song/dailySong.js')
@@ -23,7 +24,7 @@ before(() => {
   for (const stage of ['0.15', '0.5', '2', '8', '15']) {
     db.prepare('INSERT INTO clips (song_id, stage, file_name) VALUES (?, ?, ?)').run('song-A', stage, `clip-${stage}.mp3`)
   }
-  db.prepare('INSERT INTO daily_song (date, song_id) VALUES (?, ?)').run(TODAY, 'song-A')
+  db.prepare('INSERT INTO daily_songs (date, slot, song_id) VALUES (?, 1, ?)').run(TODAY, 'song-A')
   server = http.createServer(app)
   server.listen(0)
   baseUrl = `http://127.0.0.1:${server.address().port}`
@@ -95,7 +96,7 @@ test('بعد از برد امروز: آمار، فعالیت و رتبه', async
   const { body } = await b.profile()
   assert.equal(body.stats.played, 1)
   assert.equal(body.stats.totalScore, 10000)
-  assert.deepEqual(body.activity, [{ date: TODAY, daily: { score: 10000, won: true }, practice: 0 }])
+  assert.deepEqual(body.activity, [{ date: TODAY, daily: { score: 10000, won: true, songs: 1 }, practice: 0 }])
   assert.equal(body.rank.rank >= 1, true)
   assert.equal(body.rank.totalPlayers >= 1, true)
 })
@@ -111,7 +112,7 @@ test('بازی نیمه‌تموم توی فعالیت نمیاد، باخت م�
   await loser.signup('loser_user')
   await loser.game()
   for (let i = 0; i < 5; i++) await loser.guess('song-C')
-  assert.deepEqual((await loser.profile()).body.activity, [{ date: TODAY, daily: { score: 0, won: false }, practice: 0 }])
+  assert.deepEqual((await loser.profile()).body.activity, [{ date: TODAY, daily: { score: 0, won: false, songs: 1 }, practice: 0 }])
 })
 
 test('getActivity: فقط بازی‌های ۷۵ روز اخیر، مرتب از قدیم به جدید', () => {

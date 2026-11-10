@@ -50,7 +50,7 @@ app.use('/clips', express.static(CLIPS_DIR))
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {
     console.log(`سرور روی پورت ${PORT} روشن شد`)
-    if (RANDOM_SONG_MODE) console.log('حالت تست: هر رفرش = آهنگ جدید و بازی واژه‌یاب از اول')
+    if (RANDOM_SONG_MODE) console.log('حالت تست: بازی واژه‌یاب و رنگ با هر رفرش از اول شروع می‌شن؛ بازی آهنگ فقط با دکمه‌ی «بازی دوباره (تست)»')
   })
 }
 

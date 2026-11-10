@@ -5,6 +5,7 @@ import http from 'node:http'
 
 process.env.DB_PATH = ':memory:'
 process.env.NODE_ENV = 'test'
+process.env.DAILY_SONG_COUNT = '1' // این تست‌ها با روزی یه آهنگ ساده‌ترن؛ حالت ۳ آهنگ توی dailyThree.test.js
 
 const { db } = await import('../../core/db.js')
 const { getTodayDateString } = await import('../../games/song/dailySong.js')
@@ -27,7 +28,7 @@ before(() => {
   for (const stage of ['0.15', '0.5', '2', '8', '15']) {
     db.prepare('INSERT INTO clips (song_id, stage, file_name) VALUES (?, ?, ?)').run('song-A', stage, `clip-${stage}.mp3`)
   }
-  db.prepare('INSERT INTO daily_song (date, song_id) VALUES (?, ?)').run(TODAY, 'song-A')
+  db.prepare('INSERT INTO daily_songs (date, slot, song_id) VALUES (?, 1, ?)').run(TODAY, 'song-A')
 
   server = http.createServer(app)
   server.listen(0)
@@ -147,6 +148,7 @@ test('جدول امتیاز: فقط کسایی که حساب دارن و تمو�
 
 test('امتیاز مساوی: کسی که زودتر تموم کرده بالاتره', () => {
   const date = '2026-02-01'
+  db.prepare('INSERT INTO daily_songs (date, slot, song_id) VALUES (?, 1, ?)').run(date, 'song-A')
   const insertUser = db.prepare('INSERT INTO users (username, password_hash) VALUES (?, ?)')
   const early = insertUser.run('tie_early', 'x').lastInsertRowid
   const late = insertUser.run('tie_late', 'x').lastInsertRowid

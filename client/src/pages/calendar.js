@@ -17,9 +17,9 @@ function weekdayFromSaturday(dateString) {
   return (parse(dateString).getUTCDay() + 1) % 7
 }
 
-// تعداد بازی‌های تموم‌شده‌ی یه روز (مسابقه‌ای + تمرینی)
+// تعداد بازی‌های تموم‌شده‌ی یه روز (هر آهنگ مسابقه‌ای + هر بازی تمرینی)
 export function gamesOf(day) {
-  return day ? (day.daily ? 1 : 0) + day.practice : 0
+  return day ? (day.daily ? day.daily.songs : 0) + day.practice : 0
 }
 
 // رنگ هر روز (مثل گیت‌هاب): ۰ بازی نشده، بعد هر چه بازی بیشتر روشن‌تر

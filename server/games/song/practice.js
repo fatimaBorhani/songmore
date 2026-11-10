@@ -3,7 +3,7 @@
 import { db } from '../../core/db.js'
 import { isGameFinished, moveError } from './scoring.js'
 import { buildGameState } from './guesses.js'
-import { pickDailySong } from './dailySong.js'
+import { pickDailySongs } from './dailySong.js'
 
 function latestGame(playerKey) {
   return db
@@ -19,26 +19,27 @@ function gameGuesses(gameId) {
 
 export const isFinished = isGameFinished
 
-// آهنگ بعدی: از آهنگ‌هایی که توی این دور نیومدن، به جز آهنگ امروزِ مسابقه‌ای (که جوابش لو نره).
+// آهنگ بعدی: از آهنگ‌هایی که توی این دور نیومدن، به جز آهنگ‌های امروزِ مسابقه‌ای (که جوابشون لو نره).
 // وقتی همه اومدن دور بعد شروع می‌شه (و آهنگ قبلی پشت‌سرهم تکرار نمی‌شه).
 function pickSong(playerKey, date, last) {
-  const daily = pickDailySong(date)
+  const daily = pickDailySongs(date)
+  const notDaily = daily.length ? `id NOT IN (${daily.map(() => '?').join(', ')})` : '1 = 1'
   const fresh = (cycle) =>
     db
       .prepare(
-        `SELECT id FROM songs WHERE id != ?
+        `SELECT id FROM songs WHERE ${notDaily}
            AND id NOT IN (SELECT song_id FROM practice_games WHERE player_key = ? AND cycle = ?)
          ORDER BY RANDOM() LIMIT 1`
       )
-      .get(daily, playerKey, cycle)
+      .get(...daily, playerKey, cycle)
 
   let cycle = last?.cycle ?? 1
   let row = fresh(cycle)
   if (!row) {
     cycle += 1
     row = db
-      .prepare('SELECT id FROM songs WHERE id != ? AND id != ? ORDER BY RANDOM() LIMIT 1')
-      .get(daily, last?.song_id ?? '')
+      .prepare(`SELECT id FROM songs WHERE ${notDaily} AND id != ? ORDER BY RANDOM() LIMIT 1`)
+      .get(...daily, last?.song_id ?? '')
   }
   // آهنگ‌ها خیلی کم‌ان (مثلاً فقط یکی): مجبوریم تکراری یا حتی آهنگ امروز رو بدیم
   if (!row) row = db.prepare('SELECT id FROM songs ORDER BY RANDOM() LIMIT 1').get()

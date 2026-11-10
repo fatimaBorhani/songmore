@@ -5,6 +5,7 @@ import http from 'node:http'
 
 process.env.DB_PATH = ':memory:'
 process.env.NODE_ENV = 'test'
+process.env.DAILY_SONG_COUNT = '1' // این تست‌ها با روزی یه آهنگ ساده‌ترن؛ حالت ۳ آهنگ توی dailyThree.test.js
 
 const { db } = await import('../../core/db.js')
 const { getTodayDateString } = await import('../../games/song/dailySong.js')
@@ -35,7 +36,7 @@ function seedFixture() {
   for (const stage of ['0.15', '0.5', '2', '8', '15']) {
     db.prepare('INSERT INTO clips (song_id, stage, file_name) VALUES (?, ?, ?)').run('song-A', stage, `clip-${stage}.mp3`)
   }
-  db.prepare('INSERT INTO daily_song (date, song_id) VALUES (?, ?)').run(getTodayDateString(), 'song-A')
+  db.prepare('INSERT INTO daily_songs (date, slot, song_id) VALUES (?, 1, ?)').run(getTodayDateString(), 'song-A')
 }
 
 // یه «مرورگر» ساده: کوکی‌هاش رو بین درخواست‌ها نگه می‌داره

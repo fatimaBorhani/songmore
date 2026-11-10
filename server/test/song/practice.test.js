@@ -5,6 +5,7 @@ import http from 'node:http'
 
 process.env.DB_PATH = ':memory:'
 process.env.NODE_ENV = 'test'
+process.env.DAILY_SONG_COUNT = '1' // این تست‌ها با روزی یه آهنگ ساده‌ترن؛ حالت ۳ آهنگ توی dailyThree.test.js
 
 const { db } = await import('../../core/db.js')
 const { getTodayDateString } = await import('../../core/today.js')
@@ -25,7 +26,7 @@ before(() => {
       db.prepare('INSERT INTO clips (song_id, stage, file_name) VALUES (?, ?, ?)').run(id, stage, `${id}-${stage}.mp3`)
     }
   }
-  db.prepare('INSERT INTO daily_song (date, song_id) VALUES (?, ?)').run(TODAY, 'song-A') // آهنگ امروزِ مسابقه‌ای
+  db.prepare('INSERT INTO daily_songs (date, slot, song_id) VALUES (?, 1, ?)').run(TODAY, 'song-A') // آهنگ امروزِ مسابقه‌ای
   server = http.createServer(app)
   server.listen(0)
   baseUrl = `http://127.0.0.1:${server.address().port}`
@@ -210,7 +211,7 @@ test('مسابقه‌ای و تمرینی با هم توی یه روز: هر د�
   await b.game()
   await b.guess(currentSong(b)) // تمرینی: برد
   const profile = (await b.profile()).body
-  assert.deepEqual(profile.activity, [{ date: TODAY, daily: { score: 10000, won: true }, practice: 1 }])
+  assert.deepEqual(profile.activity, [{ date: TODAY, daily: { score: 10000, won: true, songs: 1 }, practice: 1 }])
   assert.equal(profile.stats.played, 1) // آمار فقط مسابقه‌ای
   assert.equal(profile.stats.totalScore, 10000)
 })

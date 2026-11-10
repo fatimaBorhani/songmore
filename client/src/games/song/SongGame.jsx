@@ -4,6 +4,7 @@ import {
   getPracticeGame,
   getTodayLeaderboard,
   nextPracticeGame,
+  resetTestGame,
   sendGiveUp,
   sendGuess,
   sendPracticeGiveUp,
@@ -17,6 +18,7 @@ import WavePlayer from './components/WavePlayer.jsx'
 import SearchBox from './components/SearchBox.jsx'
 import GuessHistory from './components/GuessHistory.jsx'
 import GameOver from './components/GameOver.jsx'
+import DayProgress from './components/DayProgress.jsx'
 import GiveUpDialog, { EyeIcon } from './components/GiveUpDialog.jsx'
 import ModeSwitch from './components/ModeSwitch.jsx'
 import BackLink from '../../shared/components/BackLink.jsx'
@@ -28,7 +30,7 @@ import './song.css'
 
 // صفحه‌ی بازی حدس آهنگ: مسابقه‌ای (آدرس /song) و تمرینی (آدرس /song/practice)
 // user: کاربر واردشده یا null (از App میاد، چون ورود بین همه‌ی بازی‌ها مشترکه)
-// mode: 'daily' (مسابقه‌ای، روزی یه آهنگ و امتیاز) یا 'practice' (تمرینی، نامحدود و بدون امتیاز)
+// mode: 'daily' (مسابقه‌ای، روزی ۳ آهنگ و امتیاز) یا 'practice' (تمرینی، نامحدود و بدون امتیاز)
 function SongGame({ user, mode = 'daily' }) {
   const practice = mode === 'practice'
   const [game, setGame] = useState(null)
@@ -146,10 +148,24 @@ function SongGame({ user, mode = 'daily' }) {
     }
   }
 
-  // فقط توی حالت تست: دکمه‌ای که بدون رفرش، یه آهنگ جدید میاره (فقط مسابقه‌ای)
+  // فقط توی حالت تست: بازی امروز رو از اول با ۳ آهنگ تصادفی جدید شروع می‌کنه (فقط مسابقه‌ای)
+  async function handleTestReset() {
+    if (busy) return
+    setBusy(true)
+    setError('')
+    try {
+      stopCelebration()
+      setGame(await resetTestGame())
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
   const nextSongButton = testMode && !practice && (
-    <button type="button" className="ghost-button" disabled={busy} onClick={loadGame}>
-      آهنگ بعدی (تست)
+    <button type="button" className="ghost-button" disabled={busy} onClick={handleTestReset}>
+      بازی دوباره با آهنگ‌های جدید (تست)
     </button>
   )
 
@@ -185,8 +201,9 @@ function SongGame({ user, mode = 'daily' }) {
 
       <header className="game-header">
         <h1>بازی حدس آهنگ</h1>
+        {!practice && game.songCount > 1 && <DayProgress game={game} />}
         <p className="guesses-left">
-          {game.finished ? 'بازی تموم شد' : `${faNumber(game.guessesLeft)} حدس و ${faNumber(game.skipsLeft)} رد کردن باقی مونده`}
+          {game.finished ? 'این آهنگ تموم شد' : `${faNumber(game.guessesLeft)} حدس و ${faNumber(game.skipsLeft)} رد کردن باقی مونده`}
         </p>
       </header>
 
@@ -264,13 +281,16 @@ function SongGame({ user, mode = 'daily' }) {
             celebrating={celebrating}
             busy={busy}
             practice={practice}
-            onNext={practice ? handleNextPractice : testMode ? loadGame : undefined}
+            day={practice ? null : game}
+            onNext={practice ? handleNextPractice : game.dayFinished ? undefined : loadGame}
           />
-          {!practice && (
+          {testMode && !practice && game.dayFinished && nextSongButton}
+          {/* جدول امتیاز بعد از تموم شدن هر ۳ آهنگ */}
+          {!practice && game.dayFinished && (
             <Leaderboard
               user={user}
               load={getTodayLeaderboard}
-              refreshKey={`${user ? user.id : 'guest'}-${game.date}-${game.score}`}
+              refreshKey={`${user ? user.id : 'guest'}-${game.date}-${game.dayScore}`}
             />
           )}
         </>

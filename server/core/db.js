@@ -7,6 +7,18 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 // پیش‌فرض: server/game.db (یه پوشه بالاتر از core/)
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, '..', 'game.db')
 
+// جدول حدس‌های مسابقه‌ای: slot = شماره‌ی آهنگِ اون روز (۱ تا ۳)
+const guessesSql = (name) => `CREATE TABLE ${name} (
+    session_id TEXT NOT NULL,
+    date TEXT NOT NULL,
+    guess_number INTEGER NOT NULL,
+    guess_text TEXT NOT NULL,
+    result TEXT NOT NULL CHECK (result IN ('correct', 'present', 'incorrect', 'skipped', 'gaveup')),
+    created_at INTEGER,
+    slot INTEGER NOT NULL DEFAULT 1,
+    PRIMARY KEY (session_id, date, slot, guess_number)
+  )`
+
 export const db = new Database(DB_PATH)
 db.pragma('journal_mode = WAL')
 db.pragma('foreign_keys = ON')
@@ -41,19 +53,12 @@ db.exec(`
     PRIMARY KEY (song_id, stage)
   );
 
-  CREATE TABLE IF NOT EXISTS daily_song (
-    date TEXT PRIMARY KEY,
-    song_id TEXT NOT NULL REFERENCES songs(id)
-  );
-
-  CREATE TABLE IF NOT EXISTS guesses (
-    session_id TEXT NOT NULL,
+  -- آهنگ‌های روزانه: هر روز چند آهنگ (slot ۱ تا ۳) که برای همه‌ی بازیکن‌ها یکیه
+  CREATE TABLE IF NOT EXISTS daily_songs (
     date TEXT NOT NULL,
-    guess_number INTEGER NOT NULL,
-    guess_text TEXT NOT NULL,
-    result TEXT NOT NULL CHECK (result IN ('correct', 'present', 'incorrect', 'skipped', 'gaveup')),
-    created_at INTEGER,
-    PRIMARY KEY (session_id, date, guess_number)
+    slot INTEGER NOT NULL,
+    song_id TEXT NOT NULL REFERENCES songs(id),
+    PRIMARY KEY (date, slot)
   );
 
   -- حساب‌های کاربری؛ نام کاربری بدون توجه به حروف بزرگ و کوچیک یکتاست
@@ -126,6 +131,11 @@ db.exec(`
   );
 `)
 
+// جدول حدس‌های مسابقه‌ای (اگه از قبل نباشه). دیتابیس‌های قدیمی پایین‌تر ارتقا پیدا می‌کنن.
+if (!db.prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'guesses'").get()) {
+  db.exec(guessesSql('guesses'))
+}
+
 // ارتقای دیتابیس‌های قدیمی: اگه جدول guesses از قبل بوده و ستون created_at نداره، اضافه‌ش کن
 // (CREATE TABLE IF NOT EXISTS به جدولی که از قبل هست ستون اضافه نمی‌کنه)
 const guessColumns = db.prepare('PRAGMA table_info(guesses)').all().map((c) => c.name)
@@ -146,4 +156,21 @@ for (const table of ['guesses', 'practice_guesses']) {
     db.exec(`INSERT INTO ${table} SELECT * FROM ${table}_old`)
     db.exec(`DROP TABLE ${table}_old`)
   }
+}
+
+// ارتقای دیتابیس‌های قدیمی: بازی مسابقه‌ای حالا روزی چند آهنگ داره (ستون slot).
+// کلید اصلی جدول عوض می‌شه، پس جدول رو دوباره می‌سازیم؛ حدس‌های قبلی می‌شن آهنگ ۱ همون روز.
+const guessColumnsNow = db.prepare('PRAGMA table_info(guesses)').all().map((c) => c.name)
+if (!guessColumnsNow.includes('slot')) {
+  db.exec('ALTER TABLE guesses RENAME TO guesses_old')
+  db.exec(guessesSql('guesses'))
+  db.exec(`INSERT INTO guesses (session_id, date, guess_number, guess_text, result, created_at, slot)
+           SELECT session_id, date, guess_number, guess_text, result, created_at, 1 FROM guesses_old`)
+  db.exec('DROP TABLE guesses_old')
+}
+
+// ارتقای دیتابیس‌های قدیمی: آهنگ‌های روزانه‌ی جدول قدیمی daily_song (روزی یه آهنگ) می‌شن slot ۱
+if (db.prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'daily_song'").get()) {
+  db.exec('INSERT OR IGNORE INTO daily_songs (date, slot, song_id) SELECT date, 1, song_id FROM daily_song')
+  db.exec('DROP TABLE daily_song')
 }

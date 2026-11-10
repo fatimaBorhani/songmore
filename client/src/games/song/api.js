@@ -22,6 +22,11 @@ export function sendGiveUp() {
   return postJson('/api/song/giveup')
 }
 
+// فقط حالت تست (npm run dev): ۳ آهنگ تصادفی جدید برای امروز و پاک شدن حدس‌های امروز
+export function resetTestGame() {
+  return postJson('/api/song/test/reset')
+}
+
 export function clipUrl(fileName) {
   return `${API_URL}/clips/${fileName}`
 }

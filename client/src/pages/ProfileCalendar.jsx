@@ -6,7 +6,7 @@ import { buildCalendar, faDay, gamesOf } from './calendar.js'
 function cellTitle(cell) {
   if (!cell.day) return undefined
   const parts = []
-  if (cell.day.daily) parts.push('مسابقه‌ای')
+  if (cell.day.daily) parts.push(`${faNumber(cell.day.daily.songs)} مسابقه‌ای`)
   if (cell.day.practice) parts.push(`${faNumber(cell.day.practice)} تمرینی`)
   return `${faDay(cell.date)} · ${faNumber(gamesOf(cell.day))} بازی (${parts.join('، ')})`
 }

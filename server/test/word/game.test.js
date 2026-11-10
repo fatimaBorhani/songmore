@@ -16,7 +16,7 @@ const { answerWords, validWords } = await import('../../games/word/wordLists.js'
 const TODAY = getTodayDateString()
 const ANSWERS = { 3: 'دست', 4: 'کتاب', 5: 'پرنده' }
 const WRONG = { 3: 'برف', 4: 'خانه', 5: 'گرسنه' } // کلمه‌ی درست ولی غلط‌ِ جواب
-const MAX = { 3: 4, 4: 5, 5: 6 }
+const MAX = { 3: 6, 4: 6, 5: 6 }
 
 let server
 let baseUrl
@@ -66,16 +66,16 @@ test('کلمه‌های ثابت تست همه توی لیست‌ها هستن',
   assert.ok(validWords(5).has('دریچه'))
 })
 
-test('بازی تازه: اول کلمه‌ی ۳ حرفی با ۴ حدس، بدون جواب', async () => {
+test('بازی تازه: اول کلمه‌ی ۳ حرفی با ۶ حدس، بدون جواب', async () => {
   const { game } = await newPlayer()
   assert.equal(game.slot, 1)
   assert.equal(game.slotCount, 3)
   assert.equal(game.wordLength, 3)
-  assert.equal(game.maxGuesses, 4)
+  assert.equal(game.maxGuesses, 6)
   assert.deepEqual(game.guesses, [])
   assert.equal(game.finished, false)
   assert.equal(game.dayFinished, false)
-  assert.deepEqual(game.slots.map((s) => [s.length, s.maxGuesses, s.finished]), [[3, 4, false], [4, 5, false], [5, 6, false]])
+  assert.deepEqual(game.slots.map((s) => [s.length, s.maxGuesses, s.finished]), [[3, 6, false], [4, 6, false], [5, 6, false]])
   assert.equal('answer' in game, false)
   const text = JSON.stringify(game)
   for (const word of Object.values(ANSWERS)) assert.equal(text.includes(word), false, `${word} لو رفته`)
@@ -154,7 +154,7 @@ test('برد کلمه‌ی ۳ حرفی: جواب میاد و کلمه‌ی ۴ ح
   const next = await getGame(cookie)
   assert.equal(next.slot, 2)
   assert.equal(next.wordLength, 4)
-  assert.equal(next.maxGuesses, 5)
+  assert.equal(next.maxGuesses, 6)
   assert.equal(next.finished, false)
   assert.equal('answer' in next, false)
   assert.equal(JSON.stringify(next.guesses), '[]')
@@ -163,7 +163,7 @@ test('برد کلمه‌ی ۳ حرفی: جواب میاد و کلمه‌ی ۴ ح
   assert.equal((await guess(cookie, WRONG[4])).status, 200)
 })
 
-test('باخت: ۴ حدس غلط برای ۳ حرفی بازی اون کلمه رو تموم می‌کنه، نه کل روز رو', async () => {
+test('باخت: ۶ حدس غلط برای ۳ حرفی بازی اون کلمه رو تموم می‌کنه، نه کل روز رو', async () => {
   const { cookie } = await newPlayer()
   let last
   for (let i = 0; i < MAX[3]; i++) {

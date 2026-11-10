@@ -186,10 +186,11 @@ if (db.prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'dai
 }
 
 // ارتقای دیتابیس‌های قدیمی: واژه‌یاب حالا هر روز ۳ بازی (۳، ۴ و ۵ حرفی) داره (ستون length).
-// کلید اصلی عوض می‌شه، پس جدول رو دوباره می‌سازیم؛ حدس‌های قبلی (که ۵ حرفی بودن) همون‌طور می‌مونن.
+// کلید اصلی عوض می‌شه، پس جدول رو دوباره می‌سازیم. حدس‌های قبلی رو نگه نمی‌داریم: اون‌ها برای بازی قدیمی
+// (کلمه‌ی ثابت و هر ترکیبی قبول) بودن و اگه می‌موندن، حدس‌های امروز همون بازی قدیمی توی بازی ۵ حرفیِ جدید پیدا می‌شدن.
 const wordColumns = db.prepare('PRAGMA table_info(word_guesses)').all().map((c) => c.name)
 if (!wordColumns.includes('length')) {
-  db.exec('ALTER TABLE word_guesses RENAME TO word_guesses_old')
+  db.exec('DROP TABLE word_guesses')
   db.exec(`CREATE TABLE word_guesses (
     player_key TEXT NOT NULL,
     date TEXT NOT NULL,
@@ -199,7 +200,4 @@ if (!wordColumns.includes('length')) {
     length INTEGER NOT NULL DEFAULT 5,
     PRIMARY KEY (player_key, date, length, guess_number)
   )`)
-  db.exec(`INSERT INTO word_guesses (player_key, date, guess_number, word, created_at, length)
-           SELECT player_key, date, guess_number, word, created_at, 5 FROM word_guesses_old`)
-  db.exec('DROP TABLE word_guesses_old')
 }

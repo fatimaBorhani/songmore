@@ -3,8 +3,8 @@
 import fs from 'node:fs'
 
 export const LENGTHS = [3, 4, 5]
-// تعداد حدس هر بازی: هر چه کلمه کوتاه‌تر، حدس کمتر
-export const MAX_GUESSES = { 3: 4, 4: 5, 5: 6 }
+// تعداد حدس هر بازی: برای هر سه طول ۶ تا
+export const MAX_GUESSES = { 3: 6, 4: 6, 5: 6 }
 
 const cache = new Map()
 

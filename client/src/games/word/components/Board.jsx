@@ -1,4 +1,4 @@
-// صفحه‌ی حرف‌ها: ۶ ردیف ۵ تایی
+// صفحه‌ی حرف‌ها: maxGuesses ردیف، هر ردیف wordLength خونه (۳، ۴ یا ۵ حرفی)
 //   ردیف‌های حدس‌زده‌شده با رنگ، ردیف فعلی با حرف‌هایی که داره تایپ می‌شه، بقیه خالی
 // revealRow: ردیفی که همین الان ثبت شده و کاشی‌هاش یکی‌یکی برمی‌گردن
 // winRow: ردیف برنده که کاشی‌هاش بالا پایین می‌پرن
@@ -58,7 +58,11 @@ function Board({ guesses, typed, maxGuesses, wordLength, finished, revealRow, wi
     )
   }
 
-  return <div className="board">{rows}</div>
+  return (
+    <div className="board" style={{ '--cols': wordLength, '--rows': maxGuesses }}>
+      {rows}
+    </div>
+  )
 }
 
 export default Board

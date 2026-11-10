@@ -8,3 +8,8 @@ export function getWordGame() {
 export function sendWordGuess(word) {
   return postJson('/api/word/guess', { word })
 }
+
+// فقط حالت تست (npm run dev): ۳ کلمه‌ی تصادفی جدید برای امروز و پاک شدن حدس‌های امروز
+export function resetWordTest() {
+  return postJson('/api/word/test/reset')
+}

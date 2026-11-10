@@ -1,9 +1,6 @@
 // حروف، چیدمان کیبورد و تبدیل کلیدهای کیبورد به حرف فارسی
 import { faDigits } from '../../shared/format.js'
 
-export const WORD_LENGTH = 5
-export const MAX_GUESSES = 6
-
 // چیدمان کیبورد استاندارد فارسی، از چپ به راست (همون‌جوری که روی کیبورد کامپیوتر دیده می‌شه)
 // «آ» و «ئ» حرف جدا هستن (آ با ا یکی نیست)
 export const KEY_ROWS = [
@@ -64,11 +61,15 @@ export function letterStatuses(guesses) {
   return statuses
 }
 
-// متن اشتراک نتیجه: مربع‌های رنگی، بدون لو دادن حرف‌ها
+// متن اشتراک نتیجه‌ی روز: برای هر کلمه (۳، ۴ و ۵ حرفی) یه تیتر با تعداد حدس و مربع‌های رنگی، بدون لو دادن حرف‌ها
 const SHARE_SQUARES = { correct: '🟦', present: '⬜', absent: '⬛' }
 export function shareText(game, title) {
-  const RLM = '‏' // تا توی برنامه‌ها ردیف‌ها راست‌به‌چپ نشون داده بشن
-  const score = game.won ? game.guesses.length : 'X'
-  const rows = game.guesses.map((g) => RLM + g.letters.map((l) => SHARE_SQUARES[l.result]).join(''))
-  return [faDigits(`${title} ${score}/${game.maxGuesses}`), ...rows].join('\n')
+  const RLM = '\u200f' // تا توی برنامه‌ها ردیف‌ها راست‌به‌چپ نشون داده بشن
+  const lines = [faDigits(title)]
+  for (const slot of game.slots) {
+    const score = slot.won ? slot.guessCount : 'X'
+    lines.push(RLM + faDigits(`${slot.length} حرفی ${score}/${slot.maxGuesses}`))
+    for (const row of slot.rows) lines.push(RLM + row.map((r) => SHARE_SQUARES[r]).join(''))
+  }
+  return lines.join('\n')
 }

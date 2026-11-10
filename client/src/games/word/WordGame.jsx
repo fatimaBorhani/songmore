@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { getWordGame, sendWordGuess } from './api.js'
-import { isUnknownCharacterKey, letterFromKeyEvent, letterStatuses, shareText, WORD_LENGTH } from './letters.js'
+import { getWordGame, resetWordTest, sendWordGuess } from './api.js'
+import { isUnknownCharacterKey, letterFromKeyEvent, letterStatuses, shareText } from './letters.js'
 import { REVEAL_TOTAL_MS } from './timing.js'
 import Board from './components/Board.jsx'
 import Keyboard from './components/Keyboard.jsx'
@@ -14,8 +14,8 @@ const GAME_TITLE = 'واژه‌یاب' // اسم موقت
 const HELP_SEEN_KEY = 'songmore_word_help_seen'
 
 const ERROR_MESSAGES = {
-  WORD_LENGTH: 'کلمه باید ۵ حرف باشه',
   INVALID_LETTERS: 'فقط حروف فارسی',
+  NOT_IN_LIST: 'این کلمه توی فرهنگ لغت نیست',
   GAME_OVER: 'بازی امروز تموم شده',
 }
 
@@ -109,7 +109,7 @@ function WordGame({ user }) {
 
   function addLetter(letter) {
     if (locked) return
-    setTyped((t) => (t.length >= WORD_LENGTH ? t : [...t, letter]))
+    setTyped((t) => (t.length >= game.wordLength ? t : [...t, letter]))
   }
 
   function removeLetter() {
@@ -119,7 +119,7 @@ function WordGame({ user }) {
 
   async function submit() {
     if (locked || sending.current) return
-    if (typed.length < WORD_LENGTH) {
+    if (typed.length < game.wordLength) {
       showToast('حروف کافی نیست')
       shakeRow()
       return
@@ -141,10 +141,27 @@ function WordGame({ user }) {
         }
       }, REVEAL_TOTAL_MS)
     } catch (e) {
-      showToast(ERROR_MESSAGES[e.message] || e.message)
+      showToast(e.message === 'WORD_LENGTH' ? `کلمه باید ${faNumber(game.wordLength)} حرف باشه` : ERROR_MESSAGES[e.message] || e.message)
       shakeRow()
     } finally {
       sending.current = false
+      setBusy(false)
+    }
+  }
+
+  // فقط حالت تست: ۳ کلمه‌ی تصادفی جدید و شروع دوباره‌ی بازی امروز
+  async function resetTest() {
+    if (busy) return
+    setBusy(true)
+    try {
+      const fresh = await resetWordTest()
+      setTyped([])
+      setRevealRow(-1)
+      setWinRow(-1)
+      setGame(fresh)
+    } catch (e) {
+      showToast(e.message)
+    } finally {
       setBusy(false)
     }
   }
@@ -265,10 +282,17 @@ function WordGame({ user }) {
         <div className="word-title">
           <h1>{GAME_TITLE}</h1>
           <p>
-            {game.finished
+            {game.dayFinished
               ? 'بازی امروز تموم شد'
-              : `کلمه‌ی ۵ حرفی امروز · حدس ${faNumber(guessNumber)} از ${faNumber(game.maxGuesses)}`}
+              : game.finished
+                ? `کلمه‌ی ${faNumber(game.wordLength)} حرفی تموم شد`
+                : `کلمه‌ی ${faNumber(game.wordLength)} حرفی · حدس ${faNumber(guessNumber)} از ${faNumber(game.maxGuesses)}`}
           </p>
+          <div className="word-progress" role="img" aria-label={`کلمه‌ی ${faNumber(game.slot)} از ${faNumber(game.slotCount)}`}>
+            {game.slots.map((s) => (
+              <span key={s.slot} className={s.finished ? 'done' : s.slot === game.slot ? 'current' : ''} />
+            ))}
+          </div>
         </div>
         <span className="word-top-spacer" aria-hidden="true" />
       </div>
@@ -294,7 +318,7 @@ function WordGame({ user }) {
       </div>
 
       {showResult ? (
-        <WordResult game={game} onShare={handleShare} testMode={game.testMode} onReplay={loadGame} />
+        <WordResult game={game} onShare={handleShare} onNext={loadGame} testMode={game.testMode} onReplay={resetTest} />
       ) : isDesktop ? (
         <>
           <Keyboard mode="map" statuses={statuses} onLetter={addLetter} onEnter={submit} onDelete={removeLetter} />
@@ -308,6 +332,12 @@ function WordGame({ user }) {
         </>
       ) : (
         <Keyboard mode="touch" statuses={statuses} onLetter={addLetter} onEnter={submit} onDelete={removeLetter} />
+      )}
+
+      {game.testMode && !showResult && (
+        <button type="button" className="ghost-button word-test-reset" disabled={busy} onClick={resetTest}>
+          بازی دوباره (تست)
+        </button>
       )}
 
       {debug && (

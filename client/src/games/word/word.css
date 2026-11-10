@@ -82,20 +82,21 @@
 
 .board {
   --gap: 6px;
-  /* پهنا به اندازه‌ی جا: نه بیشتر از ۳۳۰، و روی صفحه‌های کوتاه کوچیک‌تر تا کیبورد جا بشه */
-  width: min(100%, 330px, max(220px, calc((100dvh - 390px) * 5 / 6)));
+  /* --cols و --rows (تعداد حرف و حدس) از خود صفحه‌ی بازی میان.
+     پهنا به اندازه‌ی جا: خونه‌ها نه بزرگ‌تر از ۶۲ پیکسل، و روی صفحه‌های کوتاه کوچیک‌تر تا کیبورد جا بشه */
+  width: min(100%, calc(var(--cols) * 62px + (var(--cols) - 1) * var(--gap)), max(150px, calc((100dvh - 390px) * var(--cols) / var(--rows))));
   display: grid;
   gap: var(--gap);
   perspective: 600px;
 }
 
 .desktop .board {
-  width: min(100%, 320px);
+  width: min(100%, calc(var(--cols) * 62px + (var(--cols) - 1) * var(--gap)));
 }
 
 /* آخر بازی کارت نتیجه جای کیبورد رو می‌گیره؛ صفحه‌ی حرف‌ها کوچیک‌تر تا همه‌چی جا بشه */
 .word-page.finished .board {
-  width: min(100%, 230px, max(160px, calc((100dvh - 430px) * 5 / 6)));
+  width: min(100%, calc(var(--cols) * 46px + (var(--cols) - 1) * var(--gap)), max(110px, calc((100dvh - 430px) * var(--cols) / var(--rows))));
   --gap: 5px;
 }
 
@@ -106,7 +107,7 @@
 
 .board-row {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
   gap: var(--gap);
 }
 
@@ -620,7 +621,7 @@ kbd {
 
   .board {
     --gap: 5px;
-    width: min(100%, 330px, max(180px, calc((100dvh - 315px) * 5 / 6)));
+    width: min(100%, calc(var(--cols) * 62px + (var(--cols) - 1) * var(--gap)), max(150px, calc((100dvh - 315px) * var(--cols) / var(--rows))));
   }
 
   .word-keyboard {
@@ -655,4 +656,77 @@ kbd {
   border: 1px solid #3030e6;
   color: #fff;
   font: 12px/1.5 monospace;
+}
+
+/* ---------- پیشرفت روز: کلمه‌ی ۳، ۴ و ۵ حرفی ---------- */
+
+.word-progress {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.word-progress span {
+  width: 28px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+}
+
+.word-progress span.done {
+  background: var(--accent);
+}
+
+.word-progress span.current {
+  background: var(--text);
+}
+
+/* خلاصه‌ی روز بعد از کلمه‌ی آخر */
+.word-day-summary {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.word-day-summary li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.word-day-summary .day-len {
+  color: var(--text-muted);
+  min-width: 56px;
+  text-align: right;
+}
+
+.word-day-summary .day-word {
+  flex: 1;
+  font-weight: 900;
+  text-align: center;
+}
+
+.word-day-summary .day-score {
+  min-width: 40px;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-soft);
+}
+
+.word-day-summary li.lost .day-score {
+  color: #ff8a8a;
+}
+
+.word-test-reset {
+  align-self: center;
 }

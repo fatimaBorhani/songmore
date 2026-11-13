@@ -336,3 +336,59 @@ test('دکمه‌ی تست فقط توی حالت تست کار می‌کنه', 
   const res = await fetch(`${baseUrl}/api/survey/test/reset`, { method: 'POST', headers: { Cookie: cookie } })
   assert.equal(res.status, 404)
 })
+
+test('آمار پروفایل: فقط کاربر واردشده؛ جواب‌داده، رد‌شده، روزها، امروز و پیشنهادها', async () => {
+  // مهمان آمار نداره
+  const guest = await newPlayer()
+  const noLogin = await fetch(`${baseUrl}/api/survey/stats`, { headers: { Cookie: guest.cookie } })
+  assert.equal(noLogin.status, 401)
+
+  // مهمان ۲ تا جواب می‌ده، بعد ثبت‌نام می‌کنه (جواب‌ها منتقل می‌شن) و بعد از ورود ۱ تا رد و ۱ تا جواب دیگه می‌ده
+  const { cookie } = await newPlayer()
+  await answerCurrent(cookie, 'اولی')
+  await answerCurrent(cookie, 'دومی')
+  const signup = await fetch(`${baseUrl}/api/auth/signup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Cookie: cookie },
+    body: JSON.stringify({ username: 'survey_stats', password: 'pass-1234' }),
+  })
+  assert.equal(signup.status, 201)
+  const authCookie = signup.headers.getSetCookie().find((c) => c.startsWith('songmore_auth=')).split(';')[0]
+  const both = `${cookie}; ${authCookie}`
+  const state = await getState(both)
+  await post(both, 'skip', { questionId: state.current.id })
+  await answerCurrent(both, 'سومی')
+  await post(both, 'suggest', { text: 'یه چیزی بگو که توی کوله‌ی کوهنوردی می‌ذارن' })
+
+  const res = await fetch(`${baseUrl}/api/survey/stats`, { headers: { Cookie: both } })
+  assert.equal(res.status, 200)
+  const stats = await res.json()
+  assert.equal(stats.answered, 3)
+  assert.equal(stats.skipped, 1)
+  assert.equal(stats.today, 3)
+  assert.equal(stats.days, 1)
+  assert.equal(stats.suggestions, 1)
+  assert.equal(stats.totalQuestions, QUESTIONS.length)
+  assert.deepEqual(Object.keys(stats.goal).sort(), ['completed', 'perQuestion', 'progress', 'target', 'totalAnswers'])
+  // جواب‌های متنی هیچ‌جا نیست
+  assert.equal(JSON.stringify(stats).includes('اولی'), false)
+})
+
+test('روزهای مشارکت: جواب‌های روزهای مختلف جدا شمرده می‌شن (به وقت تهران)', async () => {
+  const { cookie } = await newPlayer()
+  const key = playerKeyOf(cookie)
+  await answerCurrent(cookie, 'الف')
+  // یه جواب قدیمی‌تر برای دو روز پیش و دیروز
+  const insert = db.prepare('INSERT INTO survey_answers (player_key, question_id, answer, answer_norm, created_at) VALUES (?, ?, ?, ?, ?)')
+  const free = QUESTIONS.filter((q) => !db.prepare('SELECT 1 FROM survey_answers WHERE player_key = ? AND question_id = ?').get(key, q.id))
+  insert.run(key, free[0].id, 'ب', 'ب', Date.now() - 2 * 24 * 3600 * 1000)
+  insert.run(key, free[1].id, 'ج', 'ج', Date.now() - 1 * 24 * 3600 * 1000)
+  // رد کردن مشارکت حساب نمی‌شه
+  insert.run(key, free[2].id, null, null, Date.now() - 5 * 24 * 3600 * 1000)
+  const { getSurveyStats } = await import('../../games/survey/survey.js')
+  const stats = getSurveyStats(key, getTodayDateString())
+  assert.equal(stats.answered, 3)
+  assert.equal(stats.skipped, 1)
+  assert.equal(stats.days, 3)
+  assert.equal(stats.today, 1)
+})

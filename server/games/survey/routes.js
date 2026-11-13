@@ -1,12 +1,13 @@
 // مسیرهای API نظرسنجی «صد نفر گفتن» (همه زیر /api/survey)
 //   GET  state      سؤال جاری، پیشرفت امروز و هدف جمعی
+//   GET  stats      آمار کاربر واردشده برای صفحه‌ی حساب (وگرنه 401)
 //   POST answer     { questionId, answer }
 //   POST skip       { questionId }
 //   POST more       «۵ سؤال دیگه»
 //   POST suggest    { text }  پیشنهاد سؤال
 import express from 'express'
 import { getTodayDateString } from '../../core/today.js'
-import { SurveyError, addMoreQuestions, addSuggestion, clearSurveyPlayer, getSurveyState, skipQuestion, submitAnswer } from './survey.js'
+import { SurveyError, addMoreQuestions, addSuggestion, clearSurveyPlayer, getSurveyState, getSurveyStats, skipQuestion, submitAnswer } from './survey.js'
 
 // حالت تست (همون پرچم npm run dev): دکمه‌ی «بازی دوباره (تست)» جواب‌های خود بازیکن رو پاک می‌کنه
 export const SURVEY_TEST_MODE = process.argv.includes('--random-song')
@@ -25,6 +26,12 @@ function handle(res, fn) {
 
 surveyRouter.get('/state', (req, res) => {
   handle(res, () => getSurveyState(req.playerKey, getTodayDateString()))
+})
+
+// آمار نظرسنجی برای صفحه‌ی حساب (فقط کاربر واردشده، مثل آمار بازی‌ها)
+surveyRouter.get('/stats', (req, res) => {
+  if (!req.user) return res.status(401).json({ error: 'NOT_LOGGED_IN' })
+  res.json(getSurveyStats(req.playerKey, getTodayDateString()))
 })
 
 surveyRouter.post('/answer', (req, res) => {

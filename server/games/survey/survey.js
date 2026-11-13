@@ -1,6 +1,7 @@
 // منطق نظرسنجی «صد نفر گفتن»: سؤال‌های امروز، جواب دادن، رد کردن، «۵ سؤال دیگه» و پیشنهاد سؤال.
 // مهم: هیچ‌وقت جواب بقیه یا درصد جواب‌ها به کلاینت داده نمی‌شه. فقط شمارش کلی برای «هدف جمعی».
 import { db } from '../../core/db.js'
+import { getTodayDateString } from '../../core/today.js'
 import { normalizePersian } from '../../core/normalize.js'
 import {
   ANSWERS_PER_QUESTION,
@@ -171,4 +172,22 @@ export function addSuggestion(playerKey, date, text) {
 export function clearSurveyPlayer(playerKey) {
   db.prepare('DELETE FROM survey_answers WHERE player_key = ?').run(playerKey)
   db.prepare('DELETE FROM survey_assign WHERE player_key = ?').run(playerKey)
+}
+
+// آمار نظرسنجی یه بازیکن برای صفحه‌ی حساب: چند سؤال جواب داده/رد کرده، چند روز مشارکت کرده و امروز چند تا
+export function getSurveyStats(playerKey, today) {
+  const rows = db.prepare('SELECT answer IS NOT NULL AS answered, created_at FROM survey_answers WHERE player_key = ?').all(playerKey)
+  const answeredRows = rows.filter((r) => r.answered)
+  // روزهای مشارکت: تاریخ تهرانِ هر جوابی که داده (رد کردن مشارکت حساب نمی‌شه)
+  const days = new Set(answeredRows.map((r) => getTodayDateString(new Date(r.created_at))))
+  const suggestions = db.prepare('SELECT COUNT(*) AS n FROM survey_suggestions WHERE player_key = ?').get(playerKey).n
+  return {
+    answered: answeredRows.length,
+    skipped: rows.length - answeredRows.length,
+    today: answeredRows.filter((r) => getTodayDateString(new Date(r.created_at)) === today).length,
+    days: days.size,
+    suggestions,
+    totalQuestions: QUESTIONS.length,
+    goal: goalProgress(),
+  }
 }

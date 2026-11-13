@@ -463,6 +463,132 @@ kbd {
   background: #4040f0;
 }
 
+.word-result-note {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--text-soft);
+}
+
+/* ---------- ادامه دادن بعد از ۶ حدس ---------- */
+
+/* نوار «حالت ادامه» بالای صفحه‌ی حرف‌ها */
+.word-continue-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 10px;
+}
+
+.word-continue-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(48, 48, 230, 0.18);
+  color: #a8a8ff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.word-continue-bar .ghost-button {
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* پنجره‌ی «ادامه می‌دی؟» */
+.continue-backdrop {
+  background: rgba(9, 9, 11, 0.78);
+}
+
+.continue-dialog {
+  max-width: 326px;
+  padding: 24px 20px 20px;
+  border-radius: 28px;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+}
+
+.continue-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(48, 48, 230, 0.18);
+  color: #8c8cff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.continue-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.continue-text h2 {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.continue-text p {
+  line-height: 1.8;
+}
+
+.continue-actions {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.continue-actions .primary-button,
+.continue-actions .ghost-button {
+  height: 48px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.continue-actions .ghost-button {
+  align-self: stretch;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+/* گوشی توی حالت ادامه: نوار بالای تخته جا می‌گیره، پس تخته کمی کوچیک‌تر تا کیبورد توی صفحه بمونه */
+.word-page.touch.continuing .board {
+  --gap: 5px;
+  width: min(100%, calc(var(--cols) * 62px + (var(--cols) - 1) * var(--gap)), max(110px, calc((100dvh - 450px) * var(--cols) / var(--rows))));
+}
+
+/* قاب صفحه‌ی حرف‌ها: همیشه به اندازه‌ی خود تخته؛ توی حالت ادامه (ردیف‌های بیشتر از ۶ تا) ارتفاعش با جاوااسکریپت
+   روی ۶ ردیف بسته می‌شه و بقیه با اسکرول دیده می‌شن */
+.board-viewport {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* تخته قد خودش می‌مونه، فشرده نمی‌شه */
+}
+
+.board-viewport.scrolling {
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
 .word-next {
   text-align: center;
   font-size: 13px;

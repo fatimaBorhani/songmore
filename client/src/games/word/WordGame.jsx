@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { getWordGame, resetWordTest, sendWordGuess } from './api.js'
+import { getWordGame, resetWordTest, sendWordGiveUp, sendWordGuess } from './api.js'
 import { isUnknownCharacterKey, letterFromKeyEvent, letterStatuses, shareText } from './letters.js'
 import { REVEAL_TOTAL_MS } from './timing.js'
 import Board from './components/Board.jsx'
 import Keyboard from './components/Keyboard.jsx'
 import WordResult from './components/WordResult.jsx'
 import HelpDialog from './components/HelpDialog.jsx'
+import ContinueDialog from './components/ContinueDialog.jsx'
 import { faNumber } from '../../shared/format.js'
 import { SITE_NAME } from '../../shared/site.js'
 import './word.css'
@@ -54,6 +55,7 @@ function WordGame({ user }) {
   const [revealRow, setRevealRow] = useState(-1) // ردیفی که کاشی‌هاش دارن برمی‌گردن
   const [winRow, setWinRow] = useState(-1) // ردیف برنده که داره جشن می‌گیره
   const [showHelp, setShowHelp] = useState(() => !helpSeenBefore())
+  const [continueChosen, setContinueChosen] = useState(false) // بعد از ۶ حدس گفته «ادامه می‌دم»
   const isDesktop = useIsDesktop()
   // حالت عیب‌یابی: آدرس /word?debug؛ آخرین کلیدی که به صفحه رسیده و دلیل حرف نشستن یا ننشستنش رو نشون می‌ده
   const debug = new URLSearchParams(window.location.search).has('debug')
@@ -83,6 +85,7 @@ function WordGame({ user }) {
     setTyped([])
     setRevealRow(-1)
     setWinRow(-1)
+    setContinueChosen(false)
     getWordGame()
       .then(setGame)
       .catch(() => setLoadError('سرور در دسترس نیست. اول سرور رو روشن کن.'))
@@ -104,8 +107,12 @@ function WordGame({ user }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId])
 
-  // وقتی بازی تموم شده یا ردیف داره برمی‌گرده، تایپ قفله
-  const locked = !game || game.finished || busy || revealRow >= 0
+  // بعد از حدس ششمِ غلط (وقتی ردیف آخر برگشت) باید انتخاب کنه: ادامه یا جواب. اگه رفرش کرده و بیشتر از ۶ حدس داره،
+  // یعنی قبلاً ادامه رو انتخاب کرده و دیگه نمی‌پرسیم
+  const showContinueDialog = !!game && game.exhausted && revealRow < 0 && !continueChosen && game.guesses.length === game.maxGuesses
+
+  // وقتی بازی تموم شده، ردیف داره برمی‌گرده یا پنجره‌ی «ادامه می‌دی؟» بازه، تایپ قفله
+  const locked = !game || game.finished || busy || revealRow >= 0 || showContinueDialog
 
   function addLetter(letter) {
     if (locked) return
@@ -135,7 +142,7 @@ function WordGame({ user }) {
       // اول کاشی‌ها یکی‌یکی برمی‌گردن، بعد (اگه برد بود) ردیف می‌پره
       later(() => {
         setRevealRow(-1)
-        if (updated.won) {
+        if (updated.solved) {
           setWinRow(row)
           later(() => setWinRow(-1), 1100)
         }
@@ -149,6 +156,20 @@ function WordGame({ user }) {
     }
   }
 
+  // «جواب رو ببینم» (بعد از ۶ حدس غلط): کلمه باخت حساب می‌شه و کارت نتیجه با جواب میاد
+  async function giveUp() {
+    if (busy) return
+    setBusy(true)
+    try {
+      setGame(await sendWordGiveUp())
+      setTyped([])
+    } catch (e) {
+      showToast(ERROR_MESSAGES[e.message] || e.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
   // فقط حالت تست: ۳ کلمه‌ی تصادفی جدید و شروع دوباره‌ی بازی امروز
   async function resetTest() {
     if (busy) return
@@ -158,6 +179,7 @@ function WordGame({ user }) {
       setTyped([])
       setRevealRow(-1)
       setWinRow(-1)
+      setContinueChosen(false)
       setGame(fresh)
     } catch (e) {
       showToast(e.message)
@@ -194,6 +216,8 @@ function WordGame({ user }) {
         if (e.key === 'Escape') closeHelp()
         return
       }
+      // پنجره‌ی «ادامه می‌دی؟» بازه: کیبورد دکمه‌های همون پنجره رو کار می‌ندازه (Enter)، نه تایپ
+      if (showContinueDialog) return
       // میانبرهای مرورگر (Ctrl+C، Alt+Tab و ...) کار خودشون رو بکنن. بعضی کیبوردها (AltGr) هم Ctrl و Alt رو
       // با هم میزنن و حرف می‌دن؛ اونا باید کار کنن
       if (e.metaKey || (e.ctrlKey && !e.altKey) || (e.altKey && !e.ctrlKey)) return
@@ -269,9 +293,14 @@ function WordGame({ user }) {
   const statuses = letterStatuses(settledGuesses)
   const showResult = game.finished && revealRow < 0
   const guessNumber = Math.min(game.guesses.length + 1, game.maxGuesses)
+  // بعد از ۶ حدس: «حالت ادامه» (نوار بالای صفحه‌ی حرف‌ها) تا پیدا کنه یا «جواب رو ببینم» بزنه
+  const continuing = game.exhausted && !showContinueDialog
+  const nextSlot = game.slots[game.slot] // کلمه‌ی بعدی (اگه هست)
+  // هر حدسِ بعد از ۶ تا یه ردیف بیشتر (تا وقتی پنجره‌ی «ادامه می‌دی؟» بازه هنوز همون ۶ ردیف)
+  const rowCount = Math.max(game.maxGuesses, game.guesses.length + (game.finished || showContinueDialog ? 0 : 1))
 
   return (
-    <main className={`word-page ${isDesktop ? 'desktop' : 'touch'}${showResult ? ' finished' : ''}`}>
+    <main className={`word-page ${isDesktop ? 'desktop' : 'touch'}${showResult ? ' finished' : ''}${continuing ? ' continuing' : ''}`}>
       <div className="word-top">
         <button type="button" className="icon-button" aria-label="آموزش بازی" onClick={() => setShowHelp(true)}>
           <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -286,7 +315,9 @@ function WordGame({ user }) {
               ? 'بازی امروز تموم شد'
               : game.finished
                 ? `کلمه‌ی ${faNumber(game.wordLength)} حرفی تموم شد`
-                : `کلمه‌ی ${faNumber(game.wordLength)} حرفی · حدس ${faNumber(guessNumber)} از ${faNumber(game.maxGuesses)}`}
+                : game.exhausted
+                  ? `کلمه‌ی ${faNumber(game.wordLength)} حرفی`
+                  : `کلمه‌ی ${faNumber(game.wordLength)} حرفی · حدس ${faNumber(guessNumber)} از ${faNumber(game.maxGuesses)}`}
           </p>
           <div className="word-progress" role="img" aria-label={`کلمه‌ی ${faNumber(game.slot)} از ${faNumber(game.slotCount)}`}>
             {game.slots.map((s) => (
@@ -296,6 +327,20 @@ function WordGame({ user }) {
         </div>
         <span className="word-top-spacer" aria-hidden="true" />
       </div>
+
+      {continuing && (
+        <div className="word-continue-bar">
+          <span className="word-continue-chip">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 12c-1.8-2.4-3.2-4-5-4a4 4 0 0 0 0 8c1.8 0 3.2-1.6 5-4zm0 0c1.8 2.4 3.2 4 5 4a4 4 0 0 0 0-8c-1.8 0-3.2 1.6-5 4z" />
+            </svg>
+            حالت ادامه · حدس {faNumber(game.guesses.length + 1)} · بدون امتیاز
+          </span>
+          <button type="button" className="ghost-button" disabled={busy} onClick={giveUp}>
+            {nextSlot ? 'کلمه‌ی بعدی' : 'نمایش جواب'}
+          </button>
+        </div>
+      )}
 
       <div className="word-stage">
         <div className="word-toast-area" role="status">
@@ -309,6 +354,7 @@ function WordGame({ user }) {
           guesses={game.guesses}
           typed={typed}
           maxGuesses={game.maxGuesses}
+          rowCount={rowCount}
           wordLength={game.wordLength}
           finished={game.finished}
           revealRow={revealRow}
@@ -351,6 +397,7 @@ function WordGame({ user }) {
       )}
 
       {showHelp && <HelpDialog onClose={closeHelp} />}
+      {showContinueDialog && <ContinueDialog busy={busy} onContinue={() => setContinueChosen(true)} onGiveUp={giveUp} />}
     </main>
   )
 }

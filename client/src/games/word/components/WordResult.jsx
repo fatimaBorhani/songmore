@@ -13,6 +13,7 @@ function WordResult({ game, onShare, onNext, testMode, onReplay }) {
     card.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }, [])
   const nextSlot = game.slots[game.slot] // کلمه‌ی بعدی (اگه هست)
+  // (برای کلمه‌ای که بعد از ۶ حدس پیدا شده، شمارنده‌ی «در حدس N» همون تعداد کل حدس‌هاست)
   return (
     <section ref={card} className="word-result" aria-live="polite">
       <div className="word-result-head">
@@ -20,10 +21,15 @@ function WordResult({ game, onShare, onNext, testMode, onReplay }) {
           <p className="word-result-message won">
             {PRAISE[count - 1] || PRAISE.at(-1)} در حدس {faNumber(count)} پیدا کردی
           </p>
+        ) : game.solved ? (
+          <p className="word-result-message won">بالاخره پیداش کردی! در حدس {faNumber(count)}</p>
         ) : (
           <p className="word-result-message">این بار نشد. کلمه‌ی {faNumber(game.wordLength)} حرفی این بود:</p>
         )}
         <h2 className="word-result-answer">{game.answer}</h2>
+        {game.solved && !game.won && (
+          <p className="word-result-note">چون از {faNumber(game.maxGuesses)} حدس گذشتی، این کلمه توی نتیجه‌ی امروزت باخت حساب می‌شه.</p>
+        )}
       </div>
 
       {game.dayFinished && (

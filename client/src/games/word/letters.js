@@ -69,7 +69,8 @@ export function shareText(game, title) {
   for (const slot of game.slots) {
     const score = slot.won ? slot.guessCount : 'X'
     lines.push(RLM + faDigits(`${slot.length} حرفی ${score}/${slot.maxGuesses}`))
-    for (const row of slot.rows) lines.push(RLM + row.map((r) => SHARE_SQUARES[r]).join(''))
+    // فقط ۶ ردیف اول (مثل نتیجه‌ی حساب‌شده)؛ حدس‌های بعد از «ادامه» توی اشتراک نمیاد
+    for (const row of slot.rows.slice(0, slot.maxGuesses)) lines.push(RLM + row.map((r) => SHARE_SQUARES[r]).join(''))
   }
   return lines.join('\n')
 }

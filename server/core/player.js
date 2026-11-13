@@ -42,6 +42,12 @@ export function claimGuestGames(sessionId, userId) {
          AND date NOT IN (SELECT date FROM word_guesses WHERE player_key = ?)`
     )
     .run(userKey, sessionId, userKey)
+  // کلمه‌هایی که مهمان برای واژه‌یاب پیشنهاد داده (اگه حساب خودش همون کلمه رو پیشنهاد نداده باشه)
+  db.prepare(
+    `UPDATE word_suggestions SET player_key = ?
+     WHERE player_key = ?
+       AND word NOT IN (SELECT word FROM word_suggestions WHERE player_key = ?)`
+  ).run(userKey, sessionId, userKey)
   // نظرسنجی: جواب‌ها و سؤال‌های امروز (جواب به سؤالی که حساب خودش قبلاً جواب داده منتقل نمی‌شه)
   db.prepare(
     `UPDATE survey_answers SET player_key = ?

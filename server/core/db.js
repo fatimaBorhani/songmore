@@ -172,6 +172,17 @@ db.exec(`
     created_at INTEGER NOT NULL
   );
 
+  -- کلمه‌هایی که بازیکن‌ها فکر می‌کنن درسته ولی توی لیست نبوده («فکر می‌کنم درسته»)؛ فقط برای بازبینی خودمون
+  -- هر بازیکن هر کلمه رو یه بار می‌تونه پیشنهاد بده؛ word نرمال‌شده‌ست
+  CREATE TABLE IF NOT EXISTS word_suggestions (
+    player_key TEXT NOT NULL,
+    word TEXT NOT NULL,
+    length INTEGER NOT NULL,
+    date TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    PRIMARY KEY (player_key, word)
+  );
+
   -- کلمه‌های روزانه‌ی واژه‌یاب: برای هر تاریخ و هر طول یه کلمه که برای همه یکیه
   CREATE TABLE IF NOT EXISTS word_daily (
     date TEXT NOT NULL,

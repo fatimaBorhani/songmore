@@ -7,6 +7,7 @@ import { getDailyWords, pickNewRandomWords } from './dailyWord.js'
 import { normalizeWord, validateWord } from './letters.js'
 import { addWordGaveUp, addWordGuess, clearWordGames, currentIndex, getWordGameState } from './game.js'
 import { getWordStats } from './playerStats.js'
+import { suggestWord } from './suggestions.js'
 
 // حالت تست (همون پرچم npm run dev): دکمه‌ی «بازی دوباره (تست)» کلمه‌های امروز رو عوض می‌کنه.
 // رفرش صفحه بازی رو پاک نمی‌کنه.
@@ -23,6 +24,13 @@ wordRouter.get('/game', (req, res) => {
 wordRouter.get('/stats', (req, res) => {
   if (!req.user) return res.status(401).json({ error: 'NOT_LOGGED_IN' })
   res.json(getWordStats(req.playerKey))
+})
+
+// «فکر می‌کنم درسته»: کلمه‌ی ردشده‌ای که بازیکن می‌گه معنی داره (فقط ذخیره می‌شه؛ مهمان هم می‌تونه)
+wordRouter.post('/suggest', (req, res) => {
+  const error = suggestWord(req.playerKey, getTodayDateString(), req.body?.word)
+  if (error) return res.status(400).json({ error })
+  res.json({ ok: true })
 })
 
 // فقط حالت تست: ۳ کلمه‌ی تصادفی جدید و پاک شدن حدس‌های امروز

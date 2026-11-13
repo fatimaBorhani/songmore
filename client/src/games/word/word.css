@@ -327,6 +327,10 @@
 .word-keyboard.map {
   align-self: center;
   gap: 5px;
+  /* پهنا رو صریح می‌گیریم: ۱۳ کلید ۳۲ پیکسلی + ۱۲ فاصله‌ی ۴ پیکسلی + لبه‌ها.
+     بدون این، مرورگر پهنای قاب رو از روی خود حرف‌ها حساب می‌کنه و قاب از ردیف‌ها کوچیک‌تر می‌شه */
+  box-sizing: border-box;
+  width: min(100%, calc(13 * 32px + 12 * 4px + 34px));
   padding: 14px 16px;
   border-radius: 16px;
   background: #111113;

@@ -345,8 +345,8 @@ test('آمار پروفایل: فقط کاربر واردشده؛ جواب‌د�
 
   // مهمان ۲ تا جواب می‌ده، بعد ثبت‌نام می‌کنه (جواب‌ها منتقل می‌شن) و بعد از ورود ۱ تا رد و ۱ تا جواب دیگه می‌ده
   const { cookie } = await newPlayer()
-  await answerCurrent(cookie, 'اولی')
-  await answerCurrent(cookie, 'دومی')
+  await answerCurrent(cookie, 'زعفرون‌خاص۱')
+  await answerCurrent(cookie, 'زعفرون‌خاص۲')
   const signup = await fetch(`${baseUrl}/api/auth/signup`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Cookie: cookie },
@@ -357,7 +357,7 @@ test('آمار پروفایل: فقط کاربر واردشده؛ جواب‌د�
   const both = `${cookie}; ${authCookie}`
   const state = await getState(both)
   await post(both, 'skip', { questionId: state.current.id })
-  await answerCurrent(both, 'سومی')
+  await answerCurrent(both, 'زعفرون‌خاص۳')
   await post(both, 'suggest', { text: 'یه چیزی بگو که توی کوله‌ی کوهنوردی می‌ذارن' })
 
   const res = await fetch(`${baseUrl}/api/survey/stats`, { headers: { Cookie: both } })
@@ -371,7 +371,7 @@ test('آمار پروفایل: فقط کاربر واردشده؛ جواب‌د�
   assert.equal(stats.totalQuestions, QUESTIONS.length)
   assert.deepEqual(Object.keys(stats.goal).sort(), ['completed', 'perQuestion', 'progress', 'target', 'totalAnswers'])
   // جواب‌های متنی هیچ‌جا نیست
-  assert.equal(JSON.stringify(stats).includes('اولی'), false)
+  assert.equal(JSON.stringify(stats).includes('زعفرون‌خاص۱'), false)
 })
 
 test('روزهای مشارکت: جواب‌های روزهای مختلف جدا شمرده می‌شن (به وقت تهران)', async () => {

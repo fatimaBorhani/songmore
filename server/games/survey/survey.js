@@ -2,6 +2,7 @@
 // مهم: هیچ‌وقت جواب بقیه یا درصد جواب‌ها به کلاینت داده نمی‌شه. فقط شمارش کلی برای «هدف جمعی».
 import { db } from '../../core/db.js'
 import { getTodayDateString } from '../../core/today.js'
+import { EARLY_MEMBERS, computeBadges, countedAnswers, userIdOf } from './badges.js'
 import { normalizePersian } from '../../core/normalize.js'
 import {
   ANSWERS_PER_QUESTION,
@@ -174,13 +175,29 @@ export function clearSurveyPlayer(playerKey) {
   db.prepare('DELETE FROM survey_assign WHERE player_key = ?').run(playerKey)
 }
 
-// آمار نظرسنجی یه بازیکن برای صفحه‌ی حساب: چند سؤال جواب داده/رد کرده، چند روز مشارکت کرده و امروز چند تا
+// آمار نظرسنجی یه بازیکن برای صفحه‌ی حساب: چند سؤال جواب داده/رد کرده، چند روز مشارکت کرده، امروز چند تا و بج‌ها
 export function getSurveyStats(playerKey, today) {
-  const rows = db.prepare('SELECT answer IS NOT NULL AS answered, created_at FROM survey_answers WHERE player_key = ?').all(playerKey)
+  const rows = db.prepare('SELECT answer IS NOT NULL AS answered, answer_norm, created_at FROM survey_answers WHERE player_key = ?').all(playerKey)
   const answeredRows = rows.filter((r) => r.answered)
   // روزهای مشارکت: تاریخ تهرانِ هر جوابی که داده (رد کردن مشارکت حساب نمی‌شه)
   const days = new Set(answeredRows.map((r) => getTodayDateString(new Date(r.created_at))))
   const suggestions = db.prepare('SELECT COUNT(*) AS n FROM survey_suggestions WHERE player_key = ?').get(playerKey).n
+  // جواب‌هایی که به سؤال‌های «۵ سؤال دیگه» (batch ۱ به بعد) داده
+  const extra = db
+    .prepare(
+      `SELECT COUNT(*) AS n FROM survey_assign a
+       JOIN survey_answers s ON s.player_key = a.player_key AND s.question_id = a.question_id
+       WHERE a.player_key = ? AND a.batch >= 1 AND s.answer IS NOT NULL`
+    )
+    .get(playerKey).n
+  const userId = userIdOf(playerKey)
+  const badges = computeBadges({
+    counted: countedAnswers(answeredRows.map((r) => r.answer_norm)),
+    days: days.size,
+    extra,
+    suggestions,
+    early: userId !== null && userId <= EARLY_MEMBERS ? 1 : 0,
+  })
   return {
     answered: answeredRows.length,
     skipped: rows.length - answeredRows.length,
@@ -189,5 +206,6 @@ export function getSurveyStats(playerKey, today) {
     suggestions,
     totalQuestions: QUESTIONS.length,
     goal: goalProgress(),
+    badges,
   }
 }

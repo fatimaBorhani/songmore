@@ -141,6 +141,45 @@ db.exec(`
     PRIMARY KEY (player_key, date, length)
   );
 
+  -- نظرسنجی «صد نفر گفتن»: جواب هر بازیکن به هر سؤال (هر نفر برای هر سؤال فقط یه ردیف).
+  -- answer خالی (NULL) یعنی سؤال رو رد کرد؛ answer_norm همون جواب نرمال‌شده‌ست برای شمردن جواب‌های یکسان
+  CREATE TABLE IF NOT EXISTS survey_answers (
+    player_key TEXT NOT NULL,
+    question_id INTEGER NOT NULL,
+    answer TEXT,
+    answer_norm TEXT,
+    created_at INTEGER NOT NULL,
+    PRIMARY KEY (player_key, question_id)
+  );
+  CREATE INDEX IF NOT EXISTS idx_survey_answers_question ON survey_answers (question_id);
+
+  -- سؤال‌هایی که امروز به هر بازیکن داده شده (batch ۰ = سؤال‌های روز، ۱ به بعد = «۵ سؤال دیگه»ها)
+  CREATE TABLE IF NOT EXISTS survey_assign (
+    player_key TEXT NOT NULL,
+    date TEXT NOT NULL,
+    question_id INTEGER NOT NULL,
+    position INTEGER NOT NULL,
+    batch INTEGER NOT NULL,
+    PRIMARY KEY (player_key, date, question_id)
+  );
+
+  -- سؤال‌های روزانه‌ی نظرسنجی (برای همه یکیه)
+  CREATE TABLE IF NOT EXISTS survey_daily (
+    date TEXT NOT NULL,
+    position INTEGER NOT NULL,
+    question_id INTEGER NOT NULL,
+    PRIMARY KEY (date, position)
+  );
+
+  -- سؤال‌هایی که بازیکن‌ها پیشنهاد دادن (فقط برای خود ما؛ هیچ‌جا نشون داده نمی‌شن)
+  CREATE TABLE IF NOT EXISTS survey_suggestions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    player_key TEXT NOT NULL,
+    date TEXT NOT NULL,
+    text TEXT NOT NULL,
+    created_at INTEGER NOT NULL
+  );
+
   -- کلمه‌های روزانه‌ی واژه‌یاب: برای هر تاریخ و هر طول یه کلمه که برای همه یکیه
   CREATE TABLE IF NOT EXISTS word_daily (
     date TEXT NOT NULL,

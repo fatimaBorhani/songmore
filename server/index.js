@@ -3,6 +3,7 @@
 //   /api/song/...  بازی حدس آهنگ
 //   /api/word/...  بازی واژه‌یاب
 //   /api/color/... بازی حافظه‌ی رنگ
+//   /api/survey/.. نظرسنجی «صد نفر گفتن» (جمع کردن داده برای بازی‌های بعدی)
 //   /clips/...     فایل‌های کلیپ بازی آهنگ
 import express from 'express'
 import path from 'node:path'
@@ -13,6 +14,7 @@ import { attachPlayer } from './core/player.js'
 import { songRouter, RANDOM_SONG_MODE } from './games/song/routes.js'
 import { wordRouter } from './games/word/routes.js'
 import { colorRouter } from './games/color/routes.js'
+import { surveyRouter } from './games/survey/routes.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..')
@@ -45,6 +47,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/song', songRouter)
 app.use('/api/word', wordRouter)
 app.use('/api/color', colorRouter)
+app.use('/api/survey', surveyRouter)
 app.use('/clips', express.static(CLIPS_DIR))
 
 if (process.env.NODE_ENV !== 'test') {

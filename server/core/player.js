@@ -42,6 +42,17 @@ export function claimGuestGames(sessionId, userId) {
          AND date NOT IN (SELECT date FROM word_guesses WHERE player_key = ?)`
     )
     .run(userKey, sessionId, userKey)
+  // نظرسنجی: جواب‌ها و سؤال‌های امروز (جواب به سؤالی که حساب خودش قبلاً جواب داده منتقل نمی‌شه)
+  db.prepare(
+    `UPDATE survey_answers SET player_key = ?
+     WHERE player_key = ?
+       AND question_id NOT IN (SELECT question_id FROM survey_answers WHERE player_key = ?)`
+  ).run(userKey, sessionId, userKey)
+  db.prepare(
+    `UPDATE survey_assign SET player_key = ?
+     WHERE player_key = ?
+       AND date NOT IN (SELECT date FROM survey_assign WHERE player_key = ?)`
+  ).run(userKey, sessionId, userKey)
   // بازی حافظه‌ی رنگ
   const colorInfo = db
     .prepare(

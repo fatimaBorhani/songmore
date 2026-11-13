@@ -2,7 +2,6 @@
 import { useState } from 'react'
 import { faNumber } from '../../../shared/format.js'
 import GoalBar from './GoalBar.jsx'
-import Credit from './Credit.jsx'
 
 const MAX_ANSWER_LENGTH = 60 // همون حد سرور
 
@@ -68,7 +67,6 @@ function QuestionView({ title, state, busy, error, onSubmit, onSkip }) {
 
       <p className="survey-note">جواب‌ها ناشناس ذخیره می‌شن و برای ساختن بازی بعدی استفاده می‌شن.</p>
       <GoalBar goal={goal} compact />
-      <Credit />
     </main>
   )
 }

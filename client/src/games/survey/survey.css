@@ -187,16 +187,6 @@
   color: #a8a8ff;
 }
 
-.survey-credit {
-  text-align: center;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.survey-credit a {
-  color: var(--text-soft);
-}
-
 /* ---------- هدف جمعی ---------- */
 
 .survey-bar {

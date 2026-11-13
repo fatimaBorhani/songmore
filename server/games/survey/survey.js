@@ -60,7 +60,7 @@ function ensureDailyAssigned(playerKey, date) {
 }
 
 // هدف جمعی: چند سؤال به ۱۰۰ جواب رسیدن، تا الان چند جواب جمع شده و پیشرفت کلی (۰ تا ۱)
-// پیشرفت = مجموع جواب‌های ۳۰ سؤالِ جلوتر (هر کدوم حداکثر ۱۰۰) تقسیم بر ۳۰×۱۰۰، تا نوار از همون اول کمی پر بشه
+// پیشرفت = مجموع جواب‌های سؤال‌های جلوتر (به تعداد هدف، هر کدوم حداکثر ۱۰۰) تقسیم بر هدف×۱۰۰، تا نوار از همون اول کمی پر بشه
 function goalProgress() {
   const counts = [...answerCounts().values()].sort((a, b) => b - a)
   const completed = counts.filter((n) => n >= ANSWERS_PER_QUESTION).length

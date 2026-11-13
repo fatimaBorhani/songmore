@@ -311,7 +311,7 @@ test('هدف جمعی: سؤالی که به ۱۰۰ جواب برسه حساب م
   assert.ok(after.progress > mid.progress && after.progress <= 1, `${mid.progress} -> ${after.progress}`)
   assert.equal(after.completed, before.completed + 1)
   assert.equal(after.totalAnswers, before.totalAnswers + toAdd + 1)
-  assert.equal(after.target, 30)
+  assert.equal(after.target, 100)
   db.prepare("DELETE FROM survey_answers WHERE player_key LIKE 'goal-%'").run()
 })
 

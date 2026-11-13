@@ -4,7 +4,6 @@ import { Link } from 'react-router'
 import { faNumber } from '../../../shared/format.js'
 import { sendSuggestion } from '../api.js'
 import GoalBar from './GoalBar.jsx'
-import Credit from './Credit.jsx'
 
 const SUGGEST_ERRORS = {
   INVALID_SUGGESTION: 'سؤال باید بین ۱۰ تا ۲۰۰ حرف باشه.',
@@ -98,7 +97,6 @@ function DoneView({ title, state, busy, error, onMore, onReset }) {
           </button>
         )}
       </div>
-      <Credit />
     </main>
   )
 }

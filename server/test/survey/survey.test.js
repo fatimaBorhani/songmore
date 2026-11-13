@@ -10,7 +10,6 @@ const { db } = await import('../../core/db.js')
 const { app } = await import('../../index.js')
 const { getTodayDateString } = await import('../../core/today.js')
 const { QUESTIONS, DAILY_COUNT, BATCH_SIZE, ANSWERS_PER_QUESTION, MAX_ANSWER_LENGTH, MAX_SUGGESTIONS_PER_DAY } = await import('../../games/survey/questions.js')
-const { getDailyQuestionIds } = await import('../../games/survey/survey.js')
 
 let server
 let baseUrl
@@ -82,27 +81,35 @@ test('بازیکن تازه: اولین سؤال امروز، بدون منبع 
   assert.equal('source' in state.current, false)
   assert.equal(state.todayAnswered, 0)
   assert.equal(state.testMode, false)
-  assert.deepEqual(Object.keys(state.goal).sort(), ['completed', 'perQuestion', 'target', 'totalAnswers'])
+  assert.deepEqual(Object.keys(state.goal).sort(), ['completed', 'perQuestion', 'progress', 'target', 'totalAnswers'])
+  assert.equal(state.dailyCount, DAILY_COUNT)
+  assert.equal(state.moreCount, BATCH_SIZE)
 })
 
-test('سؤال‌های روز برای همه یکیه، ۵ تای متفاوته و ذخیره می‌شه', async () => {
+test('بازیکن‌های تازه همه همون سؤال‌های اول رو می‌گیرن (تا جواب‌ها روی همون‌ها جمع بشه)', async () => {
   const a = await newPlayer()
   const b = await newPlayer()
   assert.equal(a.state.current.id, b.state.current.id)
-  const ids = getDailyQuestionIds(getTodayDateString())
-  assert.equal(ids.length, DAILY_COUNT)
-  assert.equal(new Set(ids).size, DAILY_COUNT)
-  assert.deepEqual(getDailyQuestionIds(getTodayDateString()), ids)
-  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM survey_daily WHERE date = ?').get(getTodayDateString()).n, DAILY_COUNT)
-  // ترتیب سؤال‌ها هم برای همه یکیه
+  const first = []
   for (let i = 0; i < DAILY_COUNT; i++) {
     const sa = await getState(a.cookie)
     const sb = await getState(b.cookie)
     assert.equal(sa.current.id, sb.current.id)
-    assert.equal(sa.current.id, ids[i])
+    assert.equal(sa.current.number, i + 1)
+    first.push(sa.current.id)
     await answerCurrent(a.cookie)
     await answerCurrent(b.cookie)
   }
+  assert.equal(new Set(first).size, DAILY_COUNT)
+  // نفر سوم، بعد از جواب این دو نفر، همین ۵ سؤال رو می‌بینه (چون جواب بیشتری دارن)
+  const c = await newPlayer()
+  const seen = []
+  let state = c.state
+  while (!state.finished) {
+    seen.push(state.current.id)
+    state = (await answerCurrent(c.cookie)).body
+  }
+  assert.deepEqual([...seen].sort((x, y) => x - y), [...first].sort((x, y) => x - y))
 })
 
 test('جواب دادن: سؤال بعدی میاد، جواب با متن اصلی و نرمال‌شده ذخیره می‌شه، بعد از ۵ تا تموم می‌شه', async () => {
@@ -207,24 +214,41 @@ test('«۵ سؤال دیگه»: وسط سؤال‌ها نه، بعد از تمو
   assert.equal(third.body.batch, 2)
 })
 
-test('سؤال‌های اضافه از اون‌هایی میان که کمترین جواب رو دارن', async () => {
+test('اولویت سؤال‌ها: اول اون‌هایی که به ۱۰۰ نزدیک‌ترن، سؤال کامل‌شده آخر', async () => {
   const { cookie } = await newPlayer()
   await finishAll(cookie)
-  const daily = new Set(getDailyQuestionIds(getTodayDateString()))
+  const key = playerKeyOf(cookie)
+  const handled = new Set(db.prepare('SELECT question_id FROM survey_answers WHERE player_key = ?').all(key).map((r) => r.question_id))
+  const free = QUESTIONS.filter((q) => !handled.has(q.id))
   const counts = new Map(db.prepare('SELECT question_id, COUNT(*) AS n FROM survey_answers WHERE answer IS NOT NULL GROUP BY question_id').all().map((r) => [r.question_id, r.n]))
-  const fewest = QUESTIONS.filter((q) => !daily.has(q.id) && !(counts.get(q.id) > 0)).slice(0, BATCH_SIZE).map((q) => q.id)
-  assert.equal(fewest.length, BATCH_SIZE)
-  // به بقیه‌ی سؤال‌ها چند جواب (از بازیکن‌های ساختگی) می‌دیم، تا فقط این ۵ تا کم‌جواب بمونن
+  const untouched = free.filter((q) => !(counts.get(q.id) > 0))
+  const nearest = untouched.slice(0, BATCH_SIZE).map((q) => q.id) // این ۵ تا ۶۰ جواب می‌گیرن
+  const complete = untouched[BATCH_SIZE].id // این یکی ۱۰۰ جواب می‌گیره و باید آخر بره
   const insert = db.prepare('INSERT OR IGNORE INTO survey_answers (player_key, question_id, answer, answer_norm, created_at) VALUES (?, ?, ?, ?, ?)')
-  for (const q of QUESTIONS) {
-    if (fewest.includes(q.id)) continue
-    for (let i = 0; i < 3; i++) insert.run(`fake-${i}`, q.id, 'الف', 'الف', Date.now())
-  }
+  for (let i = 0; i < 60; i++) for (const id of nearest) insert.run(`fake-${i}`, id, 'الف', 'الف', Date.now())
+  for (let i = 0; i < ANSWERS_PER_QUESTION; i++) insert.run(`fake-${i}`, complete, 'الف', 'الف', Date.now())
+
   const more = await post(cookie, 'more')
-  const got = db.prepare('SELECT question_id FROM survey_assign WHERE player_key = ? AND batch = 1').all(playerKeyOf(cookie)).map((r) => r.question_id)
-  assert.deepEqual([...got].sort((a, b) => a - b), [...fewest].sort((a, b) => a - b))
   assert.equal(more.status, 200)
+  const got = db.prepare('SELECT question_id FROM survey_assign WHERE player_key = ? AND batch = 1').all(key).map((r) => r.question_id)
+  assert.deepEqual([...got].sort((x, y) => x - y), [...nearest].sort((x, y) => x - y))
+  assert.equal(got.includes(complete), false)
   db.prepare("DELETE FROM survey_answers WHERE player_key LIKE 'fake-%'").run()
+})
+
+test('فردا بازیکن قبلی ۵ سؤال تازه می‌گیره (از اون‌هایی که هنوز جواب نداده)', async () => {
+  const { cookie } = await newPlayer()
+  const key = playerKeyOf(cookie)
+  await finishAll(cookie)
+  const before = db.prepare('SELECT question_id FROM survey_answers WHERE player_key = ?').all(key).map((r) => r.question_id)
+  // «فردا»: سؤال‌های امروز رو به تاریخ دیروز برمی‌گردونیم
+  db.prepare("UPDATE survey_assign SET date = '2000-01-01' WHERE player_key = ?").run(key)
+  const tomorrow = await getState(cookie)
+  assert.equal(tomorrow.finished, false)
+  assert.equal(tomorrow.current.number, 1)
+  assert.equal(tomorrow.batch, 0)
+  assert.equal(before.includes(tomorrow.current.id), false)
+  assert.equal(tomorrow.todayAnswered, 0)
 })
 
 test('وقتی همه‌ی سؤال‌ها تموم بشن «سؤال دیگه‌ای نیست»', async () => {
@@ -284,6 +308,7 @@ test('هدف جمعی: سؤالی که به ۱۰۰ جواب برسه حساب م
   assert.equal(mid.completed, before.completed)
   insert.run('goal-last', q, 'ب', 'ب', Date.now())
   const after = (await newPlayer()).state.goal
+  assert.ok(after.progress > mid.progress && after.progress <= 1, `${mid.progress} -> ${after.progress}`)
   assert.equal(after.completed, before.completed + 1)
   assert.equal(after.totalAnswers, before.totalAnswers + toAdd + 1)
   assert.equal(after.target, 30)

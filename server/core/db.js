@@ -153,7 +153,7 @@ db.exec(`
   );
   CREATE INDEX IF NOT EXISTS idx_survey_answers_question ON survey_answers (question_id);
 
-  -- سؤال‌هایی که امروز به هر بازیکن داده شده (batch ۰ = سؤال‌های روز، ۱ به بعد = «۵ سؤال دیگه»ها)
+  -- سؤال‌هایی که امروز به هر بازیکن داده شده (batch ۰ = سؤال‌های امروز، ۱ به بعد = «۵ سؤال دیگه»ها)
   CREATE TABLE IF NOT EXISTS survey_assign (
     player_key TEXT NOT NULL,
     date TEXT NOT NULL,
@@ -161,14 +161,6 @@ db.exec(`
     position INTEGER NOT NULL,
     batch INTEGER NOT NULL,
     PRIMARY KEY (player_key, date, question_id)
-  );
-
-  -- سؤال‌های روزانه‌ی نظرسنجی (برای همه یکیه)
-  CREATE TABLE IF NOT EXISTS survey_daily (
-    date TEXT NOT NULL,
-    position INTEGER NOT NULL,
-    question_id INTEGER NOT NULL,
-    PRIMARY KEY (date, position)
   );
 
   -- سؤال‌هایی که بازیکن‌ها پیشنهاد دادن (فقط برای خود ما؛ هیچ‌جا نشون داده نمی‌شن)

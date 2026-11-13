@@ -1,6 +1,5 @@
-// منطق نظرسنجی «صد نفر گفتن»: سؤال‌های روز، جواب دادن، رد کردن، «۵ سؤال دیگه» و پیشنهاد سؤال.
+// منطق نظرسنجی «صد نفر گفتن»: سؤال‌های امروز، جواب دادن، رد کردن، «۵ سؤال دیگه» و پیشنهاد سؤال.
 // مهم: هیچ‌وقت جواب بقیه یا درصد جواب‌ها به کلاینت داده نمی‌شه. فقط شمارش کلی برای «هدف جمعی».
-import { randomInt } from 'node:crypto'
 import { db } from '../../core/db.js'
 import { normalizePersian } from '../../core/normalize.js'
 import {
@@ -25,29 +24,22 @@ function answerCounts() {
   return new Map(rows.map((r) => [r.question_id, r.n]))
 }
 
-// سؤال‌ها به ترتیب «کمترین جواب اول»؛ بین هم‌تعدادها تصادفی (تا سؤال‌های کم‌جواب‌تر زودتر پر بشن)
-function leastAnswered(questions) {
+// یه ترتیب ثابت ولی «تصادفی‌نما» برای سؤال‌ها (تا وقتی تعداد جواب‌ها مساویه، دسته‌ها قاطی بیان و فقط خوراکی‌ها اول نشن)
+const scramble = (id) => Number((BigInt(id) * 2654435761n) % 4294967296n)
+
+// اولویت سؤال‌هایی که این بازیکن هنوز جواب نداده:
+//  ۱) اول سؤال‌هایی که شروع شدن و هنوز به ۱۰۰ جواب نرسیدن، «نزدیک‌ترها به ۱۰۰ اول» (تا سؤال‌ها یکی‌یکی کامل بشن،
+//     نه اینکه همه با هم تا ۱۰۰ نزدیک بشن و هیچ‌کدوم کامل نشه)
+//  ۲) بعد سؤال‌های کامل‌شده، «کم‌جواب‌ترها اول» (باز هم داده‌ی بیشتر مفیده)
+// بین مساوی‌ها همون ترتیب ثابت و تصادفی‌نما
+function priorityQuestions(handled) {
   const counts = answerCounts()
-  const shuffled = [...questions]
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = randomInt(i + 1)
-    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-  }
-  return shuffled.sort((a, b) => (counts.get(a.id) ?? 0) - (counts.get(b.id) ?? 0))
-}
-
-// سؤال‌های روزانه‌ی این تاریخ؛ بار اول انتخاب و ذخیره می‌شن (برای همه یکیه)
-export function getDailyQuestionIds(date) {
-  const saved = db.prepare('SELECT question_id FROM survey_daily WHERE date = ? ORDER BY position').all(date)
-  if (saved.length > 0) return saved.map((r) => r.question_id)
-
-  const picked = leastAnswered(QUESTIONS).slice(0, DAILY_COUNT)
-  const insert = db.prepare('INSERT OR IGNORE INTO survey_daily (date, position, question_id) VALUES (?, ?, ?)')
-  db.transaction(() => picked.forEach((q, i) => insert.run(date, i + 1, q.id)))()
-  return db
-    .prepare('SELECT question_id FROM survey_daily WHERE date = ? ORDER BY position')
-    .all(date)
-    .map((r) => r.question_id)
+  const n = (q) => counts.get(q.id) ?? 0
+  const open = QUESTIONS.filter((q) => !handled.has(q.id) && n(q) < ANSWERS_PER_QUESTION)
+  const done = QUESTIONS.filter((q) => !handled.has(q.id) && n(q) >= ANSWERS_PER_QUESTION)
+  open.sort((a, b) => n(b) - n(a) || scramble(a.id) - scramble(b.id))
+  done.sort((a, b) => n(a) - n(b) || scramble(a.id) - scramble(b.id))
+  return [...open, ...done]
 }
 
 // سؤال‌هایی که این بازیکن قبلاً جواب داده یا رد کرده (هیچ‌وقت دوباره نمیان)
@@ -55,23 +47,25 @@ function handledIds(playerKey) {
   return new Set(db.prepare('SELECT question_id FROM survey_answers WHERE player_key = ?').all(playerKey).map((r) => r.question_id))
 }
 
-// سؤال‌های روز رو به بازیکن می‌دیم (فقط بار اول امروز)؛ اگه یکی‌شون رو قبلاً جواب داده، نمیاد
+// سؤال‌های امروز: بار اول هر روز ۵ سؤال بعدیِ بالای اولویت (که هنوز جواب نداده) به بازیکن داده می‌شه.
+// همه‌ی بازیکن‌های تازه همون سؤال‌های اول رو می‌گیرن، پس جواب‌ها روی همون‌ها جمع می‌شه
 function ensureDailyAssigned(playerKey, date) {
   const has = db.prepare('SELECT 1 FROM survey_assign WHERE player_key = ? AND date = ? AND batch = 0 LIMIT 1').get(playerKey, date)
   if (has) return
-  const handled = handledIds(playerKey)
-  const ids = getDailyQuestionIds(date).filter((id) => !handled.has(id))
+  const picked = priorityQuestions(handledIds(playerKey)).slice(0, DAILY_COUNT)
   const insert = db.prepare('INSERT OR IGNORE INTO survey_assign (player_key, date, question_id, position, batch) VALUES (?, ?, ?, ?, 0)')
-  db.transaction(() => ids.forEach((id, i) => insert.run(playerKey, date, id, i + 1)))()
+  db.transaction(() => picked.forEach((q, i) => insert.run(playerKey, date, q.id, i + 1)))()
 }
 
-// هدف جمعی: چند سؤال به ۱۰۰ جواب رسیدن و تا الان چند جواب جمع شده
+// هدف جمعی: چند سؤال به ۱۰۰ جواب رسیدن، تا الان چند جواب جمع شده و پیشرفت کلی (۰ تا ۱)
+// پیشرفت = مجموع جواب‌های ۳۰ سؤالِ جلوتر (هر کدوم حداکثر ۱۰۰) تقسیم بر ۳۰×۱۰۰، تا نوار از همون اول کمی پر بشه
 function goalProgress() {
-  const completed = db
-    .prepare('SELECT COUNT(*) AS n FROM (SELECT question_id FROM survey_answers WHERE answer IS NOT NULL GROUP BY question_id HAVING COUNT(*) >= ?)')
-    .get(ANSWERS_PER_QUESTION).n
-  const totalAnswers = db.prepare('SELECT COUNT(*) AS n FROM survey_answers WHERE answer IS NOT NULL').get().n
-  return { completed, target: GOAL_QUESTIONS, perQuestion: ANSWERS_PER_QUESTION, totalAnswers }
+  const counts = [...answerCounts().values()].sort((a, b) => b - a)
+  const completed = counts.filter((n) => n >= ANSWERS_PER_QUESTION).length
+  const totalAnswers = counts.reduce((sum, n) => sum + n, 0)
+  const top = counts.slice(0, GOAL_QUESTIONS).reduce((sum, n) => sum + Math.min(n, ANSWERS_PER_QUESTION), 0)
+  const progress = Math.round((top / (GOAL_QUESTIONS * ANSWERS_PER_QUESTION)) * 10000) / 10000
+  return { completed, target: GOAL_QUESTIONS, perQuestion: ANSWERS_PER_QUESTION, totalAnswers, progress }
 }
 
 // وضعیت نظرسنجی برای این بازیکن: سؤال جاری (فقط خودش)، پیشرفت امروز و هدف جمعی
@@ -108,6 +102,8 @@ export function getSurveyState(playerKey, date) {
     finished: !pending,
     batch, // ۰ = سؤال‌های روز، ۱ به بعد = «۵ سؤال دیگه»
     current,
+    dailyCount: DAILY_COUNT,
+    moreCount: BATCH_SIZE,
     todayAnswered,
     canMore: !pending && QUESTIONS.some((q) => !handled.has(q.id)),
     goal: goalProgress(),
@@ -146,12 +142,12 @@ export function skipQuestion(playerKey, date, questionId) {
   return saveCurrent(playerKey, date, questionId, null)
 }
 
-// «۵ سؤال دیگه»: فقط وقتی همه‌ی سؤال‌های الان تموم شدن. سؤال‌هایی میان که هنوز کمتر جواب گرفتن و این بازیکن ندیده
+// «۵ سؤال دیگه»: فقط وقتی همه‌ی سؤال‌های الان تموم شدن. همون ترتیب اولویت، برای سؤال‌هایی که این بازیکن ندیده
 export function addMoreQuestions(playerKey, date) {
   const state = getSurveyState(playerKey, date)
   if (!state.finished) throw new SurveyError('PENDING_QUESTIONS')
   const handled = handledIds(playerKey)
-  const picked = leastAnswered(QUESTIONS.filter((q) => !handled.has(q.id))).slice(0, BATCH_SIZE)
+  const picked = priorityQuestions(handled).slice(0, BATCH_SIZE)
   if (picked.length === 0) throw new SurveyError('NO_MORE_QUESTIONS')
 
   const batch = (db.prepare('SELECT MAX(batch) AS b FROM survey_assign WHERE player_key = ? AND date = ?').get(playerKey, date).b ?? -1) + 1

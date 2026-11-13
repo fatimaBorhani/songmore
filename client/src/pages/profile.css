@@ -89,7 +89,8 @@
 .profile-tabs button {
   flex: 1;
   min-height: 44px;
-  padding: 0 24px;
+  padding: 0 10px; /* سه تب روی گوشی باید یه خطی بمونن */
+  white-space: nowrap;
   border-radius: 12px;
   border: none;
   background: transparent;
@@ -121,6 +122,17 @@
 .profile-soon {
   padding: 28px 16px;
   text-align: center;
+  color: var(--text-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+/* «از ۱۰۷» کنار عدد اصلی آمار */
+.profile-stats dd small {
+  font-size: 13px;
+  font-weight: 400;
   color: var(--text-soft);
 }
 
@@ -371,6 +383,10 @@
   .profile-stats {
     flex: 1 1 280px;
     padding: 4px 18px;
+  }
+
+  .profile-panels .survey-goal {
+    flex: 1 1 280px;
   }
 
   .profile-stats dl > div {

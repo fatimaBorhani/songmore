@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { getProfile } from '../games/song/api.js'
+import { getSurveyStats } from '../games/survey/api.js'
+import GoalBar from '../games/survey/components/GoalBar.jsx'
 import { logout } from '../shared/api.js'
 import { faNumber } from '../shared/format.js'
 import { SITE_NAME } from '../shared/site.js'
 import ProfileCalendar from './ProfileCalendar.jsx'
 import { faMonthYear } from './calendar.js'
+import '../games/survey/survey.css' // برای کارت هدف جمعی
 import './profile.css'
 
 // آمار بازی آهنگ به شکل لیست «اسم / عدد»
@@ -22,6 +25,16 @@ function statRows(stats, practiceGames) {
   ]
 }
 
+// آمار نظرسنجی «صد نفر گفتن» به شکل لیست «اسم / عدد»
+function surveyRows(stats) {
+  return [
+    ['امروز', faNumber(stats.today)],
+    ['سؤال ردشده', faNumber(stats.skipped)],
+    ['روزهایی که جواب دادی', faNumber(stats.days)],
+    ['سؤال پیشنهادی', faNumber(stats.suggestions)],
+  ]
+}
+
 // صفحه‌ی حساب کاربری (آدرس /profile)
 // user: کاربر واردشده یا null، onUserChange: برای خروج از حساب (هر دو از App میان)
 function ProfilePage({ user, onUserChange }) {
@@ -29,6 +42,8 @@ function ProfilePage({ user, onUserChange }) {
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [tab, setTab] = useState('song')
+  const [survey, setSurvey] = useState(null) // آمار نظرسنجی؛ بار اول که تبش باز شد گرفته می‌شه
+  const [surveyError, setSurveyError] = useState(false)
   const userId = user ? user.id : null
 
   useEffect(() => {
@@ -45,6 +60,18 @@ function ProfilePage({ user, onUserChange }) {
       cancelled = true
     }
   }, [userId])
+
+  // آمار نظرسنجی فقط وقتی تبش باز می‌شه از سرور گرفته می‌شه
+  useEffect(() => {
+    if (!userId || tab !== 'survey' || survey) return
+    let cancelled = false
+    getSurveyStats()
+      .then((d) => !cancelled && setSurvey(d))
+      .catch(() => !cancelled && setSurveyError(true))
+    return () => {
+      cancelled = true
+    }
+  }, [userId, tab, survey])
 
   async function handleLogout() {
     try {
@@ -125,6 +152,9 @@ function ProfilePage({ user, onUserChange }) {
           <button type="button" aria-pressed={tab === 'word'} onClick={() => setTab('word')}>
             واژه‌یاب
           </button>
+          <button type="button" aria-pressed={tab === 'survey'} onClick={() => setTab('survey')}>
+            نظرسنجی
+          </button>
         </nav>
 
         {tab === 'song' ? (
@@ -145,6 +175,43 @@ function ProfilePage({ user, onUserChange }) {
               </dl>
             </section>
           </div>
+        ) : tab === 'survey' ? (
+          surveyError ? (
+            <section className="profile-card profile-soon">
+              <p className="error">آمار نظرسنجی گرفته نشد. سرور در دسترس نیست.</p>
+            </section>
+          ) : !survey ? (
+            <section className="profile-card profile-soon">
+              <p className="loading">در حال بارگذاری...</p>
+            </section>
+          ) : survey.answered === 0 && survey.skipped === 0 ? (
+            <section className="profile-card profile-soon">
+              <p>هنوز به سؤالی جواب ندادی.</p>
+              <Link to="/survey" className="ghost-button">
+                برو به نظرسنجی
+              </Link>
+            </section>
+          ) : (
+            <div className="profile-panels">
+              <section className="profile-card profile-stats" aria-label="آمار نظرسنجی">
+                <dl>
+                  {surveyRows(survey).map(([label, value]) => (
+                    <div key={label}>
+                      <dt>{label}</dt>
+                      <dd>{value}</dd>
+                    </div>
+                  ))}
+                  <div className="total">
+                    <dt>سؤال‌های جواب‌داده</dt>
+                    <dd>
+                      {faNumber(survey.answered)} <small>از {faNumber(survey.totalQuestions)}</small>
+                    </dd>
+                  </div>
+                </dl>
+              </section>
+              <GoalBar goal={survey.goal} />
+            </div>
+          )
         ) : (
           <section className="profile-card profile-soon">
             <p>آمار واژه‌یاب به‌زودی اینجا میاد.</p>

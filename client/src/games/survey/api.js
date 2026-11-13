@@ -5,6 +5,11 @@ export function getSurveyState() {
   return call('/api/survey/state')
 }
 
+// آمار نظرسنجی برای صفحه‌ی حساب (فقط کاربر واردشده)
+export function getSurveyStats() {
+  return call('/api/survey/stats')
+}
+
 export function sendAnswer(questionId, answer) {
   return postJson('/api/survey/answer', { questionId, answer })
 }

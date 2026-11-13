@@ -1,0 +1,409 @@
+/* نظرسنجی «صد نفر گفتن»: یه ستون وسط صفحه، سؤال توی کارت بزرگ، جواب و دکمه‌ها زیرش */
+
+.survey-page {
+  max-width: 560px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 8px 16px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ---------- بالای صفحه: اسم، نقطه‌های پیشرفت، شماره‌ی سؤال ---------- */
+
+.survey-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: 6px;
+}
+
+.survey-top h1 {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.survey-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.survey-dots span {
+  width: 28px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border);
+}
+
+.survey-dots span.done {
+  background: var(--accent);
+}
+
+.survey-dots span.current {
+  background: var(--text);
+}
+
+.survey-caption {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+/* ---------- کارت سؤال ---------- */
+
+.survey-card {
+  box-sizing: border-box;
+  padding: 22px 20px;
+  border-radius: 28px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.survey-chip {
+  align-self: flex-start;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: #111113;
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.survey-question {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.6;
+  text-wrap: balance;
+}
+
+.survey-hint {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--text-muted);
+}
+
+/* ---------- جواب ---------- */
+
+.survey-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.survey-form label {
+  font-size: 14px;
+  color: #c9c9cf;
+}
+
+.survey-input {
+  height: 56px;
+  box-sizing: border-box;
+  padding: 0 16px;
+  border-radius: 16px;
+  border: 1px solid #3f3f46;
+  background: #111113;
+  color: var(--text);
+  font-size: 17px;
+}
+
+.survey-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.survey-input::placeholder {
+  color: var(--text-muted);
+}
+
+.survey-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.survey-skip {
+  flex-shrink: 0;
+  width: 96px;
+  min-height: 56px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: #c9c9cf;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.survey-skip:hover:not(:disabled) {
+  background: var(--surface);
+}
+
+.survey-submit {
+  flex-grow: 1;
+  min-height: 56px;
+  border-radius: 18px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.survey-submit:hover:not(:disabled) {
+  background: #4040f0;
+}
+
+.survey-submit:disabled {
+  opacity: 0.4;
+}
+
+.survey-skip:focus-visible,
+.survey-submit:focus-visible,
+.survey-secondary:focus-visible,
+.survey-suggest textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.survey-note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.survey-error {
+  font-size: 14px;
+  color: #ff8a8a;
+  font-weight: 700;
+}
+
+.survey-ok {
+  font-size: 14px;
+  color: #a8a8ff;
+}
+
+.survey-credit {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.survey-credit a {
+  color: var(--text-soft);
+}
+
+/* ---------- هدف جمعی ---------- */
+
+.survey-bar {
+  height: 10px;
+  border-radius: 5px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.survey-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  background: var(--accent);
+}
+
+.survey-goal-strip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.survey-goal-strip .survey-bar {
+  flex-grow: 1;
+  height: 8px;
+}
+
+.survey-goal {
+  box-sizing: border-box;
+  padding: 18px 20px;
+  border-radius: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.survey-goal-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #c9c9cf;
+}
+
+.survey-goal-head b {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.survey-goal-head small {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-soft);
+}
+
+.survey-goal p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--text-soft);
+}
+
+.survey-goal .survey-goal-total {
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ---------- بعد از آخرین سؤال ---------- */
+
+.survey-done-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: 6px;
+  text-align: center;
+}
+
+.survey-done-top h1 {
+  margin-top: 4px;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.survey-done-top p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-soft);
+}
+
+.survey-done-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(48, 48, 230, 0.18);
+  color: #8c8cff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.survey-suggest {
+  box-sizing: border-box;
+  padding: 18px 20px;
+  border-radius: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.survey-suggest h2 {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.survey-suggest form {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.survey-suggest label {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.survey-suggest textarea {
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #3f3f46;
+  background: #111113;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.7;
+  resize: none;
+}
+
+.survey-suggest textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.survey-secondary {
+  min-height: 48px;
+  border-radius: 14px;
+  border: 1px solid #3f3f46;
+  background: transparent;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.survey-secondary:hover:not(:disabled) {
+  background: var(--surface);
+}
+
+.survey-done-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.survey-done-actions .survey-submit {
+  flex-grow: 0;
+}
+
+.survey-home {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  font-size: 14px;
+  color: #c9c9cf;
+  text-decoration: none;
+}
+
+.survey-home:hover {
+  color: #fff;
+}
+
+.survey-done-actions .ghost-button {
+  align-self: center;
+}
+
+@media (min-width: 640px) {
+  .survey-top h1 {
+    font-size: 28px;
+  }
+
+  .survey-dots span {
+    width: 36px;
+  }
+
+  .survey-card {
+    padding: 28px;
+  }
+
+  .survey-question {
+    font-size: 30px;
+  }
+}

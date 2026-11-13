@@ -23,6 +23,14 @@ function GameIcon({ type }) {
       </svg>
     )
   }
+  if (type === 'chat') {
+    return (
+      <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" />
+        <path d="M9 11h6M9 14h4" />
+      </svg>
+    )
+  }
   return (
     <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
       <rect x="3" y="3" width="7" height="7" rx="1.5" />
@@ -56,7 +64,7 @@ function HomePage() {
                 </span>
                 <span className="game-card-title">{game.title}</span>
                 <span className="game-card-desc">{game.description}</span>
-                <span className="game-card-cta">بازی کن ←</span>
+                <span className="game-card-cta">{game.cta ?? 'بازی کن ←'}</span>
               </Link>
             ) : (
               <div className="game-card soon" aria-disabled="true">

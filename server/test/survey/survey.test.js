@@ -286,7 +286,7 @@ test('پیشنهاد سؤال: ذخیره می‌شه، کوتاه و بلند �
   assert.equal(ok.body.ok, true)
   const row = db.prepare('SELECT text FROM survey_suggestions WHERE player_key = ?').get(playerKeyOf(cookie))
   assert.equal(row.text, 'یه چیزی بگو که توی کوله‌ی کوهنوردی می‌ذارن')
-  for (const bad of ['', 'سلام', '12345678', null, 5, 'ا'.repeat(201)]) {
+  for (const bad of ['', 'سلام', 'کوتاه', '123456789', null, 5, 'ا'.repeat(201)]) {
     const res = await post(cookie, 'suggest', { text: bad })
     assert.equal(res.status, 400, JSON.stringify(bad))
     assert.equal(res.body.error, 'INVALID_SUGGESTION')

@@ -9,6 +9,7 @@ import {
   GOAL_QUESTIONS,
   MAX_ANSWER_LENGTH,
   MAX_SUGGESTION_LENGTH,
+  MIN_SUGGESTION_LENGTH,
   MAX_SUGGESTIONS_PER_DAY,
   QUESTIONS,
   getQuestion,
@@ -160,7 +161,7 @@ export function addMoreQuestions(playerKey, date) {
 export function addSuggestion(playerKey, date, text) {
   if (typeof text !== 'string') throw new SurveyError('INVALID_SUGGESTION')
   const clean = text.replace(/\s+/g, ' ').trim()
-  if (clean.length < 5 || clean.length > MAX_SUGGESTION_LENGTH || !/\p{L}/u.test(clean)) throw new SurveyError('INVALID_SUGGESTION')
+  if (clean.length < MIN_SUGGESTION_LENGTH || clean.length > MAX_SUGGESTION_LENGTH || !/\p{L}/u.test(clean)) throw new SurveyError('INVALID_SUGGESTION')
   const today = db.prepare('SELECT COUNT(*) AS n FROM survey_suggestions WHERE player_key = ? AND date = ?').get(playerKey, date).n
   if (today >= MAX_SUGGESTIONS_PER_DAY) throw new SurveyError('TOO_MANY_SUGGESTIONS')
   db.prepare('INSERT INTO survey_suggestions (player_key, date, text, created_at) VALUES (?, ?, ?, ?)').run(playerKey, date, clean, Date.now())

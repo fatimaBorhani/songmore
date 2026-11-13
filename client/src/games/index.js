@@ -25,4 +25,13 @@ export const GAMES = [
     icon: 'palette',
     ready: true,
   },
+  {
+    id: 'survey',
+    path: '/survey',
+    title: 'صد نفر گفتن', // اسم موقت
+    description: 'به چند سؤال کوتاه جواب بده و به ساختن بازی بعدی کمک کن.',
+    icon: 'chat',
+    cta: 'جواب بده ←', // متن دکمه‌ی کارت (پیش‌فرض: «بازی کن ←»)
+    ready: true,
+  },
 ]

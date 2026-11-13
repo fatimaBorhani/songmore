@@ -9,6 +9,7 @@ import ProfilePage from './pages/ProfilePage.jsx'
 import SongGame from './games/song/SongGame.jsx'
 import WordGame from './games/word/WordGame.jsx'
 import ColorGame from './games/color/ColorGame.jsx'
+import SurveyGame from './games/survey/SurveyGame.jsx'
 import './shared/shared.css'
 
 // پوسته‌ی سایت: سربرگ مشترک (اسم سایت + ورود) و صفحه‌ها
@@ -16,6 +17,7 @@ import './shared/shared.css'
 //   /song  بازی حدس آهنگ (مسابقه‌ای)، /song/practice (تمرینی)
 //   /word  بازی واژه‌یاب
 //   /color  بازی حافظه‌ی رنگ
+//   /survey  نظرسنجی «صد نفر گفتن»
 //   /profile  حساب کاربری (آمار و تقویم فعالیت)
 function App() {
   const [user, setUser] = useState(null) // کاربر واردشده، یا null
@@ -49,6 +51,7 @@ function App() {
           <Route path="/song/practice" element={<SongGame key="practice" user={user} mode="practice" />} />
           <Route path="/word" element={<WordGame user={user} />} />
           <Route path="/color" element={<ColorGame user={user} />} />
+          <Route path="/survey" element={<SurveyGame user={user} />} />
           <Route path="/profile" element={<ProfilePage user={user} onUserChange={setUser} />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

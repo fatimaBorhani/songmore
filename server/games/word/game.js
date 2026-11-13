@@ -1,6 +1,8 @@
 // ذخیره‌ی حدس‌ها و ساخت وضعیت بازی واژه‌یاب برای کلاینت.
 // بازی روزانه ۳ تاست (کلمه‌ی ۳، ۴ و ۵ حرفی) که یکی‌یکی بازی می‌شن.
-// مهم: جواب هر کلمه فقط وقتی همون کلمه تموم شده (برد یا آخرین حدس) توی وضعیت میاد.
+// هر کلمه ۶ حدس داره. بعد از ۶ حدس غلط بازیکن می‌تونه هر چقدر خواست ادامه بده (کلمه باخت حساب می‌شه) یا
+// «جواب رو ببینم» رو بزنه (جدول word_gaveup).
+// مهم: جواب هر کلمه فقط وقتی همون کلمه تموم شده (پیدا شده یا «جواب رو ببینم» زده شده) توی وضعیت میاد.
 import { db } from '../../core/db.js'
 import { evaluateGuess } from './evaluate.js'
 import { MAX_GUESSES } from './wordLists.js'
@@ -19,12 +21,29 @@ export function addWordGuess(playerKey, date, length, word) {
   ).run(playerKey, date, length, count + 1, word, Date.now())
 }
 
+function hasGivenUp(playerKey, date, length) {
+  return !!db.prepare('SELECT 1 FROM word_gaveup WHERE player_key = ? AND date = ? AND length = ?').get(playerKey, date, length)
+}
+
+// «جواب رو ببینم» برای یه کلمه (دوباره زدنش اثری نداره)
+export function addWordGaveUp(playerKey, date, length) {
+  db.prepare('INSERT OR IGNORE INTO word_gaveup (player_key, date, length, created_at) VALUES (?, ?, ?, ?)').run(
+    playerKey,
+    date,
+    length,
+    Date.now()
+  )
+}
+
 // پاک کردن بازی امروزِ همه (فقط حالت تست)
 export function clearWordGames(date) {
   db.prepare('DELETE FROM word_guesses WHERE date = ?').run(date)
+  db.prepare('DELETE FROM word_gaveup WHERE date = ?').run(date)
 }
 
-// وضعیت یه کلمه (یه بازی از ۳ تا)؛ answer فقط وقتی finished
+// وضعیت یه کلمه (یه بازی از ۳ تا). answer فقط وقتی finished.
+//   solved: کلمه پیدا شده (هر موقع)   won: توی ۶ حدس پیدا شده (برد حساب می‌شه)
+//   exhausted: ۶ حدس تموم شده و بازیکن هنوز نه پیداش کرده نه «جواب رو ببینم» زده
 function slotState(playerKey, date, { length, word: answer }) {
   const words = getWordGuesses(playerKey, date, length)
   const guesses = words.map((word) => {
@@ -34,10 +53,12 @@ function slotState(playerKey, date, { length, word: answer }) {
       letters: Array.from(word).map((letter, i) => ({ letter, result: results[i] })),
     }
   })
-  const won = words.includes(answer)
   const maxGuesses = MAX_GUESSES[length]
-  const finished = won || words.length >= maxGuesses
-  const state = { wordLength: length, maxGuesses, guesses, finished, won }
+  const solved = words.includes(answer)
+  const finished = solved || hasGivenUp(playerKey, date, length)
+  const won = solved && words.length <= maxGuesses
+  const exhausted = !finished && words.length >= maxGuesses
+  const state = { wordLength: length, maxGuesses, guesses, finished, solved, won, exhausted }
   if (finished) state.answer = answer
   return state
 }
@@ -65,7 +86,13 @@ export function getWordGameState(playerKey, date, daily, index = null) {
       maxGuesses: s.maxGuesses,
       finished: s.finished,
       ...(s.finished
-        ? { won: s.won, answer: s.answer, guessCount: s.guesses.length, rows: s.guesses.map((g) => g.letters.map((l) => l.result)) }
+        ? {
+            won: s.won,
+            solved: s.solved,
+            answer: s.answer,
+            guessCount: s.guesses.length,
+            rows: s.guesses.map((g) => g.letters.map((l) => l.result)),
+          }
         : {}),
     })),
     dayFinished: slots.every((s) => s.finished),

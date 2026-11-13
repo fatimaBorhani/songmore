@@ -132,6 +132,15 @@ db.exec(`
     PRIMARY KEY (player_key, date, length, guess_number)
   );
 
+  -- کلمه‌هایی که بازیکن بعد از ۶ حدس غلط گفته «جواب رو ببینم» (بدون این، بعد از ۶ حدس می‌شه بی‌نهایت ادامه داد)
+  CREATE TABLE IF NOT EXISTS word_gaveup (
+    player_key TEXT NOT NULL,
+    date TEXT NOT NULL,
+    length INTEGER NOT NULL,
+    created_at INTEGER NOT NULL,
+    PRIMARY KEY (player_key, date, length)
+  );
+
   -- کلمه‌های روزانه‌ی واژه‌یاب: برای هر تاریخ و هر طول یه کلمه که برای همه یکیه
   CREATE TABLE IF NOT EXISTS word_daily (
     date TEXT NOT NULL,

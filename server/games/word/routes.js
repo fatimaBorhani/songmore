@@ -5,7 +5,7 @@ import { db } from '../../core/db.js'
 import { getTodayDateString } from '../../core/today.js'
 import { getDailyWords, pickNewRandomWords } from './dailyWord.js'
 import { normalizeWord, validateWord } from './letters.js'
-import { addWordGuess, clearWordGames, currentIndex, getWordGameState } from './game.js'
+import { addWordGaveUp, addWordGuess, clearWordGames, currentIndex, getWordGameState } from './game.js'
 
 // حالت تست (همون پرچم npm run dev): دکمه‌ی «بازی دوباره (تست)» کلمه‌های امروز رو عوض می‌کنه.
 // رفرش صفحه بازی رو پاک نمی‌کنه.
@@ -40,5 +40,18 @@ wordRouter.post('/guess', (req, res) => {
 
   const i = currentIndex(req.playerKey, date, daily)
   addWordGuess(req.playerKey, date, daily[i].length, word)
+  res.json({ ...getWordGameState(req.playerKey, date, daily, i), testMode: WORD_TEST_MODE })
+})
+
+// «جواب رو ببینم»: فقط وقتی ۶ حدس تموم شده و کلمه هنوز پیدا نشده. کلمه باخت حساب می‌شه و جوابش میاد
+wordRouter.post('/giveup', (req, res) => {
+  const date = getTodayDateString()
+  const daily = getDailyWords(date)
+  const state = getWordGameState(req.playerKey, date, daily)
+  if (state.finished) return res.status(400).json({ error: 'GAME_OVER' })
+  if (!state.exhausted) return res.status(400).json({ error: 'GUESSES_LEFT' })
+
+  const i = currentIndex(req.playerKey, date, daily)
+  addWordGaveUp(req.playerKey, date, daily[i].length)
   res.json({ ...getWordGameState(req.playerKey, date, daily, i), testMode: WORD_TEST_MODE })
 })

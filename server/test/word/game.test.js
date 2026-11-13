@@ -163,18 +163,97 @@ test('برد کلمه‌ی ۳ حرفی: جواب میاد و کلمه‌ی ۴ ح
   assert.equal((await guess(cookie, WRONG[4])).status, 200)
 })
 
-test('باخت: ۶ حدس غلط برای ۳ حرفی بازی اون کلمه رو تموم می‌کنه، نه کل روز رو', async () => {
-  const { cookie } = await newPlayer()
+const giveUp = async (cookie) => {
+  const res = await fetch(`${baseUrl}/api/word/giveup`, { method: 'POST', headers: { Cookie: cookie } })
+  return { status: res.status, body: await res.json() }
+}
+
+// ۶ حدس غلط برای کلمه‌ی جاری
+async function useAllGuesses(cookie, length) {
   let last
-  for (let i = 0; i < MAX[3]; i++) {
-    last = await guess(cookie, WRONG[3])
-    if (i < MAX[3] - 1) assert.equal('answer' in last.body, false)
-  }
-  assert.equal(last.body.finished, true)
-  assert.equal(last.body.won, false)
-  assert.equal(last.body.answer, 'دست')
-  assert.equal(last.body.dayFinished, false)
+  for (let i = 0; i < MAX[length]; i++) last = await guess(cookie, WRONG[length])
+  return last.body
+}
+
+test('۶ حدس غلط: کلمه هنوز تموم نشده، جواب نمیاد و حدس بعدی قبوله', async () => {
+  const { cookie } = await newPlayer()
+  const state = await useAllGuesses(cookie, 3)
+  assert.equal(state.guesses.length, 6)
+  assert.equal(state.finished, false)
+  assert.equal(state.exhausted, true)
+  assert.equal(state.won, false)
+  assert.equal(state.slot, 1)
+  assert.equal('answer' in state, false)
+  assert.equal(JSON.stringify(state).includes('دست'), false)
+
+  // ادامه: حدس هفتم هم ثبت می‌شه و بازی هنوز تموم نیست
+  const seventh = await guess(cookie, WRONG[3])
+  assert.equal(seventh.status, 200)
+  assert.equal(seventh.body.guesses.length, 7)
+  assert.equal(seventh.body.finished, false)
+  assert.equal('answer' in seventh.body, false)
+  // رفرش: همه‌ی حدس‌ها سر جاشونه
+  assert.equal((await getGame(cookie)).guesses.length, 7)
+})
+
+test('ادامه تا پیدا کردن: کلمه تموم می‌شه ولی برد حساب نمی‌شه', async () => {
+  const { cookie } = await newPlayer()
+  await useAllGuesses(cookie, 3)
+  await guess(cookie, WRONG[3])
+  const found = (await guess(cookie, ANSWERS[3])).body
+  assert.equal(found.finished, true)
+  assert.equal(found.solved, true)
+  assert.equal(found.won, false)
+  assert.equal(found.exhausted, false)
+  assert.equal(found.answer, 'دست')
+  assert.equal(found.guesses.length, 8)
+  assert.equal(found.dayFinished, false)
+  assert.deepEqual([found.slots[0].won, found.slots[0].solved, found.slots[0].guessCount], [false, true, 8])
+  // کلمه‌ی بعدی باز شده
   assert.equal((await getGame(cookie)).slot, 2)
+})
+
+test('«جواب رو ببینم»: بعد از ۶ حدس غلط جواب میاد، باخت حساب می‌شه و کلمه‌ی بعدی باز می‌شه', async () => {
+  const { cookie } = await newPlayer()
+  await useAllGuesses(cookie, 3)
+  const res = await giveUp(cookie)
+  assert.equal(res.status, 200)
+  assert.equal(res.body.finished, true)
+  assert.equal(res.body.solved, false)
+  assert.equal(res.body.won, false)
+  assert.equal(res.body.answer, 'دست')
+  assert.equal(res.body.slot, 1)
+  assert.equal(res.body.dayFinished, false)
+  assert.deepEqual(res.body.slots.map((s) => s.finished), [true, false, false])
+  const next = await getGame(cookie)
+  assert.equal(next.slot, 2)
+  assert.equal(next.wordLength, 4)
+  assert.equal('answer' in next, false)
+})
+
+test('«جواب رو ببینم» قبل از تموم شدن ۶ حدس یا دوباره قبول نیست', async () => {
+  const { cookie } = await newPlayer()
+  await guess(cookie, WRONG[3])
+  const early = await giveUp(cookie)
+  assert.equal(early.status, 400)
+  assert.equal(early.body.error, 'GUESSES_LEFT')
+  assert.equal('answer' in early.body, false)
+  // کلمه‌ی ۳ حرفی تموم می‌شه؛ «جواب» برای کلمه‌ی ۴ حرفیِ تازه هم زودتره
+  await useAllGuesses(cookie, 3)
+  assert.equal((await giveUp(cookie)).status, 200)
+  assert.equal((await giveUp(cookie)).body.error, 'GUESSES_LEFT')
+})
+
+test('بعد از «جواب رو ببینم» آخرین کلمه، بازی روز تموم می‌شه', async () => {
+  const { cookie } = await newPlayer()
+  await win(cookie, 3)
+  await win(cookie, 4)
+  await useAllGuesses(cookie, 5)
+  const res = await giveUp(cookie)
+  assert.equal(res.body.dayFinished, true)
+  assert.deepEqual(res.body.slots.map((s) => s.won), [true, true, false])
+  assert.equal((await giveUp(cookie)).body.error, 'GAME_OVER')
+  assert.equal((await guess(cookie, WRONG[5])).body.error, 'GAME_OVER')
 })
 
 test('هر سه کلمه: بعد از آخری بازی روز تموم می‌شه و حدس جدید قبول نیست', async () => {
@@ -222,4 +301,21 @@ test('با ثبت‌نام، بازی مهمان به حساب منتقل می�
   const game = await getGame(`${cookie}; ${authCookie}`)
   assert.equal(game.guesses.length, 1)
   assert.equal(game.guesses[0].word, 'برف')
+})
+
+test('با ثبت‌نام، «جواب رو ببینم»ِ مهمان هم به حساب منتقل می‌شه', async () => {
+  const { cookie } = await newPlayer()
+  await useAllGuesses(cookie, 3)
+  await giveUp(cookie)
+  const signup = await fetch(`${baseUrl}/api/auth/signup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Cookie: cookie },
+    body: JSON.stringify({ username: 'word_giveup', password: 'pass-1234' }),
+  })
+  assert.equal(signup.status, 201)
+  const authCookie = signup.headers.getSetCookie().find((c) => c.startsWith('songmore_auth=')).split(';')[0]
+  const game = await getGame(`${cookie}; ${authCookie}`)
+  // کلمه‌ی ۳ حرفی تموم‌شده (با جواب) و بازی روی کلمه‌ی ۴ حرفیه
+  assert.equal(game.slot, 2)
+  assert.deepEqual([game.slots[0].finished, game.slots[0].answer, game.slots[0].won], [true, 'دست', false])
 })

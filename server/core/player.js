@@ -29,7 +29,12 @@ export function claimGuestGames(sessionId, userId) {
          AND date NOT IN (SELECT date FROM guesses WHERE session_id = ?)`
     )
     .run(userKey, sessionId, userKey)
-  // بازی واژه‌یاب
+  // بازی واژه‌یاب. اول «جواب رو ببینم»ها (شرطشون به حدس‌های حساب کاربره، پس باید قبل از منتقل شدن حدس‌ها بیان)
+  db.prepare(
+    `UPDATE word_gaveup SET player_key = ?
+     WHERE player_key = ?
+       AND date NOT IN (SELECT date FROM word_guesses WHERE player_key = ?)`
+  ).run(userKey, sessionId, userKey)
   const wordInfo = db
     .prepare(
       `UPDATE word_guesses SET player_key = ?

@@ -14,6 +14,11 @@ export function sendWordGiveUp() {
   return postJson('/api/word/giveup')
 }
 
+// «فکر می‌کنم درسته»: کلمه‌ی ردشده‌ای که بازیکن می‌گه معنی داره (فقط ذخیره می‌شه تا بررسی بشه)
+export function sendWordSuggestion(word) {
+  return postJson('/api/word/suggest', { word })
+}
+
 // آمار واژه‌یاب برای صفحه‌ی حساب (فقط کاربر واردشده)
 export function getWordStats() {
   return call('/api/word/stats')

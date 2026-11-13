@@ -240,7 +240,7 @@
 /* پیام کوتاه بالای صفحه («حروف کافی نیست»، «نتیجه کپی شد») */
 .word-toast-area {
   position: absolute;
-  top: -44px; /* بالای صفحه‌ی حرف‌ها، تا ردیف‌ها رو نپوشونه */
+  bottom: calc(100% + 6px); /* درست بالای صفحه‌ی حرف‌ها (هر ارتفاعی که پیام داشته باشه)، تا ردیف‌ها رو نپوشونه */
   left: 0;
   right: 0;
   display: flex;
@@ -258,6 +258,36 @@
   font-weight: 700;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
   animation: fade-in 0.15s ease-out;
+}
+
+/* پیام با دکمه («فکر می‌کنم درسته»): تا حرف بعدی می‌مونه و باید قابل لمس باشه */
+.word-toast-action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 10px;
+  max-width: calc(100% - 16px);
+  box-sizing: border-box;
+  pointer-events: auto;
+}
+
+.word-toast-action button {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 9px;
+  border: none;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.word-toast-action button:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 /* ---------- کیبورد ---------- */

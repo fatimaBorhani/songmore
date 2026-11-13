@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { getWordGame, resetWordTest, sendWordGiveUp, sendWordGuess } from './api.js'
+import { getWordGame, resetWordTest, sendWordGiveUp, sendWordGuess, sendWordSuggestion } from './api.js'
 import { isUnknownCharacterKey, letterFromKeyEvent, letterStatuses, shareText } from './letters.js'
 import { REVEAL_TOTAL_MS } from './timing.js'
 import Board from './components/Board.jsx'
@@ -18,6 +18,12 @@ const ERROR_MESSAGES = {
   INVALID_LETTERS: 'فقط حروف فارسی',
   NOT_IN_LIST: 'این کلمه توی فرهنگ لغت نیست',
   GAME_OVER: 'بازی امروز تموم شده',
+}
+
+const SUGGEST_ERRORS = {
+  TOO_MANY_SUGGESTIONS: 'امروز به اندازه‌ی کافی کلمه پیشنهاد دادی. فردا دوباره امتحان کن',
+  ALREADY_IN_LIST: 'این کلمه الان توی لیست هست',
+  NOT_A_WORD: 'این کلمه معنی‌دار به نظر نمیاد',
 }
 
 // کامپیوتر (موس و کیبورد) یا گوشی و تبلت (لمسی)؟
@@ -56,6 +62,7 @@ function WordGame({ user }) {
   const [winRow, setWinRow] = useState(-1) // ردیف برنده که داره جشن می‌گیره
   const [showHelp, setShowHelp] = useState(() => !helpSeenBefore())
   const [continueChosen, setContinueChosen] = useState(false) // بعد از ۶ حدس گفته «ادامه می‌دم»
+  const [suggest, setSuggest] = useState(null) // کلمه‌ی ردشده برای «فکر می‌کنم درسته»: { word, status: idle | sending | sent }
   const isDesktop = useIsDesktop()
   // حالت عیب‌یابی: آدرس /word?debug؛ آخرین کلیدی که به صفحه رسیده و دلیل حرف نشستن یا ننشستنش رو نشون می‌ده
   const debug = new URLSearchParams(window.location.search).has('debug')
@@ -70,6 +77,7 @@ function WordGame({ user }) {
   useEffect(() => () => timers.current.forEach(clearTimeout), [])
 
   function showToast(text, ms = 1600) {
+    setSuggest(null)
     const id = Date.now()
     setToast({ text, id })
     later(() => setToast((t) => (t && t.id === id ? null : t)), ms)
@@ -116,11 +124,13 @@ function WordGame({ user }) {
 
   function addLetter(letter) {
     if (locked) return
+    setSuggest(null)
     setTyped((t) => (t.length >= game.wordLength ? t : [...t, letter]))
   }
 
   function removeLetter() {
     if (locked) return
+    setSuggest(null)
     setTyped((t) => t.slice(0, -1))
   }
 
@@ -133,8 +143,10 @@ function WordGame({ user }) {
     }
     sending.current = true
     setBusy(true)
+    setSuggest(null)
+    const attempt = typed.join('')
     try {
-      const updated = await sendWordGuess(typed.join(''))
+      const updated = await sendWordGuess(attempt)
       const row = updated.guesses.length - 1
       setGame(updated)
       setTyped([])
@@ -148,11 +160,30 @@ function WordGame({ user }) {
         }
       }, REVEAL_TOTAL_MS)
     } catch (e) {
-      showToast(e.message === 'WORD_LENGTH' ? `کلمه باید ${faNumber(game.wordLength)} حرف باشه` : ERROR_MESSAGES[e.message] || e.message)
+      if (e.message === 'NOT_IN_LIST') {
+        // به‌جای پیام معمولی، یه نوار با دکمه‌ی «فکر می‌کنم درسته» (تا حرف بعدی می‌مونه)
+        setSuggest({ word: attempt, status: 'idle' })
+      } else {
+        showToast(e.message === 'WORD_LENGTH' ? `کلمه باید ${faNumber(game.wordLength)} حرف باشه` : ERROR_MESSAGES[e.message] || e.message)
+      }
       shakeRow()
     } finally {
       sending.current = false
       setBusy(false)
+    }
+  }
+
+  // «فکر می‌کنم درسته»: کلمه‌ی ردشده برای بررسی ثبت می‌شه
+  async function suggestRejectedWord() {
+    if (!suggest || suggest.status !== 'idle') return
+    const { word } = suggest
+    setSuggest({ word, status: 'sending' })
+    try {
+      await sendWordSuggestion(word)
+      setSuggest({ word, status: 'sent' })
+      later(() => setSuggest((s) => (s && s.status === 'sent' ? null : s)), 2200)
+    } catch (e) {
+      showToast(SUGGEST_ERRORS[e.message] || e.message)
     }
   }
 
@@ -344,10 +375,25 @@ function WordGame({ user }) {
 
       <div className="word-stage">
         <div className="word-toast-area" role="status">
-          {toast && (
-            <p key={toast.id} className="word-toast">
-              {toast.text}
+          {suggest ? (
+            <p key="suggest" className="word-toast word-toast-action">
+              {suggest.status === 'sent' ? (
+                'ممنون! کلمه برای بررسی ثبت شد'
+              ) : (
+                <>
+                  <span>این کلمه توی لیست نیست</span>
+                  <button type="button" disabled={suggest.status === 'sending'} onClick={suggestRejectedWord}>
+                    فکر می‌کنم درسته
+                  </button>
+                </>
+              )}
             </p>
+          ) : (
+            toast && (
+              <p key={toast.id} className="word-toast">
+                {toast.text}
+              </p>
+            )
           )}
         </div>
         <Board

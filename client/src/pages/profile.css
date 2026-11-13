@@ -191,6 +191,138 @@
   background: var(--accent);
 }
 
+/* ---------- بج‌ها ---------- */
+
+.profile-badges {
+  flex: 1 1 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-badges header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.profile-badges h2 {
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.profile-badges header span {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.profile-badges ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+/* روی گوشی (دو ستون) بجِ آخر اگه تنها مونده، کل عرض رو بگیره */
+@media (max-width: 639px) {
+  .profile-badge:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+.profile-badge {
+  box-sizing: border-box;
+  padding: 14px 12px;
+  border-radius: 16px;
+  border: 1px solid #1f1f23;
+  background: #111113;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.profile-badge.earned {
+  border-color: var(--accent);
+  background: rgba(48, 48, 230, 0.1);
+}
+
+.profile-badge-disc {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--border);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-badge.earned .profile-badge-disc {
+  background: var(--accent);
+  color: #fff;
+}
+
+.profile-badge-num {
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.profile-badge-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.profile-badge p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text-soft);
+}
+
+.profile-badge-state {
+  margin-top: auto;
+  padding: 2px 12px;
+  border-radius: 999px;
+  background: rgba(48, 48, 230, 0.25);
+  color: #c9c9ff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.profile-badge-state.locked {
+  background: var(--border);
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.profile-badge-progress {
+  margin-top: auto;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.profile-badge-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.profile-badge-bar div {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+}
+
 /* ---------- تقویم ---------- */
 
 .profile-calendar {
@@ -443,6 +575,10 @@
   .profile-panels .survey-goal,
   .profile-dist {
     flex: 1 1 280px;
+  }
+
+  .profile-badges ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   /* وقتی فقط یه کارت آمار هست (مثل رنگ)، زیادی پهن نشه */

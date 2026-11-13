@@ -5,6 +5,9 @@ export const EARLY_MEMBERS = 100 // «اعضای اولیه» = ۱۰۰ نفر ا
 export const MAX_SAME_ANSWER = 3 // یه جواب عین‌هم بیشتر از این‌قدر برای بج حساب نمی‌شه (تا تایپ بی‌معنی یا «الف» برای همه‌ی سؤال‌ها بج نده)
 
 // metric: چی شمرده می‌شه (counted = جواب‌های حساب‌شده، days = روزهای مشارکت، extra = جواب به «۵ سؤال دیگه»، suggestions = سؤال‌های پیشنهادی، early = عضو اولیه)
+// عدد با رقم فارسی (برای متن بج‌ها)
+const fa = (n) => String(n).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d])
+
 export const BADGES = [
   { id: 'first', title: 'اولین قدم', description: 'به یه سؤال جواب بده', metric: 'counted', target: 1 },
   { id: 'q10', title: '۱۰ سؤال', description: 'به ۱۰ سؤال جواب بده', metric: 'counted', target: 10 },
@@ -14,7 +17,7 @@ export const BADGES = [
   { id: 'days7', title: 'همیشگی', description: 'توی ۷ روز مختلف جواب بده', metric: 'days', target: 7 },
   { id: 'more', title: 'بیشتر می‌خوام', description: 'با «۵ سؤال دیگه» ادامه بده', metric: 'extra', target: 1 },
   { id: 'suggest', title: 'سؤال‌ساز', description: 'یه سؤال پیشنهاد بده', metric: 'suggestions', target: 1 },
-  { id: 'early', title: 'از اعضای اولیه', description: `جزو ${EARLY_MEMBERS} نفر اولی که توی سایت عضو شدن`, metric: 'early', target: 1, showProgress: false },
+  { id: 'early', title: 'از اعضای اولیه', description: `جزو ${fa(EARLY_MEMBERS)} نفر اولی که توی سایت عضو شدن`, metric: 'early', target: 1, showProgress: false },
 ]
 
 // metrics: { counted, days, extra, suggestions, early (۰ یا ۱) } -> [{ id, title, description, earned, progress, target, showProgress }]

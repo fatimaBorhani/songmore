@@ -2,6 +2,7 @@
 import { Link } from 'react-router'
 import { faNumber } from '../shared/format.js'
 import GoalBar from '../games/survey/components/GoalBar.jsx'
+import BadgeGrid from './BadgeGrid.jsx'
 
 // لیست «اسم / عدد»؛ total = ردیف درشت آخر
 function StatsList({ label, rows, total }) {
@@ -107,6 +108,7 @@ export function SurveyStatsPanel({ stats }) {
     <div className="profile-panels">
       <StatsList label="آمار نظرسنجی" rows={rows} total={['سؤال‌های جواب‌داده', withOf(faNumber(stats.answered), faNumber(stats.totalQuestions))]} />
       <GoalBar goal={stats.goal} />
+      <BadgeGrid badges={stats.badges} />
     </div>
   )
 }

@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { getProfile } from '../games/song/api.js'
+import { getWordStats } from '../games/word/api.js'
+import { getColorStats } from '../games/color/api.js'
 import { getSurveyStats } from '../games/survey/api.js'
-import GoalBar from '../games/survey/components/GoalBar.jsx'
 import { logout } from '../shared/api.js'
 import { faNumber } from '../shared/format.js'
 import { SITE_NAME } from '../shared/site.js'
 import ProfileCalendar from './ProfileCalendar.jsx'
+import { ColorStatsPanel, SurveyStatsPanel, WordStatsPanel } from './ProfileStats.jsx'
 import { faMonthYear } from './calendar.js'
-import '../games/survey/survey.css' // برای کارت هدف جمعی
+import '../games/survey/survey.css' // برای کارت هدف جمعی (توی تب نظرسنجی)
 import './profile.css'
 
 // آمار بازی آهنگ به شکل لیست «اسم / عدد»
@@ -25,15 +27,13 @@ function statRows(stats, practiceGames) {
   ]
 }
 
-// آمار نظرسنجی «صد نفر گفتن» به شکل لیست «اسم / عدد»
-function surveyRows(stats) {
-  return [
-    ['امروز', faNumber(stats.today)],
-    ['سؤال ردشده', faNumber(stats.skipped)],
-    ['روزهایی که جواب دادی', faNumber(stats.days)],
-    ['سؤال پیشنهادی', faNumber(stats.suggestions)],
-  ]
-}
+// تب‌های صفحه‌ی حساب. بقیه‌ی تب‌ها (غیر از آهنگ که با خود پروفایل میاد) آمارشون فقط وقتی تبشون باز می‌شه گرفته می‌شه
+const TABS = [
+  { id: 'song', label: 'حدس آهنگ' },
+  { id: 'word', label: 'واژه‌یاب', load: getWordStats, Panel: WordStatsPanel },
+  { id: 'color', label: 'رنگ', load: getColorStats, Panel: ColorStatsPanel },
+  { id: 'survey', label: 'نظرسنجی', load: getSurveyStats, Panel: SurveyStatsPanel },
+]
 
 // صفحه‌ی حساب کاربری (آدرس /profile)
 // user: کاربر واردشده یا null، onUserChange: برای خروج از حساب (هر دو از App میان)
@@ -42,8 +42,8 @@ function ProfilePage({ user, onUserChange }) {
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [tab, setTab] = useState('song')
-  const [survey, setSurvey] = useState(null) // آمار نظرسنجی؛ بار اول که تبش باز شد گرفته می‌شه
-  const [surveyError, setSurveyError] = useState(false)
+  const [stats, setStats] = useState({}) // آمار هر تب (id تب -> داده)، بعد از اولین باز شدن تب
+  const [failed, setFailed] = useState({}) // تب‌هایی که گرفتن آمارشون خطا داد
   const userId = user ? user.id : null
 
   useEffect(() => {
@@ -61,17 +61,19 @@ function ProfilePage({ user, onUserChange }) {
     }
   }, [userId])
 
-  // آمار نظرسنجی فقط وقتی تبش باز می‌شه از سرور گرفته می‌شه
+  // آمار تبِ باز، اگه قبلاً نگرفتیم و خطا هم نداده، از سرور گرفته می‌شه
+  const activeTab = TABS.find((t) => t.id === tab)
   useEffect(() => {
-    if (!userId || tab !== 'survey' || survey) return
+    if (!userId || !activeTab?.load || stats[tab] || failed[tab]) return
     let cancelled = false
-    getSurveyStats()
-      .then((d) => !cancelled && setSurvey(d))
-      .catch(() => !cancelled && setSurveyError(true))
+    activeTab
+      .load()
+      .then((d) => !cancelled && setStats((old) => ({ ...old, [tab]: d })))
+      .catch(() => !cancelled && setFailed((old) => ({ ...old, [tab]: true })))
     return () => {
       cancelled = true
     }
-  }, [userId, tab, survey])
+  }, [userId, tab, activeTab, stats, failed])
 
   async function handleLogout() {
     try {
@@ -146,15 +148,11 @@ function ProfilePage({ user, onUserChange }) {
 
       <section className="profile-content">
         <nav className="profile-tabs" aria-label="بازی">
-          <button type="button" aria-pressed={tab === 'song'} onClick={() => setTab('song')}>
-            حدس آهنگ
-          </button>
-          <button type="button" aria-pressed={tab === 'word'} onClick={() => setTab('word')}>
-            واژه‌یاب
-          </button>
-          <button type="button" aria-pressed={tab === 'survey'} onClick={() => setTab('survey')}>
-            نظرسنجی
-          </button>
+          {TABS.map((t) => (
+            <button key={t.id} type="button" aria-pressed={tab === t.id} onClick={() => setTab(t.id)}>
+              {t.label}
+            </button>
+          ))}
         </nav>
 
         {tab === 'song' ? (
@@ -175,47 +173,16 @@ function ProfilePage({ user, onUserChange }) {
               </dl>
             </section>
           </div>
-        ) : tab === 'survey' ? (
-          surveyError ? (
-            <section className="profile-card profile-soon">
-              <p className="error">آمار نظرسنجی گرفته نشد. سرور در دسترس نیست.</p>
-            </section>
-          ) : !survey ? (
-            <section className="profile-card profile-soon">
-              <p className="loading">در حال بارگذاری...</p>
-            </section>
-          ) : survey.answered === 0 && survey.skipped === 0 ? (
-            <section className="profile-card profile-soon">
-              <p>هنوز به سؤالی جواب ندادی.</p>
-              <Link to="/survey" className="ghost-button">
-                برو به نظرسنجی
-              </Link>
-            </section>
-          ) : (
-            <div className="profile-panels">
-              <section className="profile-card profile-stats" aria-label="آمار نظرسنجی">
-                <dl>
-                  {surveyRows(survey).map(([label, value]) => (
-                    <div key={label}>
-                      <dt>{label}</dt>
-                      <dd>{value}</dd>
-                    </div>
-                  ))}
-                  <div className="total">
-                    <dt>سؤال‌های جواب‌داده</dt>
-                    <dd>
-                      {faNumber(survey.answered)} <small>از {faNumber(survey.totalQuestions)}</small>
-                    </dd>
-                  </div>
-                </dl>
-              </section>
-              <GoalBar goal={survey.goal} />
-            </div>
-          )
-        ) : (
+        ) : failed[tab] ? (
           <section className="profile-card profile-soon">
-            <p>آمار واژه‌یاب به‌زودی اینجا میاد.</p>
+            <p className="error">آمار گرفته نشد. سرور در دسترس نیست.</p>
           </section>
+        ) : !stats[tab] ? (
+          <section className="profile-card profile-soon">
+            <p className="loading">در حال بارگذاری...</p>
+          </section>
+        ) : (
+          <activeTab.Panel stats={stats[tab]} />
         )}
 
         {logoutButton('mobile-only')}

@@ -14,3 +14,8 @@ export function startColorRound() {
 export function sendColorGuess(hsb) {
   return postJson('/api/color/guess', hsb)
 }
+
+// آمار حافظه‌ی رنگ برای صفحه‌ی حساب (فقط کاربر واردشده)
+export function getColorStats() {
+  return call('/api/color/stats')
+}

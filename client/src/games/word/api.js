@@ -14,6 +14,11 @@ export function sendWordGiveUp() {
   return postJson('/api/word/giveup')
 }
 
+// آمار واژه‌یاب برای صفحه‌ی حساب (فقط کاربر واردشده)
+export function getWordStats() {
+  return call('/api/word/stats')
+}
+
 // فقط حالت تست (npm run dev): ۳ کلمه‌ی تصادفی جدید برای امروز و پاک شدن حدس‌های امروز
 export function resetWordTest() {
   return postJson('/api/word/test/reset')

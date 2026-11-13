@@ -136,6 +136,61 @@
   color: var(--text-soft);
 }
 
+.profile-dist {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-dist h2 {
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.profile-dist ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-dist li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.profile-dist li span {
+  width: 14px;
+  text-align: center;
+}
+
+.profile-dist li b {
+  min-width: 24px;
+  text-align: left;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.profile-dist-bar {
+  flex-grow: 1;
+  height: 12px;
+  border-radius: 6px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.profile-dist-bar div {
+  height: 100%;
+  border-radius: 6px;
+  background: var(--accent);
+}
+
 /* ---------- تقویم ---------- */
 
 .profile-calendar {
@@ -385,8 +440,14 @@
     padding: 4px 18px;
   }
 
-  .profile-panels .survey-goal {
+  .profile-panels .survey-goal,
+  .profile-dist {
     flex: 1 1 280px;
+  }
+
+  /* وقتی فقط یه کارت آمار هست (مثل رنگ)، زیادی پهن نشه */
+  .profile-panels > .profile-stats:only-child {
+    max-width: 460px;
   }
 
   .profile-stats dl > div {

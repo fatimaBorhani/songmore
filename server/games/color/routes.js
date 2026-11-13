@@ -3,6 +3,7 @@ import express from 'express'
 import { getTodayDateString } from '../../core/today.js'
 import { regenerateDailyColors } from './daily.js'
 import { addColorGuess, clearColorGame, getColorState, getCurrentRoundColor, parseColorInput } from './game.js'
+import { getColorStats } from './playerStats.js'
 
 // حالت تست (همون پرچم npm run dev): با هر بار باز کردن صفحه، بازی امروز از اول و با رنگ‌های تازه شروع می‌شه
 export const COLOR_TEST_MODE = process.argv.includes('--random-song')
@@ -16,6 +17,12 @@ colorRouter.get('/game', (req, res) => {
     regenerateDailyColors(date)
   }
   res.json({ ...getColorState(req.playerKey, date), testMode: COLOR_TEST_MODE })
+})
+
+// آمار حافظه‌ی رنگ برای صفحه‌ی حساب (فقط کاربر واردشده)
+colorRouter.get('/stats', (req, res) => {
+  if (!req.user) return res.status(401).json({ error: 'NOT_LOGGED_IN' })
+  res.json(getColorStats(req.playerKey, getTodayDateString()))
 })
 
 // شروع یه دور: رنگی که باید حفظ بشه (فقط رنگ دور جاری)

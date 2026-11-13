@@ -6,6 +6,7 @@ import { getTodayDateString } from '../../core/today.js'
 import { getDailyWords, pickNewRandomWords } from './dailyWord.js'
 import { normalizeWord, validateWord } from './letters.js'
 import { addWordGaveUp, addWordGuess, clearWordGames, currentIndex, getWordGameState } from './game.js'
+import { getWordStats } from './playerStats.js'
 
 // حالت تست (همون پرچم npm run dev): دکمه‌ی «بازی دوباره (تست)» کلمه‌های امروز رو عوض می‌کنه.
 // رفرش صفحه بازی رو پاک نمی‌کنه.
@@ -16,6 +17,12 @@ export const wordRouter = express.Router()
 wordRouter.get('/game', (req, res) => {
   const date = getTodayDateString()
   res.json({ ...getWordGameState(req.playerKey, date, getDailyWords(date)), testMode: WORD_TEST_MODE })
+})
+
+// آمار واژه‌یاب برای صفحه‌ی حساب (فقط کاربر واردشده، مثل آمار بازی آهنگ)
+wordRouter.get('/stats', (req, res) => {
+  if (!req.user) return res.status(401).json({ error: 'NOT_LOGGED_IN' })
+  res.json(getWordStats(req.playerKey))
 })
 
 // فقط حالت تست: ۳ کلمه‌ی تصادفی جدید و پاک شدن حدس‌های امروز

@@ -104,7 +104,7 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
 ## دستورها
 - سرور (پوشه‌ی `server/`): `npm run dev` (پورت 3001، `node --watch`)، `npm start`، `npm test` (همه‌ی تست‌ها با `node --test`)
 - یه تست تنها: `cd server && node --test test/song/guessLogic.test.js` (یا با `--test-name-pattern="..."`)
-- پر کردن دیتابیس بازی آهنگ: `cd server && npm run seed` (از songs.json + artists.json + clip_map.json؛ فقط آهنگ‌هایی که توی clip_map کلیپ دارن وارد بازی می‌شن)
+- پر کردن دیتابیس بازی آهنگ: `cd server && npm run seed` (از songs.json + artists.json + clip_map.json؛ فقط آهنگ‌هایی که توی clip_map کلیپ دارن وارد بازی می‌شن؛ قبل از شروع، `clipMap.js` شکل `clip_map.json` رو چک می‌کنه: هر آهنگ باید «مرحله ← اسم فایل» باشه، وگرنه seed با پیام فارسی می‌ایسته و چیزی توی دیتابیس نمی‌ریزه. `make_clips.py` هم همین چک رو داره. برای مقایسه‌ی `clip_map.json` فعلی با نسخه‌ی commit‌شده: `python tools/compare_clip_map.py`)
 - ساخت کلیپ: `python3 tools/make_clips.py` (به ffmpeg نیاز داره؛ فقط آهنگ‌های جدید رو به clip_map.json اضافه می‌کنه)
 - خوندن ژانر و سال از تگ mp3ها: `python3 tools/read_song_tags.py` (با ffprobe؛ فقط می‌خونه و خروجی‌ش `tools/song_tags.csv` برای بررسی دستیه)
 - چک خواننده‌ها: `python3 tools/check_artist_tags.py` (با ffprobe؛ اسم خواننده‌ی تگ هر mp3 رو با `songs.json` و `tools/artist_overrides.csv` مقایسه می‌کنه و آهنگ‌هایی که خواننده‌شون ناقصه پیدا می‌کنه؛ فقط می‌خونه و خروجی‌ش `tools/artist_tag_check.csv` برای بررسی دستیه؛ اسم سایت‌ها و `@کانال`‌های توی تگ رو نادیده می‌گیره)

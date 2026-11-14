@@ -103,10 +103,19 @@ def cut_clip(ffmpeg, audio_path, start, duration, out_path):
 
 
 def load_clip_map():
-    if os.path.exists(CLIP_MAP_JSON):
-        with open(CLIP_MAP_JSON, encoding="utf-8") as f:
-            return json.load(f)
-    return {}
+    if not os.path.exists(CLIP_MAP_JSON):
+        return {}
+    with open(CLIP_MAP_JSON, encoding="utf-8") as f:
+        clip_map = json.load(f)
+    # هر آهنگ باید یه دیکشنری «مرحله ← اسم فایل» باشه؛ اگه چیز دیگه‌ای باشه نباید چیزی روش نوشته بشه
+    bad = [k for k, v in clip_map.items() if not (isinstance(v, dict) and v and all(isinstance(n, str) for n in v.values()))]
+    if bad:
+        sys.exit(
+            f"clip_map.json شکل درست نداره: {len(bad)} ورودی از {len(clip_map)} تا باید «مرحله ← اسم فایل» باشن "
+            f"(مثلاً {bad[0]}: {json.dumps(clip_map[bad[0]], ensure_ascii=False)}). هیچ‌چیز تغییر نکرد. "
+            "نسخه‌ی سالم رو با «git restore data/clip_map.json» برگردون."
+        )
+    return clip_map
 
 
 def save_clip_map(clip_map):

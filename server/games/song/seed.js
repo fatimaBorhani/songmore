@@ -6,6 +6,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { db } from '../../core/db.js'
 import { applyArtistOverrides, loadArtistOverrides } from './artistOverrides.js'
+import { assertClipMapOk } from './clipMap.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..', '..', '..') // ریشه‌ی پروژه
@@ -24,6 +25,7 @@ const songs = applyArtistOverrides(
   artists
 )
 const clipMap = readJson('data/clip_map.json', {})
+assertClipMapOk(clipMap) // اگه فایل شکل درست نداشت همین‌جا می‌ایسته، قبل از اینکه چیزی توی دیتابیس بریزه
 
 const insertArtist = db.prepare(
   'INSERT OR REPLACE INTO artists (id, name, persian, aliases) VALUES (?, ?, ?, ?)'

@@ -17,7 +17,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## ساختار پوشه‌ها
 client/src/
   App.jsx           پوسته‌ی سایت: سربرگ مشترک (اسم سایت + ورود) و مسیرها (react-router)
-  pages/            صفحه‌ی اول (انتخاب بازی)، «پیدا نشد» و حساب کاربری (ProfilePage.jsx، ProfileStats.jsx، BadgeGrid.jsx، ProfileCalendar.jsx، calendar.js، profile.css)
+  assets/fonts/     فونت‌های صفحه‌ی اول: Doran (۴ وزن) و Radio (فقط ساعت)؛ با @font-face توی pages/home.css
+  pages/            صفحه‌ی اول (انتخاب بازی، چینش بنتو)، «پیدا نشد» و حساب کاربری (ProfilePage.jsx، ProfileStats.jsx، BadgeGrid.jsx، ProfileCalendar.jsx، calendar.js، profile.css)
   games/index.js    فهرست بازی‌ها (کارت‌های صفحه‌ی اول از روی همینه)
   games/song/       همه‌چیزِ بازی حدس آهنگ (SongGame.jsx، api.js، اجزا، song.css)
   games/word/       همه‌چیزِ بازی واژه‌یاب (WordGame.jsx، letters.js، timing.js، اجزا، word.css)
@@ -145,6 +146,7 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
   - `GET state`: `{ date, finished, batch, current: { id, text, category, number, batchSize } یا null، dailyCount, moreCount, todayAnswered, canMore, goal: { completed, target, perQuestion, totalAnswers, progress }, testMode }`. هیچ API جواب‌های بقیه رو نمی‌ده
   - کلاینت: `SurveyGame.jsx` (ماشین حالت ساده: `QuestionView` وقتی سؤال جاریه، `DoneView` وقتی `finished`)، `GoalBar.jsx` (هدف جمعی)
 - **کلاینت**
+  - صفحه‌ی اول (`HomePage.jsx` و `home.css`، طرح نهایی: `home-design.html` با چینش بنتو): عنوان «امروز چی بازی کنیم؟» و ساعت شمارش معکوس (`Countdown` مشترک، فقط استایلش با فونت Radio)؛ کارت‌ها و ترتیبشون از `games/index.js` میان: بازی با `featured: true` کارت بزرگ آبی با گرامافون CSS (فقط حلقه‌ی برق با `@keyframes record-spin` هر ۲٫۸۶ ثانیه می‌چرخه، با `prefers-reduced-motion` خاموش) و بقیه کارت‌های کوچیک تیره. شبکه: گوشی ۱ ستون (کارت آبی اول)، از ۶۴۰ پیکسل ۲ ستون، از ۱۰۲۴ پیکسل ۴ ستون (کارت آبی ۲×۲، خونه‌ی پایین‌چپ عمداً خالیه). فونت Doran فقط روی همین صفحه‌ست و بقیه‌ی سایت Vazirmatn؛ روی صفحه‌ی اول سربرگ مشترک با یه قانون CSS (`.site:has(.home-bento-page)`) هم‌عرض بنتو (۱۱۸۰) می‌شه
   - بازی آهنگ: `ModeSwitch.jsx` بالای صفحه بین `/song` و `/song/practice` عوض می‌کنه؛ هر دو حالت همون `SongGame` با پراپ `mode` هستن (با `key` جدا، تا بازی با عوض شدن حالت دوباره لود بشه)
   - `App.jsx`: سربرگ مشترک و مسیرها؛ کاربر واردشده رو یه بار می‌گیره و به صفحه‌ی هر بازی می‌ده (`user`). صفحه‌ی بازی با عوض شدن کاربر بازی رو دوباره می‌گیره
   - حافظه‌ی رنگ: `ColorGame.jsx` ماشین حالت‌هاست (`loading`، `ready`، `memorize`، `recreate`، `result`، `summary`)؛ اجزا توی `components/` (Dots، ReadyCard، Scene، MemorizeCard، Sliders، RecreateView، ResultView، SummaryView). سه مرحله‌ی حفظ کردن/ساختن/نتیجه (و کارت «آماده») یه کارت وسط صفحه با اندازه‌ی ثابت‌ان (`.color-stage`، حداکثر ۵۶۰ پیکسل عرض، مثل dialed.gg؛ سربرگ سایت دیده می‌شه). حفظ کردن (`MemorizeCard`): شماره‌ی دور گوشه، ثانیه‌شمار درشت با یه رقم اعشار و نوار زمان پایین کارت. ساختن (`RecreateView`): رنگ تو کل کارت؛ اسلایدرها (`color-panel`) از ۱۲۴۰ پیکسل به بالا کنار کارت رنگ توی جای خالی سمت راست (کارت رنگ وسط می‌مونه)، روی صفحه‌ی کوچیک‌تر پایین خود کارت روی رنگ. نتیجه (`ResultView`): کارت دو نیمه (بالا رنگ تو با امتیاز و یه جمله، پایین رنگ اصلی و دکمه‌ی گرد «بعدی»)؛ صدا (`sound.js`، Web Audio بدون فایل): تیک هر ثانیه، ناپدید شدن رنگ و اعلام امتیاز؛ دکمه‌ی بلندگو کنار نقطه‌ها خاموش/روشنش می‌کنه (کلید `songmore_color_muted` توی localStorage). امتیاز دور و جمع با `useCountUp.js` ریز ریز (صدم صدم) بالا می‌رن. رنگ متن روی رنگ‌ها با `readableOn` (کنتراست WCAG) انتخاب می‌شه. گوشی یه ستونه و از ۸۶۰ پیکسل دو ستونه

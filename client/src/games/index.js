@@ -7,13 +7,14 @@ export const GAMES = [
     title: 'حدس آهنگ',
     description: 'آهنگ امروز رو از چند صدم ثانیه‌ش بشناس.',
     icon: 'wave',
+    featured: true, // کارت بزرگ آبی (با گرامافون) توی صفحه‌ی اول
     ready: true,
   },
   {
     id: 'word',
     path: '/word',
     title: 'واژه‌یاب', // اسم موقت؛ هنوز قطعی نشده
-    description: 'کلمه‌ی پنج‌حرفی امروز رو با شش حدس پیدا کن.',
+    description: 'سه کلمه‌ی ۳، ۴ و ۵ حرفی رو با شش حدس پیدا کن.',
     icon: 'grid',
     ready: true, // false = توی صفحه‌ی اول «به‌زودی» نشون داده می‌شه
   },

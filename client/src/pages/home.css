@@ -1,29 +1,4 @@
-/* فونت‌های صفحه‌ی اول (self-hosted؛ فقط همین صفحه ازشون استفاده می‌کنه، بقیه‌ی سایت Vazirmatn) */
-@font-face {
-  font-family: 'Doran';
-  src: url('../assets/fonts/Doran-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Doran';
-  src: url('../assets/fonts/Doran-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Doran';
-  src: url('../assets/fonts/Doran-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Doran';
-  src: url('../assets/fonts/Doran-ExtraBold.woff2') format('woff2');
-  font-weight: 800;
-  font-display: swap;
-}
-/* Radio فقط برای ساعت شمارش معکوس */
+/* فونت صفحه‌ی اول همون Vazirmatn بقیه‌ی سایته؛ Radio فقط برای ساعت شمارش معکوس (self-hosted) */
 @font-face {
   font-family: 'Radio';
   src: url('../assets/fonts/Radio.ttf') format('truetype');
@@ -42,7 +17,6 @@
   margin: 0 auto;
   padding: 0 24px 56px;
   box-sizing: border-box;
-  font-family: 'Doran', 'Vazirmatn', Tahoma, sans-serif;
   line-height: 1.7;
 }
 

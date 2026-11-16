@@ -3,7 +3,7 @@
 import express from 'express'
 import { db } from '../../core/db.js'
 import { getTodayDateString } from '../../core/today.js'
-import { buildSongArtistsMap, evaluateGuess } from './guessLogic.js'
+import { buildSongArtistsMap, cleanLabel, evaluateGuess } from './guessLogic.js'
 import { addPracticeGuess, getCurrentGame, getPracticeState, startNext } from './practice.js'
 
 export const practiceRouter = express.Router()
@@ -28,7 +28,7 @@ practiceRouter.post('/guess', (req, res) => {
   if (!guessSongId || !guessSong) return res.status(400).json({ error: 'INVALID_SONG' })
 
   const result = evaluateGuess(guessSongId, game.song_id, buildSongArtistsMap())
-  addPracticeGuess(game, label || guessSong.id, result)
+  addPracticeGuess(game, cleanLabel(label, guessSong.id), result)
   res.json(getPracticeState(game))
 })
 

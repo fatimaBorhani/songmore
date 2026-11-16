@@ -18,3 +18,12 @@ export function evaluateGuess(guessSongId, dailySongId, songArtistsMap) {
   const sharedArtist = [...guessArtists].some((id) => dailyArtists.has(id))
   return sharedArtist ? 'present' : 'incorrect'
 }
+
+// متنی که کلاینت برای نمایش حدس می‌فرسته (اسم آهنگ). فقط متن کوتاه قبوله؛ هر چیز دیگه‌ای
+// (عدد، آبجکت، متن خیلی بلند) کنار گذاشته می‌شه و به‌جاش fallback (شناسه‌ی آهنگ) ذخیره می‌شه
+export const MAX_LABEL_LENGTH = 120
+export function cleanLabel(label, fallback) {
+  if (typeof label !== 'string') return fallback
+  const text = label.trim()
+  return text && text.length <= MAX_LABEL_LENGTH ? text : fallback
+}

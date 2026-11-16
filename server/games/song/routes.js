@@ -3,7 +3,7 @@ import express from 'express'
 import { db } from '../../core/db.js'
 import { getTodayDateString, pickDailySongs, pickNewRandomSongs } from './dailySong.js'
 import { searchSongs } from './search.js'
-import { buildSongArtistsMap, evaluateGuess } from './guessLogic.js'
+import { buildSongArtistsMap, cleanLabel, evaluateGuess } from './guessLogic.js'
 import { addGuess, currentSlot, getGameState } from './guesses.js'
 import { getPlayerStats } from './playerStats.js'
 import { getActivity } from './activity.js'
@@ -84,7 +84,7 @@ songRouter.post('/guess', (req, res) => {
     return res.status(400).json({ error: 'GAME_OVER' })
   }
 
-  const { songId: guessSongId, label } = req.body
+  const { songId: guessSongId, label } = req.body || {}
   const guessSong = db.prepare('SELECT id FROM songs WHERE id = ?').get(guessSongId)
   if (!guessSongId || !guessSong) {
     return res.status(400).json({ error: 'INVALID_SONG' })
@@ -92,7 +92,7 @@ songRouter.post('/guess', (req, res) => {
 
   const artistsMap = buildSongArtistsMap()
   const result = evaluateGuess(guessSongId, songId, artistsMap)
-  addGuess(req.playerKey, date, slot, label || guessSong.id, result)
+  addGuess(req.playerKey, date, slot, cleanLabel(label, guessSong.id), result)
 
   res.json(getGameState(req.playerKey, date, songIds, slot))
 })

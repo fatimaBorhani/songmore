@@ -50,6 +50,21 @@ app.use('/api/color', colorRouter)
 app.use('/api/survey', surveyRouter)
 app.use('/clips', express.static(CLIPS_DIR))
 
+// آدرس API که وجود نداره: جواب JSON (نه صفحه‌ی HTML پیش‌فرض Express)
+app.use('/api', (req, res) => {
+  res.status(404).json({ error: 'NOT_FOUND' })
+})
+
+// خطاها: همیشه JSON، بدون لو دادن جزئیات داخلی (مثل مسیر فایل‌ها) به کلاینت
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  // بدنه‌ی درخواست JSON درست نبود یا خیلی بزرگ بود
+  if (err.type === 'entity.parse.failed') return res.status(400).json({ error: 'INVALID_JSON' })
+  if (err.type === 'entity.too.large') return res.status(413).json({ error: 'TOO_LARGE' })
+  if (process.env.NODE_ENV !== 'test') console.error(err)
+  res.status(500).json({ error: 'SERVER_ERROR' })
+})
+
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {
     console.log(`سرور روی پورت ${PORT} روشن شد`)

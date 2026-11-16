@@ -220,23 +220,25 @@
   margin: 0 auto;
 }
 
-/* اسلایدرها: روی صفحه‌ی کوچیک پایین کارت، روی رنگ */
+/* اسلایدرها: روی صفحه‌ی کوچیک یه کارت تیره‌ی جدا زیر کارت رنگ (مثل کارت کنار رنگ روی کامپیوتر) */
 .color-panel {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
   box-sizing: border-box;
+  margin-top: 12px;
   padding: 14px 16px 16px;
-  border-radius: 20px;
-  background: rgba(9, 9, 11, 0.86);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  border-radius: 22px;
+  background: var(--card);
+  border: 1px solid var(--border);
   color: var(--text);
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+/* وقتی پنل زیر کارته، کارت رنگ کوتاه‌تر می‌شه تا هر دو با دکمه توی یه صفحه جا بشن */
+@media (max-width: 1239px) {
+  .color-scene.has-panel .color-stage {
+    height: clamp(170px, calc(100dvh - 520px), 480px);
+  }
 }
 
 .color-panel .color-sliders {
@@ -254,6 +256,8 @@
 /* صفحه‌ی بزرگ: اسلایدرها کنار کارت رنگ، توی جای خالی سمت راست (کارت رنگ وسط می‌مونه) */
 @media (min-width: 1240px) {
   .color-panel {
+    position: absolute;
+    margin-top: 0;
     left: calc(100% + 24px);
     right: auto;
     bottom: 0;

@@ -32,6 +32,17 @@
   color: #fff;
 }
 
+/* حلقه‌ی فوکوس فقط برای کیبورد (Tab)، نه بعد از کلیک */
+.site-logo:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.site-logo:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 10px;
+}
+
 /* فرم ورود زیر سربرگ، تمام‌عرض */
 .site-header .auth-card {
   flex-basis: 100%;

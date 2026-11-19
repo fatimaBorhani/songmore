@@ -306,52 +306,58 @@
   align-self: flex-start;
 }
 
-/* آخر بازی */
+/* آخر بازی: بدون کارت؛ جواب درشت وسط با یه خط کوتاه زیرش (آبی اگه پیدا شده، طوسی اگه تسلیم) */
 .clue-result {
-  padding: 22px 20px;
-  border-radius: 16px;
-  background: var(--card);
-  border: 1px solid var(--border);
+  padding: 6px 0 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
   text-align: center;
 }
 
-.clue-result.won {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-}
-
 .clue-result-label {
-  font-size: 15px;
-  opacity: 0.85;
+  font-size: 14px;
+  color: var(--text-soft);
 }
 
 .clue-result-answer {
-  font-size: 44px;
+  font-size: 56px;
   font-weight: 900;
-  line-height: 1.4;
+  line-height: 1.35;
+}
+
+.clue-result-line {
+  width: 48px;
+  height: 4px;
+  margin: 4px 0 12px;
+  border-radius: 999px;
+  background: var(--incorrect);
+}
+
+.clue-result.won .clue-result-line {
+  background: var(--accent);
 }
 
 .clue-result-stats {
   font-size: 15px;
-  opacity: 0.85;
+  color: var(--present);
+}
+
+.clue-result-stats b {
+  color: var(--text);
 }
 
 .clue-near {
   align-self: stretch;
-  margin-top: 14px;
+  margin-top: 26px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  font-size: 13px;
+  gap: 10px;
 }
 
 .clue-near p {
-  opacity: 0.8;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
 .clue-near ol {
@@ -365,30 +371,39 @@
 }
 
 .clue-near li {
-  padding: 4px 12px;
+  padding: 5px 12px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.22);
+  background: var(--surface);
+  border: 1px solid var(--border);
   font-size: 14px;
 }
 
+.clue-near li b {
+  color: var(--text-muted);
+}
+
 .clue-share {
-  margin-top: 16px;
-  min-width: 180px;
-  height: 48px;
-  padding: 0 24px;
+  margin-top: 24px;
+  min-width: 200px;
+  height: 50px;
+  padding: 0 28px;
   border: 0;
   border-radius: 999px;
   background: var(--text);
   color: var(--bg);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
 }
 
 .clue-next {
-  margin-top: 8px;
+  margin-top: 10px;
   font-size: 13px;
-  opacity: 0.85;
+  color: var(--text-muted);
+}
+
+.clue-next b {
+  color: var(--text);
 }
 
 .clue-test-reset {

@@ -1,15 +1,24 @@
 import Countdown from '../../../shared/components/Countdown.jsx'
 import { faNumber } from '../../../shared/format.js'
 
-// کارت آخر بازی: جواب، تعداد حدس و راهنما، کلمه‌های نزدیک به جواب، اشتراک و ساعت کلمه‌ی بعدی
+// آخر بازی (بدون کارت): «کلمه‌ی امروز»، جواب درشت با یه خط کوتاه زیرش و تعداد حدس و راهنما؛
+// بعد کلمه‌های نزدیک به جواب، اشتراک و ساعت کلمه‌ی بعدی. لیست حدس‌ها دیگه نشون داده نمی‌شه
 function ClueResult({ game, onShare }) {
+  const hints = game.hintCount > 0 && (
+    <>
+      {' '}
+      و <b>{faNumber(game.hintCount)} راهنما</b>
+    </>
+  )
   return (
     <section className={`clue-result${game.found ? ' won' : ''}`}>
-      <p className="clue-result-label">{game.found ? 'پیداش کردی! کلمه‌ی امروز' : 'جواب امروز این بود'}</p>
+      <p className="clue-result-label">کلمه‌ی امروز</p>
       <p className="clue-result-answer">{game.answer}</p>
+      <span className="clue-result-line" aria-hidden="true" />
       <p className="clue-result-stats">
-        {faNumber(game.guessCount)} حدس
-        {game.hintCount > 0 && <> · {faNumber(game.hintCount)} راهنما</>}
+        {game.found ? 'پیداش کردی با ' : 'تسلیم شدی بعد از '}
+        <b>{faNumber(game.guessCount)} حدس</b>
+        {hints}
       </p>
 
       <div className="clue-near">

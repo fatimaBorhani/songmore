@@ -125,7 +125,7 @@ function ClueGame({ user }) {
     )
   }
 
-  // آخرین کار بازیکن (حدس یا راهنما) جدا بالای لیست میاد
+  // آخرین کار بازیکن (حدس یا راهنما) جدا بالای لیست میاد؛ آخر بازی لیست حدس‌ها نشون داده نمی‌شه
   const latest = game.guesses.length ? game.guesses[game.guesses.length - 1] : null
   const sorted = sortGuesses(game.guesses)
 
@@ -183,11 +183,11 @@ function ClueGame({ user }) {
         </>
       )}
 
-      {sorted.length > 0 && (
+      {!game.finished && sorted.length > 0 && (
         <ol className="clue-list" aria-label="حدس‌ها، نزدیک‌ترین اول">
           {sorted.map((g) => (
             <li key={g.number}>
-              <GuessRow guess={g} latest={!game.finished && g.number === latest?.number} />
+              <GuessRow guess={g} latest={g.number === latest?.number} />
             </li>
           ))}
         </ol>

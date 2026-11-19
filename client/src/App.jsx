@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
 import AboutPage from './pages/AboutPage.jsx'
+import WeeklyPage from './pages/WeeklyPage.jsx'
 import SongGame from './games/song/SongGame.jsx'
 import WordGame from './games/word/WordGame.jsx'
 import ColorGame from './games/color/ColorGame.jsx'
@@ -23,6 +24,7 @@ import './shared/shared.css'
 //   /clue  بازی کلمه‌ی پنهان
 //   /profile  حساب کاربری (آمار و تقویم فعالیت)
 //   /about  درباره‌ی سایت، منبع‌ها و لایسنس‌ها
+//   /weekly  جدول هفته (امتیاز یکسان همه‌ی بازی‌ها)
 function App() {
   const [user, setUser] = useState(null) // کاربر واردشده، یا null
   const [authChecked, setAuthChecked] = useState(false) // هنوز معلوم نیست وارد شده یا نه؟
@@ -59,6 +61,7 @@ function App() {
           <Route path="/survey" element={<SurveyGame user={user} />} />
           <Route path="/profile" element={<ProfilePage user={user} onUserChange={setUser} />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/weekly" element={<WeeklyPage user={user} />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       )}

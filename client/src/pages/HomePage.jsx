@@ -5,6 +5,7 @@ import { SITE_NAME } from '../shared/site.js'
 import Countdown from '../shared/components/Countdown.jsx'
 import './home.css'
 import './about.css'
+import './weekly.css'
 
 // آیکن کوچیک هر بازی (خطی، به رنگ متن)
 function GameIcon({ type, size = 24 }) {
@@ -130,12 +131,21 @@ function HomePage() {
     <main className="home-bento-page">
       <section className="home-title-row">
         <h1>امروز چی بازی کنیم؟</h1>
-        <p className="home-countdown">
-          <span className="home-sr-only">بازی‌های بعدی تا </span>
-          <span dir="ltr">
-            <Countdown />
-          </span>
-        </p>
+        <div className="home-title-side">
+          <Link to="/weekly" className="home-weekly-link">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z" />
+              <path d="M17 6h3a3 3 0 0 1-3 4M7 6H4a3 3 0 0 0 3 4" />
+            </svg>
+            جدول هفته
+          </Link>
+          <p className="home-countdown">
+            <span className="home-sr-only">بازی‌های بعدی تا </span>
+            <span dir="ltr">
+              <Countdown />
+            </span>
+          </p>
+        </div>
       </section>
 
       <ul className="bento">

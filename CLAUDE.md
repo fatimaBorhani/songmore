@@ -18,7 +18,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 client/src/
   App.jsx           پوسته‌ی سایت: سربرگ مشترک (اسم سایت + ورود) و مسیرها (react-router)
   assets/fonts/     Radio (فقط ساعت صفحه‌ی اول؛ با @font-face توی pages/home.css). فایل‌های Doran هم هست ولی فعلاً استفاده نمی‌شه
-  pages/            صفحه‌ی اول (انتخاب بازی، چینش بنتو)، «پیدا نشد»، «درباره» (AboutPage.jsx، about.css) و حساب کاربری (ProfilePage.jsx، ProfileStats.jsx، BadgeGrid.jsx، ProfileCalendar.jsx، calendar.js، profile.css)
+  pages/            صفحه‌ی اول (انتخاب بازی، چینش بنتو)، «پیدا نشد»، «درباره» (AboutPage.jsx، about.css)، جدول هفته (WeeklyPage.jsx، weekly.css) و حساب کاربری (ProfilePage.jsx، ProfileStats.jsx، BadgeGrid.jsx، ProfileCalendar.jsx، calendar.js، profile.css)
   games/index.js    فهرست بازی‌ها (کارت‌های صفحه‌ی اول از روی همینه)
   games/song/       همه‌چیزِ بازی حدس آهنگ (SongGame.jsx، api.js، اجزا، song.css)
   games/word/       همه‌چیزِ بازی واژه‌یاب (WordGame.jsx، letters.js، timing.js، اجزا، word.css)
@@ -33,8 +33,9 @@ server/
   games/word/       بازی واژه‌یاب: routes.js، letters.js، evaluate.js، game.js، dailyWord.js، playerStats.js، suggestions.js
   games/color/      بازی حافظه‌ی رنگ: routes.js، colorMath.js، scoring.js، daily.js، game.js، playerStats.js
   games/clue/       بازی کلمه‌ی پنهان: routes.js، words.js، daily.js، game.js، playerStats.js، words/ (valid.txt، answers.txt، vectors.bin؛ خروجی build_clue_ranks.py)
+  games/weekly/     جدول هفته (بین همه‌ی بازی‌ها): weekly.js، routes.js
   games/survey/     نظرسنجی «صد نفر گفتن»: routes.js، survey.js، questions.js، questions.json (بانک سؤال‌ها)، badges.js (بج‌ها)، NOTICE.md (منبع)
-  test/core/، test/song/، test/word/، test/color/، test/clue/ و test/survey/   تست‌ها، هم‌شکل همون پوشه‌ها
+  test/core/، test/song/، test/word/، test/color/، test/clue/، test/weekly/ و test/survey/   تست‌ها، هم‌شکل همون پوشه‌ها
 tools/   اسکریپت‌های پایتون
 data/    songs.json و artists.json (خروجی اسکریپت‌های خودم؛ فقط بخون، دستی ویرایش نکن)
 data/audio/  آهنگ‌های اصلی (توی git نمیره)
@@ -83,6 +84,11 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
 - آمار پروفایل (`playerStats.js`، `GET /api/clue/stats`، تب «کلمه‌ی پنهان» توی `/profile`): روزهای بازی‌شده (پیدا شده یا تسلیم؛ نیمه‌تموم نه)، پیدا کردن و تسلیم، میانگین و کمترین حدس برای پیدا کردن، پیدا کردن بدون راهنما، تعداد راهنماها، روزهای پشت‌سرهمی که پیدا کرده (فعلی فقط اگه آخری امروز یا دیروز بوده). از روی `clue_guesses`، `clue_gaveup` و `clue_daily` حساب می‌شه و به `vectors.bin` نیاز نداره (برای همین قبل از چک `NO_DATA` توی `routes.js` اومده). مهمان 401
 - **کار مونده (یادت باشه):** `vectors.bin` واقعی هنوز ساخته و commit نشده و تا اون موقع بازی `NO_DATA` می‌ده. روی کامپیوتر خود فاطمه: اول جواب‌های بد (کنه، بشه، وبلاگ، کانال، تومان، فایل، پست و ...) توی `tools/clue_exclude.txt`، بعد `python tools/build_clue_ranks.py`، `cd server && npm test` و commit پوشه‌ی `server/games/clue/words`. بعدش کیفیت رتبه‌ها و راهنماها با چند جواب بررسی بشه
 - هنوز نیست: آرشیو روزهای قبل
+
+## جدول هفته
+- `/weekly` (`WeeklyPage.jsx`)، API `GET /api/weekly` (`server/games/weekly/`؛ مهمان هم می‌بینه، `me` فقط برای کاربر واردشده). هفته از شنبه تا جمعه به وقت تهران (`weekDates`). فقط کاربرهای واردشده توی جدولن. **هیچ‌چیز جدا ذخیره نمی‌شه**؛ هر بار از روی حدس‌های هر بازی حساب می‌شه
+- امتیاز یکسان برای همه‌ی بازی‌ها (`weekly.js`؛ کلاینت قانون‌ها رو توی `RULES` نشون می‌ده و باید هم‌شکل بمونن): هر بازی هر روز، فقط اگه تموم شده باشه، ۱۰ برای تموم کردن + ۱۰ برد + ۱۰ عالی (حداکثر ۳۰). آهنگ: تموم = هر ۳ آهنگ، برد = حداقل ۲ درست، عالی = هر ۳. واژه‌یاب: تموم = هر ۳ کلمه، برد = حداقل ۲ کلمه توی ۶ حدس، عالی = هر ۳. رنگ: تموم = ۵ دور، برد = جمع ۳۰ (`COLOR_WIN`)، عالی = ۴۰ (`COLOR_GREAT`). کلمه‌ی پنهان: تموم = پیدا یا تسلیم، برد = پیدا، عالی = بدون راهنما و حداکثر ۲۰ حدس. نظرسنجی امتیاز نداره. بازی تمرینی آهنگ حساب نمی‌شه
+- رتبه: امتیاز بیشتر، بعد تعداد بازی بیشتر، بعد اسم؛ امتیاز مساوی = رتبه‌ی مساوی. ۵۰ نفر اول (`TOP_SIZE`) + کارت «من» با امتیاز هر بازی. لینکش توی صفحه‌ی اول کنار ساعت («جدول هفته»)
 
 ## قوانین نظرسنجی «صد نفر گفتن»
 - هدف: جمع کردن داده برای بازی‌های بعدی (مثل Family Feud و «نادرترین جواب»). هر نفر به هر سؤال یه جواب آزاد می‌ده؛ از جواب‌های تکراریِ نرمال‌شده (`normalizePersian`) بعداً می‌شه جدول رایج‌ترین جواب‌ها ساخت
@@ -162,6 +168,7 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
   - کلاینت: `SurveyGame.jsx` (ماشین حالت ساده: `QuestionView` وقتی سؤال جاریه، `DoneView` وقتی `finished`)، `GoalBar.jsx` (هدف جمعی)
 - **کلاینت**
   - صفحه‌ی اول (`HomePage.jsx` و `home.css`، طرح نهایی: `home-design.html` با چینش بنتو): عنوان «امروز چی بازی کنیم؟» و ساعت شمارش معکوس (`Countdown` مشترک، فقط استایلش با فونت Radio)؛ کارت‌ها و ترتیبشون از `games/index.js` میان: بازی با `featured: true` کارت بزرگ آبی با گرامافون CSS (فقط حلقه‌ی برق با `@keyframes record-spin` هر ۲٫۸۶ ثانیه می‌چرخه، با `prefers-reduced-motion` خاموش) و بقیه کارت‌های کوچیک تیره. شبکه: گوشی ۱ ستون (کارت آبی اول)، از ۶۴۰ پیکسل ۲ ستون، از ۱۰۲۴ پیکسل ۴ ستون (کارت آبی ۲×۲، خونه‌ی پایین‌چپ عمداً خالیه). فونت متن‌ها مثل بقیه‌ی سایت Vazirmatn‌ه (Doran امتحان شد و فعلاً کنار گذاشته شد)؛ روی صفحه‌ی اول سربرگ مشترک با یه قانون CSS (`.site:has(.home-bento-page)`) هم‌عرض بنتو (۱۱۸۰) می‌شه
+  - جدول هفته (`/weekly`، `WeeklyPage.jsx`): عنوان و بازه‌ی هفته، کارت «من» (رتبه، امتیاز و امتیاز هر بازی؛ مهمان یا بدون امتیاز یه جمله)، لیست رتبه‌ها (ردیف خودت با نوار آبی کنارش) و «امتیاز چطور حساب می‌شه؟» (`details`)
   - صفحه‌ی «درباره» (`/about`، `AboutPage.jsx`): سایت چیه، لیست بازی‌ها (از `games/index.js`)، منبع‌ها و لایسنس‌ها (`SOURCES`: ProtoQA، لیلک، mainwords، fastText، وزیرمتن؛ منبع تازه = یه ردیف اینجا)، یه جمله درباره‌ی حق آهنگ‌ها و بازی‌هایی که ایده ازشون گرفته شده. لینکش پایین صفحه‌ی اول («درباره‌ی سایت و منبع‌ها»). لینک حمایت مالی فعلاً عمداً نیست
   - بازی آهنگ: `ModeSwitch.jsx` بالای صفحه بین `/song` و `/song/practice` عوض می‌کنه؛ هر دو حالت همون `SongGame` با پراپ `mode` هستن (با `key` جدا، تا بازی با عوض شدن حالت دوباره لود بشه)
   - `App.jsx`: سربرگ مشترک و مسیرها؛ کاربر واردشده رو یه بار می‌گیره و به صفحه‌ی هر بازی می‌ده (`user`). صفحه‌ی بازی با عوض شدن کاربر بازی رو دوباره می‌گیره

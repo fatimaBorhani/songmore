@@ -1,0 +1,222 @@
+/* جدول هفته: یه ستون ساده؛ رنگ‌ها از تم سایت */
+.weekly-page {
+  max-width: 640px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 16px 16px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.weekly-head h1 {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1.4;
+}
+
+.weekly-head p {
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+/* کارت من */
+.weekly-me {
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.weekly-me-empty {
+  color: var(--text-soft);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.weekly-me-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.weekly-me-rank {
+  font-size: 15px;
+  color: var(--text-soft);
+}
+
+.weekly-me-rank b {
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.weekly-me-points b {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.weekly-me-games {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.weekly-me-games li {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.weekly-me-games b {
+  color: var(--text);
+}
+
+/* لیست رتبه‌ها */
+.weekly-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.weekly-list li {
+  min-height: 48px;
+  box-sizing: border-box;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ردیف خود بازیکن: همون نوار آبی کنار ردیف‌های بازی‌ها */
+.weekly-list li.me {
+  background: var(--card);
+  border-inline-start: 4px solid var(--accent);
+  padding-inline-start: 10px;
+}
+
+.weekly-rank {
+  flex: 0 0 28px;
+  font-weight: 900;
+  color: var(--text-soft);
+  text-align: center;
+}
+
+.weekly-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.weekly-games {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.weekly-points {
+  flex: 0 0 auto;
+  min-width: 40px;
+  text-align: left;
+  font-size: 17px;
+}
+
+.weekly-empty,
+.weekly-more {
+  text-align: center;
+  color: var(--text-soft);
+  font-size: 14px;
+}
+
+/* قانون امتیاز */
+.weekly-rules {
+  margin-top: 8px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--text-soft);
+}
+
+.weekly-rules summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--text);
+  min-height: 32px;
+}
+
+.weekly-rules p {
+  margin: 8px 0 12px;
+}
+
+.weekly-rules b {
+  color: var(--text);
+}
+
+.weekly-rules-table {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.weekly-rules-table > div {
+  display: grid;
+  grid-template-columns: 0.9fr 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.weekly-rules-head {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.weekly-rules-table span:first-child {
+  color: var(--text);
+}
+
+/* لینک «جدول هفته» توی صفحه‌ی اول */
+.home-weekly-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.home-weekly-link:hover {
+  border-color: var(--accent);
+}
+
+.home-title-side {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}

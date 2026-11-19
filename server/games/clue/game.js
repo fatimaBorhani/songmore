@@ -38,7 +38,7 @@ export function getClueState(playerKey, date, answer) {
     guessCount: guesses.filter((g) => !g.hint).length,
     hintCount: guesses.filter((g) => g.hint).length,
     bestRank: ranked.length ? Math.min(...ranked) : null,
-    maxRank: ranks.list.length, // بیشتر از این «دور» حساب می‌شه
+    maxRank: ranks.list.length, // تعداد همه‌ی کلمه‌ها (بزرگ‌ترین رتبه)
     found,
     gaveUp,
     finished,

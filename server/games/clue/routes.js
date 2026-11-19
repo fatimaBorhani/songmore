@@ -3,12 +3,19 @@
 import express from 'express'
 import { getTodayDateString } from '../../core/today.js'
 import { getDailyClue, pickNewRandomClue } from './daily.js'
+import { hasClueData } from './words.js'
 import { addClueGuess, addClueHint, clearClueGames, getClueState, giveUpClue } from './game.js'
 
 // حالت تست (همون پرچم npm run dev): دکمه‌ی «بازی دوباره (تست)» کلمه‌ی امروز رو عوض می‌کنه
 export const CLUE_TEST_MODE = process.argv.includes('--random-song')
 
 export const clueRouter = express.Router()
+
+// تا وقتی داده‌ی بازی (vectors.bin) ساخته نشده، همه‌ی درخواست‌ها خطای NO_DATA می‌گیرن
+clueRouter.use((req, res, next) => {
+  if (!hasClueData()) return res.status(503).json({ error: 'NO_DATA' })
+  next()
+})
 
 function sendState(req, res, date, answer) {
   res.json({ ...getClueState(req.playerKey, date, answer), testMode: CLUE_TEST_MODE })

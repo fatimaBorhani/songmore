@@ -46,7 +46,13 @@ function ClueGame({ user }) {
         setLoadError('')
         setGame(g)
       })
-      .catch(() => setLoadError('سرور در دسترس نیست. اول سرور رو روشن کن.'))
+      .catch((e) =>
+        setLoadError(
+          e.message === 'NO_DATA'
+            ? 'داده‌ی این بازی هنوز ساخته نشده (python tools/build_clue_ranks.py).'
+            : 'سرور در دسترس نیست. اول سرور رو روشن کن.'
+        )
+      )
   }
 
   useEffect(() => {

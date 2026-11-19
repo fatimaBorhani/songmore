@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """ساخت داده‌ی بازی «کلمه‌ی پنهان» (حدس کلمه با نزدیکی معنایی).
 
-برای هر کلمه‌ای که قراره یه روز جواب باشه، از قبل حساب می‌کنه بقیه‌ی کلمه‌ها
-از نظر معنی چقدر بهش نزدیکن و TOP تای اول رو به ترتیب ذخیره می‌کنه.
-سرور بعداً فقط همین فایل‌ها رو می‌خونه (هیچ مدلی روی سرور لازم نیست).
+«معنی» همه‌ی کلمه‌ها (بردار fastText) رو توی یه فایل فشرده ذخیره می‌کنه.
+سرور هر روز یه بار با همین فایل رتبه‌ی همه‌ی کلمه‌ها رو تا جواب امروز حساب می‌کنه
+(پس همه‌ی کلمه‌ها عدد می‌گیرن، نه فقط چند تای اول، و جواب تازه حجم رو زیاد نمی‌کنه).
 
 منبع‌ها:
   1) بردار کلمه‌های fastText فارسی (cc.fa.300، لایسنس CC BY-SA 3.0)، حدود ۱٫۲ گیگ:
@@ -15,13 +15,14 @@
 
 اجرا از ریشه‌ی پروژه:
     python tools/build_clue_ranks.py
-    python tools/build_clue_ranks.py --answers 50     (فقط ۵۰ جواب، برای تست سریع)
+    python tools/build_clue_ranks.py --answers 50     (فقط ۵۰ جواب)
     python tools/build_clue_ranks.py --vectors مسیر/فایل.vec.gz
 
 خروجی (توی server/games/clue/words/):
-  valid.txt          همه‌ی کلمه‌هایی که می‌شه حدس زد (اسم، صفت و قید لیلک که بردار دارن)
-  answers.txt        جواب‌های ممکن (اسم‌های آشنا، بدون کلمه‌های tools/clue_exclude.txt)
-  ranks/<جواب>.txt   نزدیک‌ترین کلمه‌ها به اون جواب؛ خط ۱ خود جوابه (رتبه‌ی ۱)، خط ۲ رتبه‌ی ۲ و ...
+  valid.txt     همه‌ی کلمه‌هایی که می‌شه حدس زد (اسم، صفت و قید لیلک که بردار دارن)
+  answers.txt   جواب‌های ممکن (اسم‌های آشنا، بدون کلمه‌های tools/clue_exclude.txt)
+  vectors.bin   بردار همه‌ی کلمه‌ها به همون ترتیب valid.txt (فشرده: هر عدد یه بایت)
+                ساختار: count (uint32) و dim (uint32)، بعد count تا ضریب float32، بعد count×dim تا int8
 کلمه‌ی بدی توی جواب‌ها دیدی، توی tools/clue_exclude.txt بنویس و دوباره اجرا کن.
 """
 import argparse
@@ -41,7 +42,6 @@ VECTORS = ROOT / "tools/wordlists/fasttext/cc.fa.300.vec.gz"
 EXCLUDE = ROOT / "tools/clue_exclude.txt"
 OUT = ROOT / "server/games/clue/words"
 
-TOP = 1000  # برای هر جواب این‌قدر کلمه‌ی نزدیک ذخیره می‌شه؛ بقیه توی بازی «دور» حساب می‌شن
 MAX_LINES = 300_000  # فقط این‌قدر خط اول fastText (کلمه‌های رایج‌تر اول فایلن)
 ANSWER_COUNT = 500  # چندتا جواب ساخته بشه (رایج‌ترها)
 MIN_BLOG = 300  # حداقل تکرار توی وبلاگ‌ها برای اینکه کلمه برای جواب «آشنا» باشه
@@ -119,7 +119,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--vectors", type=Path, default=VECTORS, help="فایل fastText (.vec یا .vec.gz)")
     parser.add_argument("--answers", type=int, default=ANSWER_COUNT, help="تعداد جواب‌ها")
-    parser.add_argument("--top", type=int, default=TOP, help="چندتا کلمه‌ی نزدیک برای هر جواب")
+    parser.add_argument("--out", type=Path, default=OUT, help="پوشه‌ی خروجی (برای تست)")
     parser.add_argument("--max-lines", type=int, default=MAX_LINES, help="چند خط اول فایل بردارها")
     args = parser.parse_args()
 
@@ -156,28 +156,42 @@ def main():
     if not answers:
         sys.exit("هیچ جوابی پیدا نشد (MIN_BLOG یا ANSWER_LENGTH رو چک کن).")
 
-    # از نو ساختن پوشه‌ی رتبه‌ها (همه‌ش خروجی همین اسکریپته)
-    ranks_dir = OUT / "ranks"
-    if ranks_dir.exists():
-        shutil.rmtree(ranks_dir)
-    ranks_dir.mkdir(parents=True)
+    # ترتیب نهایی: الفبایی بر اساس شکل نمایشی؛ valid.txt و vectors.bin باید دقیقاً هم‌ترتیب باشن
+    out = args.out
+    order = sorted(range(len(keys)), key=lambda i: lilak[keys[i]][0])
+    keys = [keys[i] for i in order]
+    matrix = matrix[order]
+    index = {key: i for i, key in enumerate(keys)}
 
-    top = min(args.top, len(keys))
-    for n, answer in enumerate(answers, 1):
-        scores = matrix @ matrix[index[answer]]  # شباهت همه‌ی کلمه‌ها با جواب
-        scores[index[answer]] = np.inf  # خود جواب همیشه رتبه‌ی ۱
-        best = np.argpartition(-scores, top - 1)[:top]
-        best = best[np.argsort(-scores[best], kind="stable")]
-        lines = [lilak[keys[i]][0] for i in best]
-        (ranks_dir / f"{answer}.txt").write_text("\n".join(lines) + "\n", encoding="utf8")
-        if n % 50 == 0 or n == len(answers):
-            print(f"  {n}/{len(answers)} جواب: {answer} ← {'، '.join(lines[1:6])}")
+    # فشرده‌سازی: هر بردار با یه ضریب خودش به عددهای -۱۲۷ تا ۱۲۷ (یه بایت) تبدیل می‌شه
+    scales = np.abs(matrix).max(axis=1) / 127.0
+    scales[scales == 0] = 1.0
+    quantized = np.round(matrix / scales[:, None]).astype(np.int8)
 
-    valid = sorted(lilak[k][0] for k in keys)
-    (OUT / "valid.txt").write_text("\n".join(valid) + "\n", encoding="utf8")
-    (OUT / "answers.txt").write_text("\n".join(lilak[k][0] for k in answers) + "\n", encoding="utf8")
-    print(f"\nتموم شد: {len(valid):,} کلمه‌ی قابل حدس، {len(answers)} جواب، هر جواب {top} کلمه‌ی نزدیک.")
-    print(f"خروجی: {OUT.relative_to(ROOT)}")
+    out.mkdir(parents=True, exist_ok=True)
+    with open(out / "vectors.bin", "wb") as f:
+        f.write(np.array([len(keys), matrix.shape[1]], dtype="<u4").tobytes())
+        f.write(scales.astype("<f4").tobytes())
+        f.write(quantized.tobytes())
+    (out / "valid.txt").write_text("\n".join(lilak[k][0] for k in keys) + "\n", encoding="utf8")
+    (out / "answers.txt").write_text("\n".join(lilak[k][0] for k in answers) + "\n", encoding="utf8")
+
+    # پوشه‌ی ranks/ نسخه‌ی قبلی دیگه لازم نیست
+    old_ranks = out / "ranks"
+    if old_ranks.exists():
+        shutil.rmtree(old_ranks)
+
+    # چند نمونه با همون بردارهای فشرده (همون چیزی که سرور حساب می‌کنه)
+    approx = quantized.astype(np.float32) * scales[:, None]
+    for answer in answers[:: max(1, len(answers) // 8)][:8]:
+        scores = approx @ approx[index[answer]]
+        scores[index[answer]] = np.inf
+        best = np.argsort(-scores)[1:6]
+        print(f"  {lilak[answer][0]} ← {'، '.join(lilak[keys[i]][0] for i in best)}")
+
+    size = (out / "vectors.bin").stat().st_size / 1e6
+    print(f"\nتموم شد: {len(keys):,} کلمه‌ی قابل حدس، {len(answers)} جواب، vectors.bin {size:.1f} مگابایت.")
+    print(f"خروجی: {out}")
 
 
 if __name__ == "__main__":

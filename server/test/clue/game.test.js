@@ -5,6 +5,8 @@ import http from 'node:http'
 
 process.env.DB_PATH = ':memory:'
 process.env.NODE_ENV = 'test'
+const { useClueFixture } = await import('./fixture.js')
+useClueFixture() // داده‌ی کوچیک و ثابت به‌جای فایل‌های واقعی
 
 const { db } = await import('../../core/db.js')
 const { app } = await import('../../index.js')
@@ -47,14 +49,12 @@ async function post(path, cookie, body) {
 
 const guess = (cookie, word) => post('guess', cookie, { word })
 
-test('فایل‌های داده: هر جواب فایل رتبه داره و خط اولش خود جوابه', () => {
-  const answers = answerWords()
-  assert.ok(answers.length > 0)
-  assert.ok(answers.includes(ANSWER))
-  for (const answer of answers) {
-    const { list, byWord } = ranksFor(answer)
-    assert.equal(byWord.get(answer), 1, answer)
-    assert.ok(list.length >= 100, `${answer}: فقط ${list.length} کلمه`)
+test('رتبه‌ها: همه‌ی کلمه‌ها عدد دارن، خود جواب ۱ و ترتیب درسته', () => {
+  const { list, byWord } = ranksFor(ANSWER)
+  assert.equal(list.length, byWord.size)
+  assert.deepEqual(list.slice(0, 5), ['کتاب', 'کتابی', 'کتب', 'کتاب‌ها', 'رمان'])
+  for (const answer of answerWords()) {
+    assert.equal(ranksFor(answer).byWord.get(answer), 1, answer)
     assert.ok(isValidWord(answer), answer)
   }
 })
@@ -70,7 +70,7 @@ test('شروع بازی: هیچ حدسی نیست و جواب لو نمی‌ره
   assert.ok(!JSON.stringify(game).includes(ANSWER))
 })
 
-test('حدس: رتبه‌ی درست، «دور» برای کلمه‌ی بیرون از لیست نزدیک‌ها، نیم‌فاصله و ي عربی فرقی نمی‌کنن', async () => {
+test('حدس: رتبه‌ی درست برای همه‌ی کلمه‌ها (حتی دورها)، نیم‌فاصله و ي عربی فرقی نمی‌کنن', async () => {
   const { cookie } = await newPlayer()
   let res = await guess(cookie, 'رمان')
   assert.equal(res.status, 200)
@@ -83,7 +83,8 @@ test('حدس: رتبه‌ی درست، «دور» برای کلمه‌ی بیر�
 
   res = await guess(cookie, 'ماشين') // ي عربی
   assert.equal(res.body.guesses[2].word, 'ماشین')
-  assert.equal(res.body.guesses[2].rank, null)
+  assert.ok(res.body.guesses[2].rank > 12) // دور ولی با عدد
+  assert.equal(res.body.maxRank, 27)
   assert.equal(res.body.guessCount, 3)
   assert.equal(res.body.finished, false)
   assert.equal(res.body.answer, null)

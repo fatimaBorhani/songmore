@@ -6,6 +6,8 @@ import http from 'node:http'
 
 process.env.DB_PATH = ':memory:'
 process.env.NODE_ENV = 'test'
+const { useClueFixture } = await import('../clue/fixture.js')
+useClueFixture() // داده‌ی کوچیک «کلمه‌ی پنهان» به‌جای فایل‌های واقعی
 process.argv.push('--random-song') // باید قبل از import اپ باشه؛ پرچم همون موقع خونده می‌شه
 
 const { db } = await import('../../core/db.js')

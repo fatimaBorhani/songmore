@@ -1,0 +1,396 @@
+/* بازی «کلمه‌ی پنهان»: یه ستون باریک وسط صفحه؛ رنگ‌ها همه از تم سایت (index.css) */
+.clue-page {
+  --heat-hot: var(--accent);
+  --heat-warm: var(--present);
+  --heat-cold: var(--incorrect);
+
+  max-width: 540px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  /* سمت راست جای فلش «آخرین حدس» کنار ردیف‌ها */
+  padding: 8px 16px 56px 28px;
+  padding-inline: 28px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.clue-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* عنوان درشت وسط، دکمه‌ی «؟» گوشه */
+.clue-title-row {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 52px 22px;
+}
+
+.clue-title-row h1 {
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+  text-align: center;
+}
+
+.clue-round-button {
+  position: absolute;
+  inset-inline-end: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.clue-round-button:hover,
+.clue-icon-button:hover {
+  background: var(--surface);
+}
+
+/* جای نوشتن + دکمه‌ی ⋯ */
+.clue-form {
+  display: flex;
+  gap: 8px;
+}
+
+.clue-input {
+  flex-grow: 1;
+  min-width: 0;
+  height: 48px;
+  box-sizing: border-box;
+  padding: 0 14px;
+  border-radius: 8px;
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-soft);
+}
+
+.clue-input:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+}
+
+.clue-input input {
+  flex-grow: 1;
+  min-width: 0;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 17px;
+  outline: none;
+}
+
+.clue-input input::placeholder {
+  color: var(--text-muted);
+}
+
+.clue-count {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.clue-menu {
+  position: relative;
+}
+
+.clue-icon-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  border: 0;
+  background: var(--card);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.clue-menu-list {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + 6px);
+  z-index: 5;
+  min-width: 210px;
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.clue-menu-list button {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 10px;
+  min-height: 48px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: start;
+  cursor: pointer;
+}
+
+.clue-menu-list button small {
+  grid-column: 2;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.clue-menu-list button:hover:not(:disabled) {
+  background: var(--surface);
+}
+
+.clue-menu-list button.danger {
+  display: block;
+  background: var(--surface);
+  color: var(--present);
+}
+
+.clue-message {
+  min-height: 24px;
+  padding: 6px 2px 0;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+/* یه ردیف حدس: نوار رنگی سمت راست = گرما */
+.clue-row {
+  position: relative;
+  height: 44px;
+  box-sizing: border-box;
+  padding: 0 14px;
+  border-radius: 6px;
+  background: var(--card);
+  border-inline-start: 4px solid var(--heat-cold);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 700;
+}
+
+.clue-row.heat-hot {
+  border-inline-start-color: var(--heat-hot);
+}
+.clue-row.heat-warm {
+  border-inline-start-color: var(--heat-warm);
+}
+
+.clue-row-word {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clue-row-word svg {
+  flex: 0 0 auto;
+  color: var(--text-soft);
+}
+
+.clue-row.heat-cold .clue-row-rank {
+  color: var(--text-muted);
+}
+
+/* فلش کنار آخرین حدس (بیرون ردیف، سمت راست) */
+.clue-row-marker {
+  position: absolute;
+  inset-inline-start: -22px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-inline-start: 10px solid var(--text);
+}
+
+.clue-divider {
+  width: 100%;
+  height: 1px;
+  margin: 20px 0;
+  border: 0;
+  background: var(--border);
+}
+
+.clue-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* آموزش */
+.clue-help {
+  margin-bottom: 18px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--text-soft);
+}
+
+.clue-help b {
+  color: var(--text);
+}
+
+.clue-help ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 14px;
+}
+
+.clue-help li {
+  padding-inline-start: 10px;
+  border-inline-start: 4px solid var(--heat-cold);
+}
+.clue-help li.heat-hot {
+  border-inline-start-color: var(--heat-hot);
+}
+.clue-help li.heat-warm {
+  border-inline-start-color: var(--heat-warm);
+}
+
+.clue-help .ghost-button {
+  align-self: flex-start;
+}
+
+/* آخر بازی */
+.clue-result {
+  padding: 22px 20px;
+  border-radius: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.clue-result.won {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.clue-result-label {
+  font-size: 15px;
+  opacity: 0.85;
+}
+
+.clue-result-answer {
+  font-size: 44px;
+  font-weight: 900;
+  line-height: 1.4;
+}
+
+.clue-result-stats {
+  font-size: 15px;
+  opacity: 0.85;
+}
+
+.clue-near {
+  align-self: stretch;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.clue-near p {
+  opacity: 0.8;
+}
+
+.clue-near ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.clue-near li {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.22);
+  font-size: 14px;
+}
+
+.clue-share {
+  margin-top: 16px;
+  min-width: 180px;
+  height: 48px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.clue-next {
+  margin-top: 8px;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.clue-test-reset {
+  align-self: center;
+  margin-top: 28px;
+}
+
+/* گوشی: عنوان کوچیک‌تر */
+@media (max-width: 480px) {
+  .clue-page {
+    padding-inline: 26px 14px;
+  }
+  .clue-title-row h1 {
+    font-size: 32px;
+  }
+}

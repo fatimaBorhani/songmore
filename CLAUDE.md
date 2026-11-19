@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # پروژه: سایت بازی‌های روزانه‌ی فارسی
 
 ## هدف
-یه سایت با چند بازی روزانه؛ صفحه‌ی اول بازی رو انتخاب می‌کنی. بازی اول «حدس آهنگ» (شبیه Songless): هر روز ۳ آهنگ، کلیپ‌های کوتاه (از ۰.۱۵ تا ۱۵ ثانیه) و حداکثر ۵ حدس. بازی دوم: وردل فارسی با اسم موقت «واژه‌یاب» (هر روز سه کلمه‌ی ۳، ۴ و ۵ حرفی) (`/word`؛ اسم Wordle و ظاهر نیویورک‌تایمز رو کپی نکن). بازی سوم: «حافظه‌ی رنگ» (`/color`، اسم موقت): چند ثانیه یه رنگ رو می‌بینی و بعد از حافظه با اسلایدرهای HSB بازسازیش می‌کنی. بخش چهارم (نه بازی): «صد نفر گفتن» (`/survey`، اسم موقت)، یه نظرسنجی کوتاه و بدون امتیاز برای جمع کردن داده‌ی بازی‌های بعدی (مثل Family Feud یا «نادرترین جواب»).
+یه سایت با چند بازی روزانه؛ صفحه‌ی اول بازی رو انتخاب می‌کنی. بازی اول «حدس آهنگ» (شبیه Songless): هر روز ۳ آهنگ، کلیپ‌های کوتاه (از ۰.۱۵ تا ۱۵ ثانیه) و حداکثر ۵ حدس. بازی دوم: وردل فارسی با اسم موقت «واژه‌یاب» (هر روز سه کلمه‌ی ۳، ۴ و ۵ حرفی) (`/word`؛ اسم Wordle و ظاهر نیویورک‌تایمز رو کپی نکن). بازی سوم: «حافظه‌ی رنگ» (`/color`، اسم موقت): چند ثانیه یه رنگ رو می‌بینی و بعد از حافظه با اسلایدرهای HSB بازسازیش می‌کنی. بازی چهارم: «کلمه‌ی پنهان» (`/clue`، اسم موقت؛ شبیه Contexto و Clueless ولی با ظاهر خودمون): هر روز یه کلمه، هر حدس یه رتبه‌ی نزدیکی معنایی می‌گیره. بخش پنجم (نه بازی): «صد نفر گفتن» (`/survey`، اسم موقت)، یه نظرسنجی کوتاه و بدون امتیاز برای جمع کردن داده‌ی بازی‌های بعدی (مثل Family Feud یا «نادرترین جواب»).
 
 ## استک
 - فرانت: React + Vite + react-router (JavaScript، نه TypeScript)، راست‌به‌چپ، فونت Vazirmatn از npm (@fontsource/vazirmatn)
@@ -23,6 +23,7 @@ client/src/
   games/song/       همه‌چیزِ بازی حدس آهنگ (SongGame.jsx، api.js، اجزا، song.css)
   games/word/       همه‌چیزِ بازی واژه‌یاب (WordGame.jsx، letters.js، timing.js، اجزا، word.css)
   games/color/      همه‌چیزِ بازی حافظه‌ی رنگ (ColorGame.jsx، color.js، api.js، اجزا، color.css)
+  games/clue/       همه‌چیزِ بازی کلمه‌ی پنهان (ClueGame.jsx، clue.js، api.js، اجزا، clue.css)
   games/survey/     همه‌چیزِ نظرسنجی «صد نفر گفتن» (SurveyGame.jsx، api.js، اجزا، survey.css)
   shared/           مشترک بین بازی‌ها: api.js (درخواست + ورود)، format.js، site.js (اسم سایت)، اجزای ورود/جدول امتیاز/شمارش معکوس (`Countdown.jsx`)، shared.css
 server/
@@ -31,8 +32,9 @@ server/
   games/song/       بازی حدس آهنگ: routes.js، scoring.js، guesses.js، guessLogic.js، dailySong.js، search.js، playerStats.js، activity.js، leaderboard.js، artistOverrides.js، seed.js
   games/word/       بازی واژه‌یاب: routes.js، letters.js، evaluate.js، game.js، dailyWord.js، playerStats.js، suggestions.js
   games/color/      بازی حافظه‌ی رنگ: routes.js، colorMath.js، scoring.js، daily.js، game.js، playerStats.js
+  games/clue/       بازی کلمه‌ی پنهان: routes.js، words.js، daily.js، game.js، words/ (خروجی build_clue_ranks.py)
   games/survey/     نظرسنجی «صد نفر گفتن»: routes.js، survey.js، questions.js، questions.json (بانک سؤال‌ها)، badges.js (بج‌ها)، NOTICE.md (منبع)
-  test/core/، test/song/، test/word/، test/color/ و test/survey/   تست‌ها، هم‌شکل همون پوشه‌ها
+  test/core/، test/song/، test/word/، test/color/، test/clue/ و test/survey/   تست‌ها، هم‌شکل همون پوشه‌ها
 tools/   اسکریپت‌های پایتون
 data/    songs.json و artists.json (خروجی اسکریپت‌های خودم؛ فقط بخون، دستی ویرایش نکن)
 data/audio/  آهنگ‌های اصلی (توی git نمیره)
@@ -71,6 +73,14 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
 - امتیاز هر دور از ۱۰ (جمع از ۵۰) با دو رقم اعشار، همون فرمول dialed.gg/color (`scoreColor` توی `scoring.js`): پایه `۱۰ / (۱ + (ΔE/۲۵٫۲۵)^۱٫۵۵)` با ΔE از CIEDE2000 (`deltaE2000` توی `colorMath.js`)، به‌علاوه‌ی یه جایزه وقتی رنگ‌مایه کمتر از ۲۵ درجه فرق داره و منهای یه جریمه وقتی بیشتر از ۳۰ درجه فرق داره (هر دو با اشباع کم ضعیف می‌شن). مثل dialed یه لرزش ±۰٫۰۴ هم اضافه می‌شه (بالای ۹٫۸ نه) که از هش خود دو رنگ ساخته می‌شه، پس برای یه جفت رنگ همیشه یکیه. همه‌ی حساب‌ها روی سروره
 - رنگ اصلی هر دور فقط بعد از ثبت حدس همون دور توی وضعیت بازی میاد. رنگ دور جاری فقط با `POST /api/color/start` داده می‌شه و دورهای بعد هیچ‌وقت زودتر لو نمی‌رن (خود رنگ دور جاری موقع حفظ کردن توی مرورگر هست، پس با ابزار توسعه‌دهنده قابل دیدنه؛ این توی ماهیت بازیه)
 - سرور اختلاف هر مولفه رو توی `diff` می‌فرسته (رنگ‌مایه با کوتاه‌ترین مسیر روی دایره؛ منفی یعنی رنگ بازیکن کمتر بوده) ولی صفحه‌ی بازی نشونش نمی‌ده؛ فقط عددهای H S B هر دو رنگ روی کارت نتیجه میان
+
+## قوانین کلمه‌ی پنهان
+- هر روز یه کلمه برای همه (`clue_daily`، از `answers.txt`، تا تموم نشدن جواب‌ها تکراری نمیاد). حدس نامحدوده؛ فقط کلمه‌های `valid.txt` قبولن (`NOT_IN_LIST`)، تکراری نه (`ALREADY_GUESSED`)، خالی یا بیشتر از ۳۰ حرف `INVALID_WORD`. نرمال‌سازی مثل واژه‌یاب (`normalizeWord`: نیم‌فاصله، ي/ك عربی)
+- رتبه از `ranks/<جواب>.txt` (خط N = رتبه‌ی N، فقط ۱۰۰۰ تای اول)؛ بیرون از اون `rank: null` یعنی «دور». رتبه ذخیره نمی‌شه و هر بار از فایل خونده می‌شه. گرما توی کلاینت (`heatOf` توی `clue.js`): داغ تا ۵۰ (آبی سایت)، ولرم تا ۳۰۰ (`--present`)، بقیه سرد (`--incorrect`)
+- راهنما (`nextHintRank` توی `game.js`): یه کلمه‌ی نزدیک‌تر از بهترین رتبه به لیست اضافه می‌کنه (`hint: true`)؛ بدون رتبه از ۳۰۰، زیر ۲۰ یه پله جلوتر، بالاتر حدود ۸۰٪ بهترین رتبه؛ هیچ‌وقت خود جواب نه، وقتی بهترین ۲ است `NO_HINTS`. تسلیم بازی رو با باخت تموم می‌کنه. حدس‌ها با راهنما جدا شمرده می‌شن (`guessCount`، `hintCount`)
+- جواب و ۱۰ کلمه‌ی نزدیکش (`near`) فقط وقتی `finished` (پیدا شده یا تسلیم) به کلاینت می‌رسن
+- ظاهر (طرح تأییدشده): یه ستون ۵۴۰ پیکسلی، عنوان درشت، جای نوشتن با ذره‌بین و شماره‌ی حدس بعدی، منوی «⋯» (راهنما، تسلیم با یه تأیید)، آخرین حدس جدا بالای لیست با فلش، لیست از نزدیک به دور با نوار رنگی کنار هر ردیف. آموزش (`ClueHelp.jsx`) بار اول خودش باز می‌شه (کلید `songmore_clue_help_seen`)
+- هنوز نیست: آمار توی پروفایل و آرشیو روزهای قبل
 
 ## قوانین نظرسنجی «صد نفر گفتن»
 - هدف: جمع کردن داده برای بازی‌های بعدی (مثل Family Feud و «نادرترین جواب»). هر نفر به هر سؤال یه جواب آزاد می‌ده؛ از جواب‌های تکراریِ نرمال‌شده (`normalizePersian`) بعداً می‌شه جدول رایج‌ترین جواب‌ها ساخت
@@ -143,6 +153,7 @@ clips/   کلیپ‌های ساخته‌شده (توی git نمیره)
   - حدس‌ها توی جدول `word_guesses` (player_key, date, length, guess_number, word)؛ رنگ‌ها ذخیره نمی‌شن و هر بار از روی جواب حساب می‌شن. دیتابیس‌های قدیمی خودکار ارتقا پیدا می‌کنن (حدس‌های بازی قدیمی، که جواب ثابت داشت، پاک می‌شن). `claimGuestGames` این جدول رو هم به حساب منتقل می‌کنه
   - `game.js` وضعیت بازی رو می‌سازه: کلمه‌ی جاری (`slot`، `wordLength`، `maxGuesses`، `guesses`، `finished`، `won`) به‌علاوه‌ی `solved` (کلمه پیدا شده، هر موقع)، `won` (توی ۶ حدس پیدا شده؛ برد فقط همینه)، `exhausted` (۶ حدس تموم شده و هنوز نه پیدا شده نه جواب دیده شده) و `slots` (پیشرفت روز؛ برای کلمه‌های تموم‌شده جواب و `rows` رنگ‌ها) و `dayFinished`. `finished` = پیدا شده یا «جواب رو ببینم». جواب فقط وقتی `finished`. خطاها: `WORD_LENGTH`، `INVALID_LETTERS`، `NOT_IN_LIST`، `GAME_OVER`
   - حالت تست (همون `--random-song`): رفرش چیزی رو پاک نمی‌کنه؛ دکمه‌ی «بازی دوباره (تست)» (`POST /api/word/test/reset`) حدس‌های امروزِ همه رو پاک و ۳ کلمه‌ی تصادفی جدید می‌ذاره
+- **بازی کلمه‌ی پنهان (`server/games/clue/`)**، APIها زیر `/api/clue`: `GET game`، `POST guess` (`{ word }`)، `POST hint`، `POST giveup` و `POST test/reset` (فقط حالت تست؛ کلمه‌ی تصادفی جدید و پاک شدن بازی‌های امروز). وضعیت: `{ date, guesses: [{ number, word, rank, hint }], guessCount, hintCount, bestRank, maxRank, found, gaveUp, finished, answer, near, testMode }`. جدول‌ها: `clue_daily`، `clue_guesses` (player_key, date, guess_number, word نرمال‌شده، hint) و `clue_gaveup`؛ `claimGuestGames` هر دو رو منتقل می‌کنه
 - **نظرسنجی «صد نفر گفتن» (`server/games/survey/`)**، APIها زیر `/api/survey`: `GET state`، `POST answer` (`{ questionId, answer }`)، `POST skip` (`{ questionId }`)، `POST more` («۵ سؤال دیگه»؛ وسط سؤال‌ها `PENDING_QUESTIONS`، وقتی سؤالی نمونده `NO_MORE_QUESTIONS`)، `POST suggest` (`{ text }`)، `GET stats` (آمار کاربر واردشده برای پروفایل: `{ answered, skipped, today, days, suggestions, totalQuestions, goal, badges: [{ id, title, description, earned, progress, target, showProgress }] }`؛ مهمان 401) و `POST test/reset` (فقط حالت تست؛ جواب‌های خود بازیکن رو پاک می‌کنه)
   - جدول‌ها: `survey_answers` (player_key, question_id, answer، answer_norm؛ `answer` خالی = رد کرد؛ هر بازیکن برای هر سؤال یه ردیف)، `survey_assign` (سؤال‌هایی که امروز به بازیکن داده شده: date, position, batch؛ batch ۰ = سؤال‌های امروز)، `survey_suggestions`
   - `GET state`: `{ date, finished, batch, current: { id, text, category, number, batchSize } یا null، dailyCount, moreCount, todayAnswered, canMore, goal: { completed, target, perQuestion, totalAnswers, progress }, testMode }`. هیچ API جواب‌های بقیه رو نمی‌ده

@@ -27,6 +27,14 @@ export const GAMES = [
     ready: true,
   },
   {
+    id: 'clue',
+    path: '/clue',
+    title: 'کلمه‌ی پنهان', // اسم موقت
+    description: 'کلمه‌ی امروز رو از روی نزدیکی معنی حدس‌هات پیدا کن.',
+    icon: 'search',
+    ready: true,
+  },
+  {
     id: 'survey',
     path: '/survey',
     title: 'صد نفر گفتن', // اسم موقت

@@ -143,3 +143,19 @@ test('نظرسنجی: «شروع دوباره (تست)» فقط جواب‌ها�
   assert.equal(body.todayAnswered, 0)
   assert.equal((await other('/api/survey/state')).body.todayAnswered, 1) // مال بقیه دست نمی‌خوره
 })
+
+test('کلمه‌ی پنهان: «بازی دوباره (تست)» بازی امروز رو پاک می‌کنه', async () => {
+  const request = newBrowser()
+  const game = (await request('/api/clue/game')).body
+  assert.equal(game.testMode, true)
+  const word = db.prepare('SELECT word FROM clue_daily WHERE date = ?').get(TODAY).word
+  const solved = (await request('/api/clue/guess', { method: 'POST', body: { word } })).body
+  assert.equal(solved.finished, true)
+
+  const { status, body } = await request('/api/clue/test/reset', { method: 'POST' })
+  assert.equal(status, 200)
+  assert.equal(body.testMode, true)
+  assert.deepEqual(body.guesses, [])
+  assert.equal(body.finished, false)
+  assert.equal(body.answer, null)
+})

@@ -67,5 +67,19 @@ export function claimGuestGames(sessionId, userId) {
          AND date NOT IN (SELECT date FROM color_guesses WHERE player_key = ?)`
     )
     .run(userKey, sessionId, userKey)
-  return songInfo.changes + wordInfo.changes + colorInfo.changes
+  // بازی «کلمه‌ی پنهان» (اول تسلیم‌ها، چون شرطشون به حدس‌های حساب کاربره)
+  db.prepare(
+    `UPDATE clue_gaveup SET player_key = ?
+     WHERE player_key = ?
+       AND date NOT IN (SELECT date FROM clue_guesses WHERE player_key = ?)
+       AND date NOT IN (SELECT date FROM clue_gaveup WHERE player_key = ?)`
+  ).run(userKey, sessionId, userKey, userKey)
+  const clueInfo = db
+    .prepare(
+      `UPDATE clue_guesses SET player_key = ?
+       WHERE player_key = ?
+         AND date NOT IN (SELECT date FROM clue_guesses WHERE player_key = ?)`
+    )
+    .run(userKey, sessionId, userKey)
+  return songInfo.changes + wordInfo.changes + colorInfo.changes + clueInfo.changes
 }

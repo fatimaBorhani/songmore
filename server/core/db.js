@@ -190,6 +190,31 @@ db.exec(`
     word TEXT NOT NULL,
     PRIMARY KEY (date, length)
   );
+
+  -- بازی «کلمه‌ی پنهان»: کلمه‌ی هر روز (نرمال‌شده)، برای همه یکی
+  CREATE TABLE IF NOT EXISTS clue_daily (
+    date TEXT PRIMARY KEY,
+    word TEXT NOT NULL
+  );
+
+  -- حدس‌های «کلمه‌ی پنهان»؛ hint = ۱ یعنی کلمه با «راهنما» اومده. رتبه ذخیره نمی‌شه و هر بار از فایل رتبه‌ها خونده می‌شه
+  CREATE TABLE IF NOT EXISTS clue_guesses (
+    player_key TEXT NOT NULL,
+    date TEXT NOT NULL,
+    guess_number INTEGER NOT NULL,
+    word TEXT NOT NULL,
+    hint INTEGER NOT NULL DEFAULT 0,
+    created_at INTEGER NOT NULL,
+    PRIMARY KEY (player_key, date, guess_number)
+  );
+
+  -- «کلمه‌ی پنهان»: بازیکن‌هایی که تسلیم شدن (جواب رو دیدن)
+  CREATE TABLE IF NOT EXISTS clue_gaveup (
+    player_key TEXT NOT NULL,
+    date TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    PRIMARY KEY (player_key, date)
+  );
 `)
 
 // جدول حدس‌های مسابقه‌ای (اگه از قبل نباشه). دیتابیس‌های قدیمی پایین‌تر ارتقا پیدا می‌کنن.

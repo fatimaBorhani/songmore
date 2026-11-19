@@ -71,7 +71,7 @@ test('بدنه‌ی خیلی بزرگ 413 می‌ده', async () => {
 })
 
 test('درخواست POST بدون بدنه سرور رو از کار نمی‌ندازه', async () => {
-  for (const path of ['/api/auth/login', '/api/auth/signup', '/api/word/guess', '/api/word/suggest', '/api/color/guess', '/api/survey/answer', '/api/survey/skip', '/api/survey/suggest']) {
+  for (const path of ['/api/auth/login', '/api/auth/signup', '/api/word/guess', '/api/word/suggest', '/api/color/guess', '/api/survey/answer', '/api/survey/skip', '/api/survey/suggest', '/api/clue/guess']) {
     const res = await fetch(`${baseUrl}${path}`, { method: 'POST' })
     assert.ok(res.status >= 400 && res.status < 500, `${path} باید خطای 4xx بده، نه ${res.status}`)
     assert.ok((await res.json()).error, `${path} باید کد خطا بده`)

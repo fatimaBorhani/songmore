@@ -1,4 +1,4 @@
-import { HOT_MAX, WARM_MAX } from '../clue.js'
+import { WARM_MAX } from '../clue.js'
 import { faNumber } from '../../../shared/format.js'
 
 // آموزش کوتاه بازی (با دکمه‌ی «؟»؛ بار اول خودش باز می‌شه)
@@ -10,9 +10,9 @@ function ClueHelp({ onClose }) {
         باشه، عددش کوچیک‌تره. جواب رتبه‌ی ۱ است. حدس محدود نیست؛ با کمترین حدس پیداش کن.
       </p>
       <ul>
-        <li className="heat-hot">داغ: رتبه‌ی {faNumber(HOT_MAX)} یا کمتر</li>
-        <li className="heat-warm">ولرم: تا {faNumber(WARM_MAX)}</li>
-        <li className="heat-cold">سرد: دورتر</li>
+        <li className="heat-hot">هر چی نوار پرتر باشه، نزدیک‌تری</li>
+        <li className="heat-hot">آبی: رتبه‌ی {faNumber(WARM_MAX)} یا کمتر</li>
+        <li className="heat-cold">طوسی: دورتر</li>
       </ul>
       <p>گیر کردی؟ از منوی «⋯» راهنما بگیر یا تسلیم شو.</p>
       <button type="button" className="ghost-button" onClick={onClose}>

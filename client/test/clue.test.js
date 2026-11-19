@@ -57,3 +57,13 @@ test('shareText: هر ۱۰ حدس یه خط', () => {
   const lines = shareText({ found: false, guessCount: 23, hintCount: 0, guesses }, 'ک').split('\n')
   assert.equal(lines.length, 2 + 3)
 })
+
+test('fillPercent: رتبه‌ی ۱ پر، دورتر کمتر، از ۱۳۰۰ و «دور» خالی', async () => {
+  const { fillPercent } = await import('../src/games/clue/clue.js')
+  assert.equal(fillPercent(1), 100)
+  assert.ok(fillPercent(53) > fillPercent(250))
+  assert.ok(fillPercent(250) > fillPercent(1000))
+  assert.ok(fillPercent(1299) >= 4)
+  assert.equal(fillPercent(1300), 0)
+  assert.equal(fillPercent(null), 0)
+})

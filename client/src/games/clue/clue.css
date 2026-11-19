@@ -1,7 +1,7 @@
 /* بازی «کلمه‌ی پنهان»: یه ستون باریک وسط صفحه؛ رنگ‌ها همه از تم سایت (index.css) */
 .clue-page {
   --heat-hot: var(--accent);
-  --heat-warm: var(--present);
+  --heat-warm: var(--accent);
   --heat-cold: var(--incorrect);
 
   max-width: 540px;
@@ -179,8 +179,10 @@
   color: var(--text-soft);
 }
 
-/* یه ردیف حدس: نوار رنگی سمت راست = گرما */
+/* یه ردیف حدس: مثل نوار پیشرفت از راست به اندازه‌ی نزدیکی (--fill) رنگ می‌خوره؛
+   داغ و ولرم آبی سایت، سردتر طوسی؛ خیلی دورها فقط یه نوار باریک کنارشون */
 .clue-row {
+  --fill-color: var(--heat-cold);
   position: relative;
   height: 44px;
   box-sizing: border-box;
@@ -195,11 +197,16 @@
   font-weight: 700;
 }
 
-.clue-row.heat-hot {
-  border-inline-start-color: var(--heat-hot);
-}
+.clue-row.heat-hot,
 .clue-row.heat-warm {
-  border-inline-start-color: var(--heat-warm);
+  --fill-color: var(--accent);
+}
+
+.clue-row.filled {
+  border-inline-start: 0;
+  padding-inline-start: 18px;
+  /* to left یعنی از راست شروع می‌شه (صفحه راست‌به‌چپه) */
+  background: linear-gradient(to left, var(--fill-color) var(--fill), var(--card) var(--fill));
 }
 
 .clue-row-word {
@@ -217,8 +224,12 @@
   color: var(--text-soft);
 }
 
-.clue-row.heat-cold .clue-row-rank {
-  color: var(--text-muted);
+.clue-row:not(.filled) .clue-row-rank {
+  color: var(--text-soft);
+}
+
+.clue-row.filled .clue-row-word svg {
+  color: inherit;
 }
 
 /* فلش کنار آخرین حدس (بیرون ردیف، سمت راست) */

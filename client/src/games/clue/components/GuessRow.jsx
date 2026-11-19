@@ -1,9 +1,11 @@
-import { heatOf, rankLabel } from '../clue.js'
+import { fillPercent, heatOf, rankLabel } from '../clue.js'
 
-// یه ردیف حدس: کلمه، رتبه و یه نوار رنگی کنارش (داغ/ولرم/سرد). latest = آخرین حدس (فلش کنارش)
+// یه ردیف حدس: کلمه و رتبه؛ ردیف مثل نوار پیشرفت به اندازه‌ی نزدیکی رنگ می‌خوره
+// (دورها فقط یه نوار باریک کنارشون دارن). latest = آخرین حدس (فلش کنارش)
 function GuessRow({ guess, latest = false }) {
+  const fill = fillPercent(guess.rank)
   return (
-    <div className={`clue-row heat-${heatOf(guess.rank)}${latest ? ' latest' : ''}`}>
+    <div className={`clue-row heat-${heatOf(guess.rank)}${fill ? ' filled' : ''}`} style={{ '--fill': `${fill}%` }}>
       {latest && <span className="clue-row-marker" aria-label="آخرین حدس" />}
       <span className="clue-row-word">
         {guess.word}

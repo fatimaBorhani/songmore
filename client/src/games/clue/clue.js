@@ -13,6 +13,13 @@ export function heatOf(rank) {
   return 'cold'
 }
 
+// چند درصد ردیف رنگ بخوره (مثل یه نوار پیشرفت): رتبه‌ی ۱ پر، هر چی دورتر کمتر؛ از FILL_LIMIT به بعد فقط نوار باریک کنار ردیف
+export const FILL_LIMIT = 1300
+export function fillPercent(rank) {
+  if (rank === null || rank === undefined || rank >= FILL_LIMIT) return 0
+  return Math.max(4, Math.round((1 - (rank - 1) / FILL_LIMIT) * 100))
+}
+
 // متن رتبه: عدد فارسی، یا «دور»
 export function rankLabel(rank) {
   return rank === null || rank === undefined ? 'دور' : faNumber(rank)

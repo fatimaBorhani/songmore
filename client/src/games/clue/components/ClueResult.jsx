@@ -1,8 +1,8 @@
 import Countdown from '../../../shared/components/Countdown.jsx'
 import { faNumber } from '../../../shared/format.js'
 
-// آخر بازی (بدون کارت): «کلمه‌ی امروز»، جواب درشت با یه خط کوتاه زیرش و تعداد حدس و راهنما؛
-// بعد کلمه‌های نزدیک به جواب، اشتراک و ساعت کلمه‌ی بعدی. لیست حدس‌ها دیگه نشون داده نمی‌شه
+// آخر بازی (بدون کارت): «کلمه‌ی امروز»، جواب درشت با یه خط کوتاه زیرش و تعداد حدس و راهنما،
+// بعد اشتراک و ساعت کلمه‌ی بعدی. لیست حدس‌های بازیکن (نوارها) زیرش می‌مونه
 function ClueResult({ game, onShare }) {
   const hints = game.hintCount > 0 && (
     <>
@@ -20,17 +20,6 @@ function ClueResult({ game, onShare }) {
         <b>{faNumber(game.guessCount)} حدس</b>
         {hints}
       </p>
-
-      <div className="clue-near">
-        <p>نزدیک‌ترین کلمه‌ها به «{game.answer}»</p>
-        <ol>
-          {game.near.map((n) => (
-            <li key={n.rank}>
-              {n.word} <b>{faNumber(n.rank)}</b>
-            </li>
-          ))}
-        </ol>
-      </div>
 
       <button type="button" className="clue-share" onClick={onShare}>
         کپی نتیجه

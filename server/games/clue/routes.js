@@ -4,12 +4,19 @@ import express from 'express'
 import { getTodayDateString } from '../../core/today.js'
 import { getDailyClue, pickNewRandomClue } from './daily.js'
 import { hasClueData } from './words.js'
+import { getClueStats } from './playerStats.js'
 import { addClueGuess, addClueHint, clearClueGames, getClueState, giveUpClue } from './game.js'
 
 // حالت تست (همون پرچم npm run dev): دکمه‌ی «بازی دوباره (تست)» کلمه‌ی امروز رو عوض می‌کنه
 export const CLUE_TEST_MODE = process.argv.includes('--random-song')
 
 export const clueRouter = express.Router()
+
+// آمار برای صفحه‌ی حساب (فقط کاربر واردشده). به vectors.bin نیاز نداره، پس قبل از چک داده‌ست
+clueRouter.get('/stats', (req, res) => {
+  if (!req.user) return res.status(401).json({ error: 'NOT_LOGGED_IN' })
+  res.json(getClueStats(req.playerKey, getTodayDateString()))
+})
 
 // تا وقتی داده‌ی بازی (vectors.bin) ساخته نشده، همه‌ی درخواست‌ها خطای NO_DATA می‌گیرن
 clueRouter.use((req, res, next) => {

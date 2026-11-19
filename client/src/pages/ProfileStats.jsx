@@ -1,4 +1,4 @@
-// پنل‌های آمار هر بخش توی صفحه‌ی حساب: واژه‌یاب، حافظه‌ی رنگ و نظرسنجی
+// پنل‌های آمار هر بخش توی صفحه‌ی حساب: واژه‌یاب، حافظه‌ی رنگ، کلمه‌ی پنهان و نظرسنجی
 import { Link } from 'react-router'
 import { faNumber } from '../shared/format.js'
 import GoalBar from '../games/survey/components/GoalBar.jsx'
@@ -90,6 +90,25 @@ export function ColorStatsPanel({ stats }) {
   return (
     <div className="profile-panels">
       <StatsList label="آمار حافظه‌ی رنگ" rows={rows} total={['مجموع امتیاز', faNumber(stats.totalScore, 2)]} />
+    </div>
+  )
+}
+
+export function ClueStatsPanel({ stats }) {
+  if (stats.played === 0) return <EmptyStats text="هنوز کلمه‌ی پنهان رو تموم نکردی." to="/clue" linkText="برو به کلمه‌ی پنهان" />
+  const rows = [
+    ['روزهای بازی‌شده', faNumber(stats.played)],
+    ['تسلیم', faNumber(stats.gaveUps)],
+    ['میانگین حدس برای پیدا کردن', stats.wins ? faNumber(stats.averageGuesses, 1) : '—'],
+    ['کمترین حدس', stats.wins ? faNumber(stats.bestGuesses) : '—'],
+    ['پیدا کردن بدون راهنما', faNumber(stats.noHintWins)],
+    ['راهنماهای گرفته‌شده', faNumber(stats.totalHints)],
+    ['روزهای پشت‌سرهم', faNumber(stats.currentStreak)],
+    ['بهترین رکورد', faNumber(stats.maxStreak)],
+  ]
+  return (
+    <div className="profile-panels">
+      <StatsList label="آمار کلمه‌ی پنهان" rows={rows} total={['پیدا کردی', withOf(faNumber(stats.wins), faNumber(stats.played))]} />
     </div>
   )
 }

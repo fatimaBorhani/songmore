@@ -19,6 +19,11 @@ export function sendClueGiveUp() {
   return postJson('/api/clue/giveup')
 }
 
+// آمار کلمه‌ی پنهان برای صفحه‌ی حساب (فقط کاربر واردشده)
+export function getClueStats() {
+  return call('/api/clue/stats')
+}
+
 // فقط حالت تست (npm run dev): کلمه‌ی تصادفی جدید برای امروز
 export function resetClueTest() {
   return postJson('/api/clue/test/reset')

@@ -32,7 +32,7 @@ server/
   games/song/       بازی حدس آهنگ: routes.js، scoring.js، guesses.js، guessLogic.js، dailySong.js، search.js، playerStats.js، activity.js، leaderboard.js، artistOverrides.js، seed.js
   games/word/       بازی واژه‌یاب: routes.js، letters.js، evaluate.js، game.js، dailyWord.js، playerStats.js، suggestions.js
   games/color/      بازی حافظه‌ی رنگ: routes.js، colorMath.js، scoring.js، daily.js، game.js، playerStats.js
-  games/clue/       بازی کلمه‌ی پنهان: routes.js، words.js، daily.js، game.js، words/ (valid.txt، answers.txt، vectors.bin؛ خروجی build_clue_ranks.py)
+  games/clue/       بازی کلمه‌ی پنهان: routes.js، words.js، daily.js، game.js، playerStats.js، words/ (valid.txt، answers.txt، vectors.bin؛ خروجی build_clue_ranks.py)
   games/survey/     نظرسنجی «صد نفر گفتن»: routes.js، survey.js، questions.js، questions.json (بانک سؤال‌ها)، badges.js (بج‌ها)، NOTICE.md (منبع)
   test/core/، test/song/، test/word/، test/color/، test/clue/ و test/survey/   تست‌ها، هم‌شکل همون پوشه‌ها
 tools/   اسکریپت‌های پایتون

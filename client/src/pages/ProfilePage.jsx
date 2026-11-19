@@ -4,11 +4,12 @@ import { getProfile } from '../games/song/api.js'
 import { getWordStats } from '../games/word/api.js'
 import { getColorStats } from '../games/color/api.js'
 import { getSurveyStats } from '../games/survey/api.js'
+import { getClueStats } from '../games/clue/api.js'
 import { logout } from '../shared/api.js'
 import { faNumber } from '../shared/format.js'
 import { SITE_NAME } from '../shared/site.js'
 import ProfileCalendar from './ProfileCalendar.jsx'
-import { ColorStatsPanel, SurveyStatsPanel, WordStatsPanel } from './ProfileStats.jsx'
+import { ClueStatsPanel, ColorStatsPanel, SurveyStatsPanel, WordStatsPanel } from './ProfileStats.jsx'
 import { faMonthYear } from './calendar.js'
 import '../games/survey/survey.css' // برای کارت هدف جمعی (توی تب نظرسنجی)
 import './profile.css'
@@ -32,6 +33,7 @@ const TABS = [
   { id: 'song', label: 'حدس آهنگ' },
   { id: 'word', label: 'واژه‌یاب', load: getWordStats, Panel: WordStatsPanel },
   { id: 'color', label: 'رنگ', load: getColorStats, Panel: ColorStatsPanel },
+  { id: 'clue', label: 'کلمه‌ی پنهان', load: getClueStats, Panel: ClueStatsPanel },
   { id: 'survey', label: 'نظرسنجی', load: getSurveyStats, Panel: SurveyStatsPanel },
 ]
 

@@ -1,7 +1,7 @@
 // تست کمک‌های حافظه‌ی رنگ: تبدیل HSB، رنگ متن خوانا، امتیاز و متن اشتراک
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { INITIAL_HSB, faScore, hsbToCss, hsbToRgb, readableOn, shareText, sliderTracks } from '../src/games/color/color.js'
+import { INITIAL_HSB, MIN_START_HUE_GAP, faScore, randomStartHsb, hsbToCss, hsbToRgb, readableOn, shareText, sliderTracks } from '../src/games/color/color.js'
 import { hsbToRgb as serverHsbToRgb } from '../../server/games/color/colorMath.js'
 
 test('hsbToRgb رنگ‌های اصلی رو درست می‌سازه', () => {
@@ -62,4 +62,30 @@ test('متن اشتراک جمع و امتیاز هر دور رو داره و ه
   const text = shareText(game, 'حافظه‌ی رنگ')
   assert.equal(text, 'حافظه‌ی رنگ ۴۱٫۳۷/۵۰\n۹٫۸۲ · ۱۰ · ۷٫۵۰ · ۸ · ۶٫۰۵')
   assert.equal(/rgb|#[0-9a-f]{3}/i.test(text), false)
+})
+
+test('randomStartHsb رنگ تصادفی توی بازه می‌ده و رنگ‌مایه‌ش از رنگ اصلی دوره', () => {
+  const hueGap = (a, b) => Math.min(Math.abs(a - b), 360 - Math.abs(a - b))
+  const hues = new Set()
+  for (let i = 0; i < 2000; i++) {
+    const target = { h: i % 360, s: 60, b: 70 }
+    const start = randomStartHsb(target)
+    hues.add(Math.floor(start.h / 60))
+    assert.ok(start.h >= 0 && start.h < 360)
+    assert.ok(start.s >= 30 && start.s <= 90)
+    assert.ok(start.b >= 40 && start.b <= 95)
+    assert.ok(hueGap(start.h, target.h) >= MIN_START_HUE_GAP, `${start.h} vs ${target.h}`)
+  }
+  assert.equal(hues.size, 6) // همه‌ی رنگ‌ها میان، نه فقط سبزآبی
+})
+
+test('randomStartHsb با عددهای مرزی random هم از بازه بیرون نمی‌زنه', () => {
+  const target = { h: 350, s: 50, b: 50 }
+  for (const r of [0, 0.999999]) {
+    const start = randomStartHsb(target, () => r)
+    assert.ok(start.h >= 0 && start.h < 360)
+    assert.ok(Math.min(Math.abs(start.h - 350), 360 - Math.abs(start.h - 350)) >= MIN_START_HUE_GAP)
+    assert.ok(start.s >= 30 && start.s <= 90 && start.b >= 40 && start.b <= 95)
+  }
+  assert.deepEqual(randomStartHsb(null, () => 0), { h: 0, s: 30, b: 40 })
 })

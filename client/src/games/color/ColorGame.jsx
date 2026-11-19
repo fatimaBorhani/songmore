@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { getColorGame, sendColorGuess, startColorRound } from './api.js'
-import { INITIAL_HSB, shareText } from './color.js'
+import { INITIAL_HSB, randomStartHsb, shareText } from './color.js'
 import Dots from './components/Dots.jsx'
 import MemorizeCard from './components/MemorizeCard.jsx'
 import ReadyCard from './components/ReadyCard.jsx'
@@ -112,7 +112,7 @@ function ColorGame({ user }) {
       const total = game.memorizeSeconds
       const end = Date.now() + total * 1000
       setTarget(color)
-      setHsb(INITIAL_HSB)
+      setHsb(randomStartHsb(color)) // هر دور اسلایدرها از یه رنگ تصادفی شروع می‌شن
       setSecondsLeft(total)
       setPhase('memorize')
       stopTimer()

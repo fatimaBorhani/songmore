@@ -4,6 +4,23 @@ import { faDigits, faNumber } from '../../shared/format.js'
 // رنگ اولیه‌ی اسلایدرها (وسط‌های هر مقیاس)
 export const INITIAL_HSB = { h: 180, s: 50, b: 50 }
 
+// کمترین فاصله‌ی رنگ‌مایه‌ی شروع از رنگ اصلی (تا اسلایدرها تصادفاً روی جواب شروع نشن)
+export const MIN_START_HUE_GAP = 60
+
+// رنگ شروع اسلایدرها برای هر دور: تصادفی، ولی رنگ‌مایه‌ش حداقل ۶۰ درجه با رنگ اصلی فرق داره
+// random برای تست قابل عوض کردنه (پیش‌فرض Math.random)
+export function randomStartHsb(target, random = Math.random) {
+  let h = Math.floor(random() * 360)
+  if (target) {
+    // یه جا روی دایره که حداقل ۶۰ درجه از رنگ اصلی دوره (۲۴۰ درجه جای مجاز)
+    const free = 360 - 2 * MIN_START_HUE_GAP
+    h = Math.round(target.h + MIN_START_HUE_GAP + (h / 360) * free) % 360
+  }
+  const s = 30 + Math.floor(random() * 61) // ۳۰ تا ۹۰
+  const b = 40 + Math.floor(random() * 56) // ۴۰ تا ۹۵
+  return { h, s, b }
+}
+
 // HSB -> RGB (۰ تا ۲۵۵)؛ همون فرمول سروره (server/games/color/colorMath.js)
 export function hsbToRgb({ h, s, b }) {
   const S = s / 100

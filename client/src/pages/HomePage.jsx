@@ -4,6 +4,7 @@ import { GAMES } from '../games/index.js'
 import { SITE_NAME } from '../shared/site.js'
 import Countdown from '../shared/components/Countdown.jsx'
 import './home.css'
+import './about.css'
 
 // آیکن کوچیک هر بازی (خطی، به رنگ متن)
 function GameIcon({ type, size = 24 }) {
@@ -144,6 +145,10 @@ function HomePage() {
           </li>
         ))}
       </ul>
+
+      <Link to="/about" className="home-about-link">
+        درباره‌ی سایت و منبع‌ها
+      </Link>
     </main>
   )
 }

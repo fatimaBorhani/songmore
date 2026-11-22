@@ -5,7 +5,8 @@
   const MAX_TRACKS = 2;
   const LIKED_PATH = '/user-liked';
   const LIST_SELECTOR = '#user-liked-page';
-  const TITLE_SELECTOR = '.infinite-scroll-component p.fa-format-600-en-num';
+  const ROW_SELECTOR = '[data-test-id="virtuoso-item-list"] > [data-item-index]';
+  const TITLE_SELECTOR = 'p.fa-format-600-en-num';
   const PANEL_SELECTOR = 'div.overflow-scroll.pt-r144';
   const CLOSE_SELECTOR = ':scope > div.cursor-pointer > div.cursor-pointer';
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -23,7 +24,20 @@
   const visible = element =>
     element.getClientRects().length > 0 && getComputedStyle(element).visibility !== 'hidden';
   const panel = () => [...document.querySelectorAll(PANEL_SELECTOR)].find(visible);
-  const titles = () => [...document.querySelectorAll(TITLE_SELECTOR)].filter(visible);
+  const rows = list => [...list.querySelectorAll(ROW_SELECTOR)].map(element => ({
+    index: Number(element.dataset.itemIndex),
+    titleElement: element.querySelector(TITLE_SELECTOR),
+  })).filter(row => Number.isSafeInteger(row.index) && row.titleElement);
+  const lineElements = openPanel => [...openPanel.querySelectorAll(':scope > div > div[dir]')];
+  const titleVisibleInList = (titleElement, list) => {
+    const title = titleElement.querySelector('span') ?? titleElement;
+    const bounds = title.getBoundingClientRect();
+    const listBounds = list.getBoundingClientRect();
+    const x = (bounds.left + bounds.right) / 2;
+    const y = (bounds.top + bounds.bottom) / 2;
+    return y >= listBounds.top && y < listBounds.bottom
+      && titleElement.contains(document.elementFromPoint(x, y));
+  };
   const lyricButton = () => [...document.querySelectorAll('span')].find(element =>
     element.textContent.trim() === 'متن آهنگ' && visible(element)
   );
@@ -38,22 +52,6 @@
     if (!close) throw new Error('دکمهٔ بستن پنل متن پیدا نشد.');
     close.click();
     if (!await waitFor(() => !panel())) throw new Error('پنل متن بسته نشد.');
-  }
-
-  async function loadTitles(list) {
-    if (!await waitFor(() => titles().length, 8000)) {
-      throw new Error('فهرست لایک‌ها خالی است یا ساختار صفحه عوض شده.');
-    }
-    // The page requests more items when its scroll container reaches the end.
-    for (let page = 0; page < 80; page += 1) {
-      const count = titles().length;
-      if (count >= MAX_TRACKS) return true;
-      list.scrollTop = 0;
-      await sleep(200);
-      list.scrollTop = list.scrollHeight;
-      if (!await waitFor(() => titles().length > count, 4500)) return true;
-    }
-    return false;
   }
 
   async function readTrack(titleElement, track) {
@@ -74,8 +72,11 @@
     });
     if (!openPanel) return 'lyrics_panel_not_confirmed';
 
-    const lineElements = [...openPanel.querySelectorAll(':scope > div > div[dir]')];
-    track.lines = lineElements.flatMap(element =>
+    const lines = await waitFor(() => {
+      const elements = lineElements(openPanel);
+      return elements.some(element => element.innerText.trim()) ? elements : null;
+    });
+    track.lines = (lines ?? []).flatMap(element =>
       element.innerText.split(/\r?\n/u).map(line => line.trim()).filter(Boolean)
     );
     return track.lines.length ? 'ok' : 'unrecognized_or_empty_lyrics';
@@ -105,8 +106,7 @@
     source: location.origin + LIKED_PATH,
     exportedAt: new Date().toISOString(),
     scope: Number.isFinite(MAX_TRACKS) ? 'sample' : 'liked',
-    listStoppedGrowing: false,
-    processedAllLoaded: false,
+    reachedListEnd: false,
     tracks: [],
   };
   const originalScrollTop = list.scrollTop;
@@ -116,23 +116,49 @@
   let started = false;
   try {
     await closePanel();
-    const finishedLoading = await loadTitles(list);
-    report.listStoppedGrowing = report.scope === 'liked' && finishedLoading;
-    const loadedTitles = titles();
-    const selectedTitles = loadedTitles.slice(0, MAX_TRACKS);
-    for (const titleElement of selectedTitles) {
-      await closePanel();
-      const track = {
-        title: titleElement.textContent.trim(),
-        artist: titleElement.nextElementSibling?.textContent.trim() ?? '',
-        lines: [],
-      };
-      started = true;
-      track.status = await readTrack(titleElement, track);
-      report.tracks.push(track);
-      console.info(`ملودیفای ${report.tracks.length}/${selectedTitles.length}`, track.title, track.status);
+    list.scrollTop = 0;
+    if (!await waitFor(() => rows(list).some(row => row.index === 0), 8000)) {
+      throw new Error('ردیف اول فهرست پیدا نشد.');
     }
-    report.processedAllLoaded = report.tracks.length === loadedTitles.length;
+
+    let nextIndex = 0;
+    while (nextIndex < MAX_TRACKS) {
+      await closePanel();
+      const row = rows(list).find(candidate => candidate.index === nextIndex);
+      if (row && titleVisibleInList(row.titleElement, list)) {
+        const track = {
+          position: nextIndex + 1,
+          title: row.titleElement.textContent.trim(),
+          artist: row.titleElement.nextElementSibling?.textContent.trim() ?? '',
+          lines: [],
+        };
+        started = true;
+        track.status = await readTrack(row.titleElement, track);
+        report.tracks.push(track);
+        nextIndex += 1;
+        console.info(`ملودیفای · ردیف ${nextIndex}`, track.title, track.status);
+        continue;
+      }
+
+      const oldTop = list.scrollTop;
+      const oldHeight = list.scrollHeight;
+      const bottom = oldHeight - list.clientHeight;
+      if (oldTop < bottom - 1) {
+        // Leave some overlap so no item is skipped when the list recycles its rows.
+        list.scrollTop = Math.min(bottom, oldTop + Math.floor(list.clientHeight / 2));
+        await sleep(250);
+        continue;
+      }
+
+      if (await waitFor(() => list.scrollHeight > oldHeight, 4500)) continue;
+      const rendered = rows(list);
+      const tailPadding = Number.parseFloat(list.querySelector('[data-test-id="virtuoso-item-list"]')?.style.paddingBottom);
+      if (rendered.at(-1)?.index === nextIndex - 1 && tailPadding === 0) {
+        report.reachedListEnd = true;
+        break;
+      }
+      throw new Error(`ردیف ${nextIndex + 1} در دسترس نیست. خروجی تا آخرین ردیف پیوسته ذخیره می‌شود.`);
+    }
   } catch (error) {
     report.interrupted = error.message;
     console.error('استخراج متوقف شد.', error.message);

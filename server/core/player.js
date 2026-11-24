@@ -48,6 +48,12 @@ export function claimGuestGames(sessionId, userId) {
      WHERE player_key = ?
        AND word NOT IN (SELECT word FROM word_suggestions WHERE player_key = ?)`
   ).run(userKey, sessionId, userKey)
+  // آهنگ‌هایی که مهمان پیشنهاد داده (اگه حساب خودش همون آهنگ رو پیشنهاد نداده باشه)
+  db.prepare(
+    `UPDATE song_suggestions SET player_key = ?
+     WHERE player_key = ?
+       AND norm_key NOT IN (SELECT norm_key FROM song_suggestions WHERE player_key = ?)`
+  ).run(userKey, sessionId, userKey)
   // نظرسنجی: جواب‌ها و سؤال‌های امروز (جواب به سؤالی که حساب خودش قبلاً جواب داده منتقل نمی‌شه)
   db.prepare(
     `UPDATE survey_answers SET player_key = ?

@@ -191,6 +191,18 @@ db.exec(`
     PRIMARY KEY (player_key, word)
   );
 
+  -- آهنگ‌هایی که بازیکن‌ها پیشنهاد دادن اضافه بشن (توی جستجوی حدس آهنگ نبوده)؛ فقط برای بازبینی خودمون
+  -- title و artist همون متنیه که نوشتن؛ norm_key = اسم و خواننده‌ی نرمال‌شده (هر بازیکن هر آهنگ رو یه بار)
+  CREATE TABLE IF NOT EXISTS song_suggestions (
+    player_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    artist TEXT NOT NULL DEFAULT '',
+    norm_key TEXT NOT NULL,
+    date TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    PRIMARY KEY (player_key, norm_key)
+  );
+
   -- کلمه‌های روزانه‌ی واژه‌یاب: برای هر تاریخ و هر طول یه کلمه که برای همه یکیه
   CREATE TABLE IF NOT EXISTS word_daily (
     date TEXT NOT NULL,

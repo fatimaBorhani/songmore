@@ -10,6 +10,7 @@ import { getActivity } from './activity.js'
 import { practiceRouter } from './practiceRoutes.js'
 import { countFinishedPracticeGames } from './practice.js'
 import { getDailyLeaderboard } from './leaderboard.js'
+import { suggestSong } from './suggestions.js'
 
 // حالت تست (npm run dev): فقط دکمه‌ی «بازی دوباره (تست)» آهنگ‌های امروز رو عوض می‌کنه؛
 // رفرش صفحه بازی رو پاک نمی‌کنه
@@ -21,6 +22,13 @@ export const songRouter = express.Router()
 songRouter.use('/practice', practiceRouter)
 
 // بازی امروز: آهنگ جاری (اولین آهنگی که هنوز تموم نکردی) + پیشرفت روز
+// «آهنگم توی لیست نیست»: { title, artist } → { ok: true } یا خطا (مهمان هم می‌تونه)
+songRouter.post('/suggest', (req, res) => {
+  const error = suggestSong(req.playerKey, getTodayDateString(), req.body?.title, req.body?.artist)
+  if (error) return res.status(400).json({ error })
+  res.json({ ok: true })
+})
+
 songRouter.get('/game', (req, res) => {
   const date = getTodayDateString()
   const songIds = pickDailySongs(date)

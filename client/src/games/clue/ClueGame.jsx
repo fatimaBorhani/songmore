@@ -5,12 +5,13 @@ import GuessRow from './components/GuessRow.jsx'
 import ClueMenu from './components/ClueMenu.jsx'
 import ClueResult from './components/ClueResult.jsx'
 import ClueHelp from './components/ClueHelp.jsx'
+import HelpButton from '../../shared/components/HelpButton.jsx'
+import { useGameHelp } from '../../shared/useGameHelp.js'
 import { faNumber } from '../../shared/format.js'
 import { SITE_NAME } from '../../shared/site.js'
 import './clue.css'
 
 const GAME_TITLE = 'کلمه‌ی پنهان' // اسم موقت
-const HELP_SEEN_KEY = 'songmore_clue_help_seen'
 
 const ERROR_MESSAGES = {
   NOT_IN_LIST: 'این کلمه رو نمی‌شناسیم',
@@ -18,15 +19,6 @@ const ERROR_MESSAGES = {
   INVALID_WORD: 'یه کلمه بنویس',
   NO_HINTS: 'دیگه راهنمایی نمونده؛ خیلی نزدیکی!',
   GAME_OVER: 'بازی امروز تموم شده',
-}
-
-// آموزش فقط بار اول خودش باز می‌شه
-function helpSeenBefore() {
-  try {
-    return localStorage.getItem(HELP_SEEN_KEY) === '1'
-  } catch {
-    return true
-  }
 }
 
 // صفحه‌ی بازی «کلمه‌ی پنهان» (آدرس /clue)
@@ -37,7 +29,8 @@ function ClueGame({ user }) {
   const [text, setText] = useState('')
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('') // خطا یا پیام کوتاه زیر جای نوشتن
-  const [showHelp, setShowHelp] = useState(() => !helpSeenBefore())
+  // راهنما: مهمان هر بار، کاربر واردشده فقط بار اول (useGameHelp)
+  const { helpOpen, openHelp, closeHelp } = useGameHelp('clue', user)
   const input = useRef(null)
 
   function loadGame() {
@@ -87,15 +80,6 @@ function ClueGame({ user }) {
     input.current?.focus()
   }
 
-  function closeHelp() {
-    setShowHelp(false)
-    try {
-      localStorage.setItem(HELP_SEEN_KEY, '1')
-    } catch {
-      // اگه مرورگر اجازه نده مهم نیست
-    }
-  }
-
   async function handleShare() {
     const share = shareText(game, GAME_TITLE)
     try {
@@ -133,12 +117,12 @@ function ClueGame({ user }) {
     <main className="clue-page">
       <div className="clue-title-row">
         <h1>{GAME_TITLE}</h1>
-        <button type="button" className="clue-round-button" aria-label="آموزش بازی" aria-expanded={showHelp} onClick={() => (showHelp ? closeHelp() : setShowHelp(true))}>
-          ؟
-        </button>
+        <span className="clue-help-slot">
+          <HelpButton onClick={openHelp} />
+        </span>
       </div>
 
-      {showHelp && <ClueHelp onClose={closeHelp} />}
+      {helpOpen && <ClueHelp onClose={closeHelp} />}
 
       {game.finished ? (
         <ClueResult game={game} onShare={handleShare} />

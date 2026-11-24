@@ -401,20 +401,7 @@
   background: transparent;
 }
 
-.word-hint {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-.word-hint span {
-  color: #3f3f46;
-}
-
+/* کلیدهای کیبورد توی راهنما */
 kbd {
   font-family: inherit;
   font-size: 12px;
@@ -629,49 +616,7 @@ kbd {
   color: var(--text);
 }
 
-/* ---------- راهنما ---------- */
-
-.help-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  box-sizing: border-box;
-  padding: 16px;
-  background: rgba(0, 0, 0, 0.65);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fade-in 0.15s ease-out;
-}
-
-.help-dialog {
-  width: 100%;
-  max-width: 400px;
-  max-height: 100%;
-  overflow-y: auto;
-  box-sizing: border-box;
-  padding: 20px;
-  border-radius: 20px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  font-size: 14px;
-  color: var(--text-soft);
-}
-
-.help-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.help-head h2 {
-  font-size: 18px;
-  font-weight: 900;
-  color: var(--text);
-}
+/* ---------- مثال‌های راهنما (خود پنجره‌ی راهنما توی shared.css است) ---------- */
 
 .help-example {
   display: flex;
@@ -688,84 +633,6 @@ kbd {
 .tile.small {
   font-size: 18px;
   border-radius: 8px;
-}
-
-.help-slide {
-  min-height: 190px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  animation: fade-in 0.2s ease-out;
-}
-
-.help-slide-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.help-list {
-  margin: 0;
-  padding: 0 18px 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.help-dots {
-  display: flex;
-  justify-content: center;
-  gap: 4px;
-}
-
-/* ناحیه‌ی لمس ۲۴ پیکسلی، نقطه‌ی دیده‌شده کوچیک‌تره */
-.help-dot {
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  position: relative;
-}
-
-.help-dot::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
-  background: #3f3f46;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, background 0.2s;
-}
-
-.help-dot.active::after {
-  width: 22px;
-  background: var(--accent);
-}
-
-.help-nav {
-  display: flex;
-  gap: 8px;
-}
-
-.help-nav .ghost-button {
-  align-self: stretch;
-  height: 44px;
-  flex: 1;
-  border-radius: 14px;
-}
-
-.help-nav .help-next {
-  flex: 2;
-}
-
-.help-note {
-  font-size: 12px;
-  color: var(--text-muted);
 }
 
 /* صفحه‌های کوتاه (مثل آیفون SE): کلیدها و فاصله‌ها کوچیک‌تر تا همه‌چی بدون اسکرول جا بشه */

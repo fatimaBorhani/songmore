@@ -5,14 +5,15 @@ import { REVEAL_TOTAL_MS } from './timing.js'
 import Board from './components/Board.jsx'
 import Keyboard from './components/Keyboard.jsx'
 import WordResult from './components/WordResult.jsx'
-import HelpDialog from './components/HelpDialog.jsx'
+import WordHelp from './components/HelpDialog.jsx'
+import HelpButton from '../../shared/components/HelpButton.jsx'
+import { useGameHelp } from '../../shared/useGameHelp.js'
 import ContinueDialog from './components/ContinueDialog.jsx'
 import { faNumber } from '../../shared/format.js'
 import { SITE_NAME } from '../../shared/site.js'
 import './word.css'
 
 const GAME_TITLE = 'واژه‌یاب' // اسم موقت
-const HELP_SEEN_KEY = 'songmore_word_help_seen'
 
 const ERROR_MESSAGES = {
   INVALID_LETTERS: 'فقط حروف فارسی',
@@ -40,15 +41,6 @@ function useIsDesktop() {
   return isDesktop
 }
 
-// راهنما فقط بار اول خودش باز می‌شه
-function helpSeenBefore() {
-  try {
-    return localStorage.getItem(HELP_SEEN_KEY) === '1'
-  } catch {
-    return true
-  }
-}
-
 // صفحه‌ی بازی واژه‌یاب (آدرس /word)
 // user: کاربر واردشده یا null (از App میاد)
 function WordGame({ user }) {
@@ -60,7 +52,8 @@ function WordGame({ user }) {
   const [shake, setShake] = useState(false)
   const [revealRow, setRevealRow] = useState(-1) // ردیفی که کاشی‌هاش دارن برمی‌گردن
   const [winRow, setWinRow] = useState(-1) // ردیف برنده که داره جشن می‌گیره
-  const [showHelp, setShowHelp] = useState(() => !helpSeenBefore())
+  // راهنما: مهمان هر بار، کاربر واردشده فقط بار اول (useGameHelp)
+  const { helpOpen: showHelp, openHelp, closeHelp } = useGameHelp('word', user)
   const [continueChosen, setContinueChosen] = useState(false) // بعد از ۶ حدس گفته «ادامه می‌دم»
   const [suggest, setSuggest] = useState(null) // کلمه‌ی ردشده برای «فکر می‌کنم درسته»: { word, status: idle | sending | sent }
   const isDesktop = useIsDesktop()
@@ -219,15 +212,6 @@ function WordGame({ user }) {
     }
   }
 
-  function closeHelp() {
-    setShowHelp(false)
-    try {
-      localStorage.setItem(HELP_SEEN_KEY, '1')
-    } catch {
-      // اگه مرورگر اجازه نداد مهم نیست؛ فقط دفعه‌ی بعد هم راهنما باز می‌شه
-    }
-  }
-
   // تایپ با کیبورد خود کامپیوتر (و کیبوردهای بلوتوثی روی گوشی)
   useEffect(() => {
     function onKeyDown(e) {
@@ -243,10 +227,8 @@ function WordGame({ user }) {
         }
         setKeyLog((log) => [entry, ...log].slice(0, 5))
       }
-      if (showHelp) {
-        if (e.key === 'Escape') closeHelp()
-        return
-      }
+      // راهنما بازه: کلیدها مال خود پنجره‌ی راهنمان
+      if (showHelp) return
       // پنجره‌ی «ادامه می‌دی؟» بازه: کیبورد دکمه‌های همون پنجره رو کار می‌ندازه (Enter)، نه تایپ
       if (showContinueDialog) return
       // میانبرهای مرورگر (Ctrl+C، Alt+Tab و ...) کار خودشون رو بکنن. بعضی کیبوردها (AltGr) هم Ctrl و Alt رو
@@ -333,12 +315,7 @@ function WordGame({ user }) {
   return (
     <main className={`word-page ${isDesktop ? 'desktop' : 'touch'}${showResult ? ' finished' : ''}${continuing ? ' continuing' : ''}`}>
       <div className="word-top">
-        <button type="button" className="icon-button" aria-label="آموزش بازی" onClick={() => setShowHelp(true)}>
-          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 18h6M10 21h4" />
-            <path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1.1 1.2 1.1 2V16h5v-.2c0-.8.5-1.5 1.1-2A6 6 0 0 0 12 3z" />
-          </svg>
-        </button>
+        <span className="word-top-spacer" aria-hidden="true" />
         <div className="word-title">
           <h1>{GAME_TITLE}</h1>
           <p>
@@ -356,7 +333,7 @@ function WordGame({ user }) {
             ))}
           </div>
         </div>
-        <span className="word-top-spacer" aria-hidden="true" />
+        <HelpButton onClick={openHelp} />
       </div>
 
       {continuing && (
@@ -414,13 +391,6 @@ function WordGame({ user }) {
       ) : isDesktop ? (
         <>
           <Keyboard mode="map" statuses={statuses} onLetter={addLetter} onEnter={submit} onDelete={removeLetter} />
-          <p className="word-hint">
-            با کیبورد تایپ کن (یا روی کلیدها کلیک کن)
-            <span aria-hidden="true">·</span>
-            <kbd>Enter</kbd> ثبت
-            <span aria-hidden="true">·</span>
-            <kbd>Backspace</kbd> پاک کردن
-          </p>
         </>
       ) : (
         <Keyboard mode="touch" statuses={statuses} onLetter={addLetter} onEnter={submit} onDelete={removeLetter} />
@@ -442,7 +412,7 @@ function WordGame({ user }) {
         </pre>
       )}
 
-      {showHelp && <HelpDialog onClose={closeHelp} />}
+      {showHelp && <WordHelp onClose={closeHelp} />}
       {showContinueDialog && <ContinueDialog busy={busy} onContinue={() => setContinueChosen(true)} onGiveUp={giveUp} />}
     </main>
   )

@@ -106,12 +106,6 @@
   font-weight: 900;
 }
 
-.color-ready-text {
-  max-width: 320px;
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: var(--text-soft);
-}
 
 
 
@@ -139,6 +133,34 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+/* دکمه‌ی چراغ کنار بلندگو، هم‌اندازه‌ی اون */
+.color-head-row .help-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface);
+}
+
+/* دو رنگ نمونه توی راهنما */
+.color-help-swatches {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.color-help-swatches span {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+}
+
+.color-help-swatches .arrow {
+  width: auto;
+  height: auto;
+  font-size: 22px;
+  color: var(--text-muted);
 }
 
 .color-sound[aria-pressed='true'] {

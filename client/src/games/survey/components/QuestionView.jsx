@@ -5,7 +5,7 @@ import GoalBar from './GoalBar.jsx'
 
 const MAX_ANSWER_LENGTH = 60 // همون حد سرور
 
-function QuestionView({ title, state, busy, error, onSubmit, onSkip }) {
+function QuestionView({ title, helpButton, state, busy, error, onSubmit, onSkip }) {
   const { current, batch, goal } = state
   const [answer, setAnswer] = useState('')
   const canSubmit = answer.trim().length > 0 && !busy
@@ -19,6 +19,7 @@ function QuestionView({ title, state, busy, error, onSubmit, onSkip }) {
   return (
     <main className="survey-page">
       <header className="survey-top">
+        <span className="survey-help-slot">{helpButton}</span>
         <h1>{title}</h1>
         <div className="survey-dots" role="img" aria-label={`سؤال ${faNumber(current.number)} از ${faNumber(current.batchSize)}`}>
           {Array.from({ length: current.batchSize }, (_, i) => (
@@ -33,7 +34,6 @@ function QuestionView({ title, state, busy, error, onSubmit, onSkip }) {
       <section className="survey-card" aria-label="سؤال">
         <span className="survey-chip">{current.category}</span>
         <h2 className="survey-question">{current.text}</h2>
-        <p className="survey-hint">اولین چیزی که به ذهنت میاد رو بنویس. جواب درست و غلط نداره.</p>
       </section>
 
       <form className="survey-form" onSubmit={handleSubmit}>
@@ -65,7 +65,6 @@ function QuestionView({ title, state, busy, error, onSubmit, onSkip }) {
         </div>
       </form>
 
-      <p className="survey-note">جواب‌ها ناشناس ذخیره می‌شن و برای ساختن بازی بعدی استفاده می‌شن.</p>
       <GoalBar goal={goal} compact />
     </main>
   )

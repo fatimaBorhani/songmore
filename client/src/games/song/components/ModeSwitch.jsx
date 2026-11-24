@@ -1,7 +1,8 @@
 // انتخاب حالت بازی آهنگ: مسابقه‌ای (روزی ۳ آهنگ، توی لیگ) یا تمرینی (نامحدود، بدون امتیاز)
-import { NavLink } from 'react-router'
+import { NavLink } from "react-router";
 
-function ModeSwitch({ mode }) {
+// (توضیح هر حالت توی راهنمای چراغه، نه زیر دکمه‌ها)
+function ModeSwitch() {
   return (
     <div className="mode-switch-wrap">
       <nav className="mode-switch" aria-label="حالت بازی">
@@ -10,13 +11,8 @@ function ModeSwitch({ mode }) {
         </NavLink>
         <NavLink to="/song/practice">تمرینی</NavLink>
       </nav>
-      <p className="mode-hint">
-        {mode === 'practice'
-          ? 'تمرین نامحدود، بدون امتیاز. فقط توی فعالیت پروفایلت حساب می‌شه.'
-          : 'روزی ۳ آهنگ برای همه. جمع امتیازت میره توی جدول امتیاز امروز.'}
-      </p>
     </div>
-  )
+  );
 }
 
-export default ModeSwitch
+export default ModeSwitch;

@@ -10,7 +10,7 @@ const SUGGEST_ERRORS = {
   TOO_MANY_SUGGESTIONS: 'امروز به اندازه‌ی کافی پیشنهاد دادی. فردا دوباره امتحان کن.',
 }
 
-function DoneView({ title, state, busy, error, onMore, onReset }) {
+function DoneView({ title, helpButton, state, busy, error, onMore, onReset }) {
   const { todayAnswered, canMore, goal, moreCount, dailyCount, testMode } = state
   const [text, setText] = useState('')
   const [suggestState, setSuggestState] = useState({ status: 'idle', message: '' }) // idle | sending | sent | error
@@ -31,6 +31,7 @@ function DoneView({ title, state, busy, error, onMore, onReset }) {
   return (
     <main className="survey-page">
       <header className="survey-done-top">
+        <span className="survey-help-slot">{helpButton}</span>
         <span className="survey-done-icon" aria-hidden="true">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 12.5l4.5 4.5L19 7.5" />
@@ -82,7 +83,6 @@ function DoneView({ title, state, busy, error, onMore, onReset }) {
         )}
         {canMore && (
           <>
-            <p className="survey-note">اختیاریه. هر چقدر خواستی ادامه بده؛ اول سؤال‌هایی میان که بیشتر به کامل شدن نزدیکن.</p>
             <button type="button" className="survey-submit" disabled={busy} onClick={onMore}>
               {faNumber(moreCount)} سؤال دیگه جواب می‌دم
             </button>

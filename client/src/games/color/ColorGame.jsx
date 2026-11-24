@@ -7,21 +7,14 @@ import ReadyCard from './components/ReadyCard.jsx'
 import RecreateView from './components/RecreateView.jsx'
 import ResultView from './components/ResultView.jsx'
 import SummaryView from './components/SummaryView.jsx'
+import ColorHelp from './components/ColorHelp.jsx'
+import HelpButton from '../../shared/components/HelpButton.jsx'
+import { useGameHelp } from '../../shared/useGameHelp.js'
 import { SITE_NAME } from '../../shared/site.js'
 import { isMuted, playHide, playScore, playTick, setMuted, unlockSound } from './sound.js'
 import './color.css'
 
 const GAME_TITLE = 'حافظه‌ی رنگ' // اسم موقت
-const INTRO_KEY = 'songmore_color_intro_seen' // توضیح بازی فقط بار اول نشون داده می‌شه
-
-function wasIntroSeen() {
-  try {
-    return localStorage.getItem(INTRO_KEY) === '1'
-  } catch {
-    return false
-  }
-}
-
 const ERROR_TEXT = {
   GAME_OVER: 'بازی امروز تموم شده.',
   INVALID_COLOR: 'این رنگ درست نیست؛ دوباره امتحان کن.',
@@ -40,7 +33,8 @@ function ColorGame({ user }) {
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [muted, setMutedState] = useState(isMuted) // صدا خاموشه؟
-  const [introSeen, setIntroSeen] = useState(wasIntroSeen)
+  // راهنما: مهمان هر بار، کاربر واردشده فقط بار اول (useGameHelp)
+  const { helpOpen, openHelp, closeHelp } = useGameHelp('color', user)
   const timer = useRef(null)
   const noticeTimer = useRef(null)
 
@@ -97,14 +91,6 @@ function ColorGame({ user }) {
   async function startRound() {
     if (busy) return
     unlockSound() // مرورگر فقط بعد از کلیک اجازه‌ی صدا می‌ده
-    if (!introSeen) {
-      setIntroSeen(true)
-      try {
-        localStorage.setItem(INTRO_KEY, '1')
-      } catch {
-        // اگه مرورگر اجازه نده مهم نیست
-      }
-    }
     setBusy(true)
     setError('')
     try {
@@ -205,6 +191,7 @@ function ColorGame({ user }) {
         <h1>{GAME_TITLE}</h1>
         <div className="color-head-row">
           <Dots total={game.roundCount} completed={game.completed} current={current} />
+          <HelpButton onClick={openHelp} />
           <button
             type="button"
             className="color-sound"
@@ -225,10 +212,8 @@ function ColorGame({ user }) {
         <ReadyCard
           round={game.completed + 1}
           roundCount={game.roundCount}
-          seconds={game.memorizeSeconds}
           busy={busy}
           onStart={startRound}
-          showIntro={!introSeen}
         />
       )}
       {phase === 'memorize' && target && (
@@ -252,6 +237,7 @@ function ColorGame({ user }) {
       {phase === 'result' && result && (
         <ResultView result={result} game={game} last={game.finished} busy={busy} onNext={nextRound} />
       )}
+      {helpOpen && <ColorHelp rounds={game.roundCount} seconds={game.memorizeSeconds} onClose={closeHelp} />}
       {phase === 'summary' && <SummaryView game={game} onShare={share} testMode={game.testMode} onReplay={loadGame} />}
 
       {/* موقع ساختن خطا توی کارت اسلایدرها نشون داده می‌شه */}

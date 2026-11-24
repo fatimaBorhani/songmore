@@ -40,21 +40,11 @@
   text-align: center;
 }
 
-.clue-round-button {
+.clue-help-slot {
   position: absolute;
   inset-inline-end: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text);
-  font-size: 17px;
-  font-weight: 700;
-  cursor: pointer;
 }
 
-.clue-round-button:hover,
 .clue-icon-button:hover {
   background: var(--surface);
 }
@@ -262,48 +252,11 @@
   gap: 8px;
 }
 
-/* آموزش */
-.clue-help {
-  margin-bottom: 18px;
-  padding: 16px 18px;
-  border-radius: 12px;
-  background: var(--surface);
-  border: 1px solid var(--border);
+/* ردیف‌های نمونه توی پنجره‌ی راهنما */
+.clue-help-rows {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  font-size: 15px;
-  line-height: 1.9;
-  color: var(--text-soft);
-}
-
-.clue-help b {
-  color: var(--text);
-}
-
-.clue-help ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 16px;
-  font-size: 14px;
-}
-
-.clue-help li {
-  padding-inline-start: 10px;
-  border-inline-start: 4px solid var(--heat-cold);
-}
-.clue-help li.heat-hot {
-  border-inline-start-color: var(--heat-hot);
-}
-.clue-help li.heat-warm {
-  border-inline-start-color: var(--heat-warm);
-}
-
-.clue-help .ghost-button {
-  align-self: flex-start;
+  gap: 8px;
 }
 
 /* آخر بازی: بدون کارت؛ جواب درشت وسط با یه خط کوتاه زیرش (آبی اگه پیدا شده، طوسی اگه تسلیم) */

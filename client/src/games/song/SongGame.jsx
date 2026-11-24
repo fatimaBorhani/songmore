@@ -21,6 +21,9 @@ import GameOver from './components/GameOver.jsx'
 import DayProgress from './components/DayProgress.jsx'
 import GiveUpDialog, { EyeIcon } from './components/GiveUpDialog.jsx'
 import ModeSwitch from './components/ModeSwitch.jsx'
+import SongHelp from './components/SongHelp.jsx'
+import HelpButton from '../../shared/components/HelpButton.jsx'
+import { useGameHelp } from '../../shared/useGameHelp.js'
 import BackLink from '../../shared/components/BackLink.jsx'
 import AnimatedNumber from '../../shared/components/AnimatedNumber.jsx'
 import Leaderboard from '../../shared/components/Leaderboard.jsx'
@@ -40,6 +43,8 @@ function SongGame({ user, mode = 'daily' }) {
   const [testMode, setTestMode] = useState(false)
   const [celebrating, setCelebrating] = useState(false) // جشن حدس درست در حال نمایشه؟
   const celebrateTimer = useRef(null)
+  // راهنما: مهمان هر بار، کاربر واردشده فقط بار اول (useGameHelp)
+  const { helpOpen, openHelp, closeHelp } = useGameHelp('song', user)
 
   // جشن حدس درست: موج می‌رقصه، ردیف درست نبض می‌زنه و صدای پیروزی پخش می‌شه.
   // فقط همون لحظه‌ی حدس درست، نه با باز کردن یا رفرش صفحه.
@@ -197,10 +202,13 @@ function SongGame({ user, mode = 'daily' }) {
   return (
     <main className="game-page">
       <BackLink />
-      <ModeSwitch mode={mode} />
+      <ModeSwitch />
 
       <header className="game-header">
-        <h1>بازی حدس آهنگ</h1>
+        <div className="game-title-row">
+          <h1>بازی حدس آهنگ</h1>
+          <HelpButton onClick={openHelp} />
+        </div>
         {!practice && game.songCount > 1 && <DayProgress game={game} />}
         <p className="guesses-left">
           {game.finished ? 'این آهنگ تموم شد' : `${faNumber(game.guessesLeft)} حدس و ${faNumber(game.skipsLeft)} رد کردن باقی مونده`}
@@ -268,6 +276,7 @@ function SongGame({ user, mode = 'daily' }) {
 
       {error && <p className="error">{error}</p>}
 
+      {helpOpen && <SongHelp onClose={closeHelp} />}
       {confirmGiveUp && !game.finished && (
         <GiveUpDialog busy={busy} onConfirm={handleGiveUp} onCancel={() => setConfirmGiveUp(false)} />
       )}

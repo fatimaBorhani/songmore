@@ -147,7 +147,7 @@ function HomePage() {
       </ul>
 
       <Link to="/about" className="home-about-link">
-        درباره‌ی سایت و منبع‌ها
+        درباره‌ی سایت
       </Link>
     </main>
   )

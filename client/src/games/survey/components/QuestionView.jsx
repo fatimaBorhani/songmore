@@ -6,7 +6,7 @@ import GoalBar from './GoalBar.jsx'
 const MAX_ANSWER_LENGTH = 60 // همون حد سرور
 
 function QuestionView({ title, helpButton, state, busy, error, onSubmit, onSkip }) {
-  const { current, batch, goal } = state
+  const { current, goal } = state
   const [answer, setAnswer] = useState('')
   const canSubmit = answer.trim().length > 0 && !busy
   const isLast = current.number === current.batchSize
@@ -26,9 +26,6 @@ function QuestionView({ title, helpButton, state, busy, error, onSubmit, onSkip 
             <span key={i} className={i + 1 < current.number ? 'done' : i + 1 === current.number ? 'current' : ''} />
           ))}
         </div>
-        <p className="survey-caption">
-          سؤال {faNumber(current.number)} از {faNumber(current.batchSize)} · {batch === 0 ? 'سؤال‌های امروز' : 'سؤال‌های بیشتر'}
-        </p>
       </header>
 
       <section className="survey-card" aria-label="سؤال">

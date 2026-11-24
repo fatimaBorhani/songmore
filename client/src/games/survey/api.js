@@ -1,4 +1,4 @@
-// API نظرسنجی «صد نفر گفتن» (همه زیر /api/survey روی سرور)
+// API نظرسنجی «صد جور» (همه زیر /api/survey روی سرور)
 import { call, postJson } from '../../shared/api.js'
 
 export function getSurveyState() {

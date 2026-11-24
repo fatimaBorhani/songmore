@@ -1,4 +1,4 @@
-// مسیرهای API بازی «کلمه‌ی پنهان» (همه زیر /api/clue)
+// مسیرهای API بازی «جوربندی» (همه زیر /api/clue)
 // هر روز یه کلمه؛ هر حدس یه رتبه می‌گیره که نشون می‌ده معنیش چقدر به جواب نزدیکه
 import express from 'express'
 import { getTodayDateString } from '../../core/today.js'

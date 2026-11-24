@@ -1,4 +1,4 @@
-// راهنمای واژه‌یاب: سه اسلاید با مثال کاشی‌ها؛ خود پنجره مشترکه (shared/components/HelpDialog.jsx)
+// راهنمای جورچین: سه اسلاید با مثال کاشی‌ها؛ خود پنجره مشترکه (shared/components/HelpDialog.jsx)
 import HelpDialog from "../../../shared/components/HelpDialog.jsx";
 
 function Example({ word, index, result, text }) {

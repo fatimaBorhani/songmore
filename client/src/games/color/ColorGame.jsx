@@ -14,13 +14,13 @@ import { SITE_NAME } from '../../shared/site.js'
 import { isMuted, playHide, playScore, playTick, setMuted, unlockSound } from './sound.js'
 import './color.css'
 
-const GAME_TITLE = 'حافظه‌ی رنگ' // اسم موقت
+const GAME_TITLE = 'جورنگ'
 const ERROR_TEXT = {
   GAME_OVER: 'بازی امروز تموم شده.',
   INVALID_COLOR: 'این رنگ درست نیست؛ دوباره امتحان کن.',
 }
 
-// صفحه‌ی بازی حافظه‌ی رنگ (آدرس /color)
+// صفحه‌ی بازی جورنگ (آدرس /color)
 // هر دور: «آماده» -> حفظ کردن (چند ثانیه رنگ رو می‌بینی) -> ساختن از حافظه با اسلایدرها -> نتیجه.
 // بعد از ۵ دور، خلاصه‌ی بازی. user: کاربر واردشده یا null (از App میاد)
 function ColorGame({ user }) {

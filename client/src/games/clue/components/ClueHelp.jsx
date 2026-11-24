@@ -3,7 +3,7 @@ import { faNumber } from "../../../shared/format.js";
 import HelpDialog from "../../../shared/components/HelpDialog.jsx";
 import GuessRow from "./GuessRow.jsx";
 
-// راهنمای کلمه‌ی پنهان: سه اسلاید؛ خود پنجره مشترکه (shared/components/HelpDialog.jsx)
+// راهنمای جوربندی: سه اسلاید؛ خود پنجره مشترکه (shared/components/HelpDialog.jsx)
 // ردیف‌های نمونه همون GuessRow خود بازی‌ان، با رتبه‌های ساختگی
 const SLIDES = [
   {

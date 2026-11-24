@@ -1,7 +1,7 @@
 import { faNumber } from "../../../shared/format.js";
 import HelpDialog from "../../../shared/components/HelpDialog.jsx";
 
-// راهنمای «صد نفر گفتن»: سه اسلاید؛ خود پنجره مشترکه (shared/components/HelpDialog.jsx)
+// راهنمای «صد جور»: سه اسلاید؛ خود پنجره مشترکه (shared/components/HelpDialog.jsx)
 // daily: سؤال‌های هر روز، more: تعداد «سؤال دیگه» (هر دو از سرور)
 function SurveyHelp({ daily, more, onClose }) {
   const slides = [

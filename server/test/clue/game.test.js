@@ -1,4 +1,4 @@
-// تست بازی «کلمه‌ی پنهان»: رتبه‌ها، جواب زودتر لو نره، راهنما، تسلیم، خطاها و انتقال بازی مهمان به حساب
+// تست بازی «جوربندی»: رتبه‌ها، جواب زودتر لو نره، راهنما، تسلیم، خطاها و انتقال بازی مهمان به حساب
 import { test, before, after } from 'node:test'
 import assert from 'node:assert/strict'
 import http from 'node:http'

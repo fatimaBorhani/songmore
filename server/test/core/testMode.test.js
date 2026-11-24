@@ -7,7 +7,7 @@ import http from 'node:http'
 process.env.DB_PATH = ':memory:'
 process.env.NODE_ENV = 'test'
 const { useClueFixture } = await import('../clue/fixture.js')
-useClueFixture() // داده‌ی کوچیک «کلمه‌ی پنهان» به‌جای فایل‌های واقعی
+useClueFixture() // داده‌ی کوچیک «جوربندی» به‌جای فایل‌های واقعی
 process.argv.push('--random-song') // باید قبل از import اپ باشه؛ پرچم همون موقع خونده می‌شه
 
 const { db } = await import('../../core/db.js')
@@ -95,7 +95,7 @@ test('آهنگ: چند بار «بازی دوباره» بالاخره آهنگ�
   assert.ok(seen.size > 1, 'از ۱۲ آهنگ، ۸ بار انتخاب نباید همیشه یکی باشه')
 })
 
-test('واژه‌یاب: «بازی دوباره (تست)» حدس‌های امروز رو پاک می‌کنه و از کلمه‌ی اول شروع می‌شه', async () => {
+test('جورچین: «بازی دوباره (تست)» حدس‌های امروز رو پاک می‌کنه و از کلمه‌ی اول شروع می‌شه', async () => {
   const request = newBrowser()
   const game = (await request('/api/word/game')).body
   assert.equal(game.testMode, true)
@@ -146,7 +146,7 @@ test('نظرسنجی: «شروع دوباره (تست)» فقط جواب‌ها�
   assert.equal((await other('/api/survey/state')).body.todayAnswered, 1) // مال بقیه دست نمی‌خوره
 })
 
-test('کلمه‌ی پنهان: «بازی دوباره (تست)» بازی امروز رو پاک می‌کنه', async () => {
+test('جوربندی: «بازی دوباره (تست)» بازی امروز رو پاک می‌کنه', async () => {
   const request = newBrowser()
   const game = (await request('/api/clue/game')).body
   assert.equal(game.testMode, true)

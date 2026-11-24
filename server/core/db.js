@@ -85,7 +85,7 @@ db.exec(`
     expires_at INTEGER NOT NULL
   );
 
-  -- بازی‌های تمرینی حدس آهنگ (نامحدود، بدون امتیاز و لیگ؛ فقط توی فعالیت پروفایل می‌شمارن)
+  -- بازی‌های تمرینی جورزیک (نامحدود، بدون امتیاز و لیگ؛ فقط توی فعالیت پروفایل می‌شمارن)
   -- cycle: هر دور، آهنگ‌ها تکرار نمی‌شن؛ وقتی همه‌ی آهنگ‌ها اومدن دور بعد شروع می‌شه
   CREATE TABLE IF NOT EXISTS practice_games (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -106,7 +106,7 @@ db.exec(`
     PRIMARY KEY (game_id, guess_number)
   );
 
-  -- بازی حافظه‌ی رنگ: ۵ رنگ هر روز (برای همه یکی، تصادفی و موقع اولین درخواست ساخته می‌شه تا از قبل قابل حدس نباشه)
+  -- بازی جورنگ: ۵ رنگ هر روز (برای همه یکی، تصادفی و موقع اولین درخواست ساخته می‌شه تا از قبل قابل حدس نباشه)
   CREATE TABLE IF NOT EXISTS color_daily (
     date TEXT NOT NULL,
     round INTEGER NOT NULL,
@@ -128,7 +128,7 @@ db.exec(`
     PRIMARY KEY (player_key, date, round)
   );
 
-  -- حدس‌های بازی واژه‌یاب؛ رنگ حرف‌ها ذخیره نمی‌شه و هر بار از روی کلمه‌ی جواب حساب می‌شه
+  -- حدس‌های بازی جورچین؛ رنگ حرف‌ها ذخیره نمی‌شه و هر بار از روی کلمه‌ی جواب حساب می‌شه
   -- length: طول کلمه (۳، ۴ یا ۵)؛ هر روز برای هر طول یه بازی جدا داریم
   CREATE TABLE IF NOT EXISTS word_guesses (
     player_key TEXT NOT NULL,
@@ -149,7 +149,7 @@ db.exec(`
     PRIMARY KEY (player_key, date, length)
   );
 
-  -- نظرسنجی «صد نفر گفتن»: جواب هر بازیکن به هر سؤال (هر نفر برای هر سؤال فقط یه ردیف).
+  -- نظرسنجی «صد جور»: جواب هر بازیکن به هر سؤال (هر نفر برای هر سؤال فقط یه ردیف).
   -- answer خالی (NULL) یعنی سؤال رو رد کرد؛ answer_norm همون جواب نرمال‌شده‌ست برای شمردن جواب‌های یکسان
   CREATE TABLE IF NOT EXISTS survey_answers (
     player_key TEXT NOT NULL,
@@ -191,7 +191,7 @@ db.exec(`
     PRIMARY KEY (player_key, word)
   );
 
-  -- آهنگ‌هایی که بازیکن‌ها پیشنهاد دادن اضافه بشن (توی جستجوی حدس آهنگ نبوده)؛ فقط برای بازبینی خودمون
+  -- آهنگ‌هایی که بازیکن‌ها پیشنهاد دادن اضافه بشن (توی جستجوی جورزیک نبوده)؛ فقط برای بازبینی خودمون
   -- title و artist همون متنیه که نوشتن؛ norm_key = اسم و خواننده‌ی نرمال‌شده (هر بازیکن هر آهنگ رو یه بار)
   CREATE TABLE IF NOT EXISTS song_suggestions (
     player_key TEXT NOT NULL,
@@ -203,7 +203,7 @@ db.exec(`
     PRIMARY KEY (player_key, norm_key)
   );
 
-  -- کلمه‌های روزانه‌ی واژه‌یاب: برای هر تاریخ و هر طول یه کلمه که برای همه یکیه
+  -- کلمه‌های روزانه‌ی جورچین: برای هر تاریخ و هر طول یه کلمه که برای همه یکیه
   CREATE TABLE IF NOT EXISTS word_daily (
     date TEXT NOT NULL,
     length INTEGER NOT NULL,
@@ -211,13 +211,13 @@ db.exec(`
     PRIMARY KEY (date, length)
   );
 
-  -- بازی «کلمه‌ی پنهان»: کلمه‌ی هر روز (نرمال‌شده)، برای همه یکی
+  -- بازی «جوربندی»: کلمه‌ی هر روز (نرمال‌شده)، برای همه یکی
   CREATE TABLE IF NOT EXISTS clue_daily (
     date TEXT PRIMARY KEY,
     word TEXT NOT NULL
   );
 
-  -- حدس‌های «کلمه‌ی پنهان»؛ hint = ۱ یعنی کلمه با «راهنما» اومده. رتبه ذخیره نمی‌شه و هر بار از فایل رتبه‌ها خونده می‌شه
+  -- حدس‌های «جوربندی»؛ hint = ۱ یعنی کلمه با «راهنما» اومده. رتبه ذخیره نمی‌شه و هر بار از فایل رتبه‌ها خونده می‌شه
   CREATE TABLE IF NOT EXISTS clue_guesses (
     player_key TEXT NOT NULL,
     date TEXT NOT NULL,
@@ -228,7 +228,7 @@ db.exec(`
     PRIMARY KEY (player_key, date, guess_number)
   );
 
-  -- «کلمه‌ی پنهان»: بازیکن‌هایی که تسلیم شدن (جواب رو دیدن)
+  -- «جوربندی»: بازیکن‌هایی که تسلیم شدن (جواب رو دیدن)
   CREATE TABLE IF NOT EXISTS clue_gaveup (
     player_key TEXT NOT NULL,
     date TEXT NOT NULL,
@@ -281,7 +281,7 @@ if (db.prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'dai
   db.exec('DROP TABLE daily_song')
 }
 
-// ارتقای دیتابیس‌های قدیمی: واژه‌یاب حالا هر روز ۳ بازی (۳، ۴ و ۵ حرفی) داره (ستون length).
+// ارتقای دیتابیس‌های قدیمی: جورچین حالا هر روز ۳ بازی (۳، ۴ و ۵ حرفی) داره (ستون length).
 // کلید اصلی عوض می‌شه، پس جدول رو دوباره می‌سازیم. حدس‌های قبلی رو نگه نمی‌داریم: اون‌ها برای بازی قدیمی
 // (کلمه‌ی ثابت و هر ترکیبی قبول) بودن و اگه می‌موندن، حدس‌های امروز همون بازی قدیمی توی بازی ۵ حرفیِ جدید پیدا می‌شدن.
 const wordColumns = db.prepare('PRAGMA table_info(word_guesses)').all().map((c) => c.name)

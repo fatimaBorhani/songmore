@@ -1,4 +1,4 @@
-// تست سرتاسری API واژه‌یاب: هر روز ۳ کلمه (۳، ۴ و ۵ حرفی) یکی‌یکی، جواب زودتر لو نره، برد، باخت و خطاها
+// تست سرتاسری API جورچین: هر روز ۳ کلمه (۳، ۴ و ۵ حرفی) یکی‌یکی، جواب زودتر لو نره، برد، باخت و خطاها
 import { test, before, after } from 'node:test'
 import assert from 'node:assert/strict'
 import http from 'node:http'

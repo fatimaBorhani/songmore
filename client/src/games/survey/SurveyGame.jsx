@@ -14,7 +14,7 @@ import { useGameHelp } from "../../shared/useGameHelp.js";
 import { SITE_NAME } from "../../shared/site.js";
 import "./survey.css";
 
-const TITLE = "صد نفر گفتن"; // اسم موقت
+const TITLE = "صد جور";
 
 const ERROR_MESSAGES = {
   INVALID_ANSWER: "جواب باید حداقل یه حرف داشته باشه.",
@@ -25,7 +25,7 @@ const ERROR_MESSAGES = {
   NO_MORE_QUESTIONS: "سؤال دیگه‌ای نمونده. ممنون که این‌قدر جواب دادی!",
 };
 
-// صفحه‌ی نظرسنجی «صد نفر گفتن» (آدرس /survey)
+// صفحه‌ی نظرسنجی «صد جور» (آدرس /survey)
 // هر روز چند سؤال کوتاه؛ جواب‌ها برای ساختن بازی‌های بعدی جمع می‌شن. هیچ جواب یا درصدی نشون داده نمی‌شه.
 // user: کاربر واردشده یا null (از App میاد)
 function SurveyGame({ user }) {

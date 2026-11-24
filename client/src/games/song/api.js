@@ -1,4 +1,4 @@
-// API بازی حدس آهنگ (همه زیر /api/song روی سرور)
+// API جورزیک (همه زیر /api/song روی سرور)
 import { API_URL, call, postJson } from '../../shared/api.js'
 
 export function getGame() {

@@ -1,4 +1,4 @@
-// API بازی «کلمه‌ی پنهان» (همه زیر /api/clue روی سرور)
+// API بازی «جوربندی» (همه زیر /api/clue روی سرور)
 import { call, postJson } from '../../shared/api.js'
 
 export function getClueGame() {
@@ -19,7 +19,7 @@ export function sendClueGiveUp() {
   return postJson('/api/clue/giveup')
 }
 
-// آمار کلمه‌ی پنهان برای صفحه‌ی حساب (فقط کاربر واردشده)
+// آمار جوربندی برای صفحه‌ی حساب (فقط کاربر واردشده)
 export function getClueStats() {
   return call('/api/clue/stats')
 }

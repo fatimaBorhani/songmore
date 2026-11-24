@@ -10,7 +10,7 @@ const squaresOf = (results) => results.map((r) => RESULT_EMOJI[r]).join('')
 // هر آهنگ یه خط مربع، به ترتیب (رد کردن‌ها هم ⬜)؛ بدون اسم آهنگ. جمع امتیاز روز آخرشه.
 function buildShareText(day) {
   const lines = day.slots.map((s) => squaresOf(s.results)).join('\n')
-  return `بازی حدس آهنگ\n${lines}\nامتیاز: ${faNumber(day.dayScore)} از ${faNumber(10000 * day.songCount)}`
+  return `جورزیک\n${lines}\nامتیاز: ${faNumber(day.dayScore)} از ${faNumber(10000 * day.songCount)}`
 }
 
 // پیام پایان بازی: جواب، چند ثانیه طول کشید، و دکمه‌های کپی نتیجه و آهنگ بعدی.

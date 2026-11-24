@@ -2,7 +2,7 @@ import { STAGES } from "../stages.js";
 import { faNumber, faSeconds } from "../../../shared/format.js";
 import HelpDialog from "../../../shared/components/HelpDialog.jsx";
 
-// راهنمای حدس آهنگ: سه اسلاید؛ خود پنجره مشترکه (shared/components/HelpDialog.jsx)
+// راهنمای جورزیک: سه اسلاید؛ خود پنجره مشترکه (shared/components/HelpDialog.jsx)
 // (مسابقه‌ای و تمرینی یه راهنما دارن)
 const SLIDES = [
   {
@@ -49,7 +49,7 @@ const SLIDES = [
           هر چی زودتر بشناسی، امتیاز بیشتر (تا {faNumber(10000)} برای هر آهنگ).
         </li>
         <li>هر حدس غلط {faNumber(1000)} امتیاز آب می‌کنه.</li>
-        <li>«ارزش الان» می‌گه اگه همین الان درست بزنی چقدر گیرت میاد.</li>
+        <li>عدد درشت بالای موج می‌گه اگه همین الان درست بزنی چقدر گیرت میاد.</li>
         <li>جمع امتیاز ۳ آهنگ امروز می‌ره توی جدول امتیاز امروز و لیگ هفته.</li>
         <li>
           «تمرینی» آهنگ بی‌نهایت داره؛ بدون امتیاز، بدون استرس. فقط توی فعالیت

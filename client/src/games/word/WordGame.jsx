@@ -13,7 +13,7 @@ import { faNumber } from '../../shared/format.js'
 import { SITE_NAME } from '../../shared/site.js'
 import './word.css'
 
-const GAME_TITLE = 'واژه‌یاب' // اسم موقت
+const GAME_TITLE = 'جورچین'
 
 const ERROR_MESSAGES = {
   INVALID_LETTERS: 'فقط حروف فارسی',
@@ -41,7 +41,7 @@ function useIsDesktop() {
   return isDesktop
 }
 
-// صفحه‌ی بازی واژه‌یاب (آدرس /word)
+// صفحه‌ی بازی جورچین (آدرس /word)
 // user: کاربر واردشده یا null (از App میاد)
 function WordGame({ user }) {
   const [game, setGame] = useState(null)
@@ -305,7 +305,6 @@ function WordGame({ user }) {
   const settledGuesses = revealRow >= 0 ? game.guesses.slice(0, revealRow) : game.guesses
   const statuses = letterStatuses(settledGuesses)
   const showResult = game.finished && revealRow < 0
-  const guessNumber = Math.min(game.guesses.length + 1, game.maxGuesses)
   // بعد از ۶ حدس: «حالت ادامه» (نوار بالای صفحه‌ی حرف‌ها) تا پیدا کنه یا «جواب رو ببینم» بزنه
   const continuing = game.exhausted && !showContinueDialog
   const nextSlot = game.slots[game.slot] // کلمه‌ی بعدی (اگه هست)
@@ -318,15 +317,6 @@ function WordGame({ user }) {
         <span className="word-top-spacer" aria-hidden="true" />
         <div className="word-title">
           <h1>{GAME_TITLE}</h1>
-          <p>
-            {game.dayFinished
-              ? 'بازی امروز تموم شد'
-              : game.finished
-                ? `کلمه‌ی ${faNumber(game.wordLength)} حرفی تموم شد`
-                : game.exhausted
-                  ? `کلمه‌ی ${faNumber(game.wordLength)} حرفی`
-                  : `کلمه‌ی ${faNumber(game.wordLength)} حرفی · حدس ${faNumber(guessNumber)} از ${faNumber(game.maxGuesses)}`}
-          </p>
           <div className="word-progress" role="img" aria-label={`کلمه‌ی ${faNumber(game.slot)} از ${faNumber(game.slotCount)}`}>
             {game.slots.map((s) => (
               <span key={s.slot} className={s.finished ? 'done' : s.slot === game.slot ? 'current' : ''} />

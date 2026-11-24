@@ -11,7 +11,7 @@ import { faNumber } from '../../shared/format.js'
 import { SITE_NAME } from '../../shared/site.js'
 import './clue.css'
 
-const GAME_TITLE = 'کلمه‌ی پنهان' // اسم موقت
+const GAME_TITLE = 'جوربندی'
 
 const ERROR_MESSAGES = {
   NOT_IN_LIST: 'این کلمه رو نمی‌شناسیم',
@@ -21,7 +21,7 @@ const ERROR_MESSAGES = {
   GAME_OVER: 'بازی امروز تموم شده',
 }
 
-// صفحه‌ی بازی «کلمه‌ی پنهان» (آدرس /clue)
+// صفحه‌ی بازی «جوربندی» (آدرس /clue)
 // user: کاربر واردشده یا null (از App میاد؛ با عوض شدنش بازی دوباره گرفته می‌شه)
 function ClueGame({ user }) {
   const [game, setGame] = useState(null)

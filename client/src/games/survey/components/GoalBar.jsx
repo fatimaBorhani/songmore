@@ -35,8 +35,8 @@ function GoalBar({ goal, compact = false }) {
       <Bar goal={goal} />
       <p>
         {reached
-          ? 'هدف کامل شد! ممنون از همه. بازی «صد نفر گفتن» با جواب‌های واقعی شما ساخته می‌شه.'
-          : `هر سؤال که به ${faNumber(goal.perQuestion)} جواب برسه، یه قدم نزدیک می‌شیم. وقتی ${faNumber(goal.target)} سؤال کامل شد، بازی «صد نفر گفتن» با جواب‌های واقعی خودتون ساخته می‌شه.`}
+          ? 'هدف کامل شد! ممنون از همه. بازی بعدی با جواب‌های واقعی شما ساخته می‌شه.'
+          : `هر سؤال که به ${faNumber(goal.perQuestion)} جواب برسه، یه قدم نزدیک می‌شیم. وقتی ${faNumber(goal.target)} سؤال کامل شد، بازی بعدی با جواب‌های واقعی خودتون ساخته می‌شه.`}
       </p>
       <p className="survey-goal-total">تا الان {faNumber(goal.totalAnswers)} جواب جمع شده</p>
     </section>

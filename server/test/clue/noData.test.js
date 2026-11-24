@@ -1,4 +1,4 @@
-// تا وقتی داده‌ی «کلمه‌ی پنهان» (vectors.bin) ساخته نشده، API خطای روشن NO_DATA می‌ده و سرور از کار نمی‌افته
+// تا وقتی داده‌ی «جوربندی» (vectors.bin) ساخته نشده، API خطای روشن NO_DATA می‌ده و سرور از کار نمی‌افته
 import { test, before, after } from 'node:test'
 import assert from 'node:assert/strict'
 import http from 'node:http'

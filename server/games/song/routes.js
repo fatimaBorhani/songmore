@@ -1,4 +1,4 @@
-// مسیرهای API بازی حدس آهنگ (همه زیر /api/song)
+// مسیرهای API جورزیک (همه زیر /api/song)
 import express from 'express'
 import { db } from '../../core/db.js'
 import { getTodayDateString, pickDailySongs, pickNewRandomSongs } from './dailySong.js'

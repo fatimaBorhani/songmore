@@ -1,4 +1,4 @@
-// تست ارتقای دیتابیس قدیمی واژه‌یاب: جدول ستون length می‌گیره و حدس‌های بازی قدیمی (با جواب ثابت) پاک می‌شن
+// تست ارتقای دیتابیس قدیمی جورچین: جدول ستون length می‌گیره و حدس‌های بازی قدیمی (با جواب ثابت) پاک می‌شن
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'

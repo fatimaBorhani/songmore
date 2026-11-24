@@ -30,10 +30,10 @@ function statRows(stats, practiceGames) {
 
 // تب‌های صفحه‌ی حساب. بقیه‌ی تب‌ها (غیر از آهنگ که با خود پروفایل میاد) آمارشون فقط وقتی تبشون باز می‌شه گرفته می‌شه
 const TABS = [
-  { id: 'song', label: 'حدس آهنگ' },
-  { id: 'word', label: 'واژه‌یاب', load: getWordStats, Panel: WordStatsPanel },
+  { id: 'song', label: 'جورزیک' },
+  { id: 'word', label: 'جورچین', load: getWordStats, Panel: WordStatsPanel },
   { id: 'color', label: 'رنگ', load: getColorStats, Panel: ColorStatsPanel },
-  { id: 'clue', label: 'کلمه‌ی پنهان', load: getClueStats, Panel: ClueStatsPanel },
+  { id: 'clue', label: 'جوربندی', load: getClueStats, Panel: ClueStatsPanel },
   { id: 'survey', label: 'نظرسنجی', load: getSurveyStats, Panel: SurveyStatsPanel },
 ]
 

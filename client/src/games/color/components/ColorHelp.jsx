@@ -1,7 +1,7 @@
 import { faNumber } from "../../../shared/format.js";
 import HelpDialog from "../../../shared/components/HelpDialog.jsx";
 
-// راهنمای حافظه‌ی رنگ: سه اسلاید؛ خود پنجره مشترکه (shared/components/HelpDialog.jsx)
+// راهنمای جورنگ: سه اسلاید؛ خود پنجره مشترکه (shared/components/HelpDialog.jsx)
 // rounds: تعداد رنگ‌های هر روز، seconds: چند ثانیه رنگ دیده می‌شه (هر دو از سرور)
 function ColorHelp({ rounds, seconds, onClose }) {
   const slides = [

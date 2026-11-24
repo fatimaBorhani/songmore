@@ -1,4 +1,4 @@
-# منبع سؤال‌های «صد نفر گفتن»
+# منبع سؤال‌های «صد جور»
 
 بیشتر سؤال‌های `questions.json` از روی مجموعه‌ی **ProtoQA** ساخته شدن
 (https://github.com/iesl/protoqa-data، لایسنس [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)).

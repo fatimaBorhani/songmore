@@ -1,4 +1,4 @@
-// تست آمار واژه‌یاب برای صفحه‌ی حساب: بازی تموم‌شده، برد، پیدا شدن با ادامه دادن، توزیع حدس‌ها، رکورد و طول‌ها
+// تست آمار جورچین برای صفحه‌ی حساب: بازی تموم‌شده، برد، پیدا شدن با ادامه دادن، توزیع حدس‌ها، رکورد و طول‌ها
 import { test, before, after } from 'node:test'
 import assert from 'node:assert/strict'
 import http from 'node:http'
@@ -29,7 +29,7 @@ function addGuesses(player, date, length, words) {
 const giveUp = (player, date, length) => db.prepare('INSERT INTO word_gaveup (player_key, date, length, created_at) VALUES (?, ?, ?, ?)').run(player, date, length, Date.now())
 const wrong = (n, w = 'برف') => Array(n).fill(w)
 
-test('آمار واژه‌یاب: برد، باخت، پیدا شدن با ادامه، توزیع حدس‌ها، رکورد و طول‌ها', () => {
+test('آمار جورچین: برد، باخت، پیدا شدن با ادامه، توزیع حدس‌ها، رکورد و طول‌ها', () => {
   for (const d of ['2026-02-01', '2026-02-02', '2026-02-03', '2026-02-04', '2026-02-05']) addDaily(d, 3, 'دست')
   for (const d of ['2026-02-01', '2026-02-02']) addDaily(d, 4, 'کتاب')
 

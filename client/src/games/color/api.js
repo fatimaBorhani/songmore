@@ -1,4 +1,4 @@
-// API بازی حافظه‌ی رنگ (همه زیر /api/color روی سرور)
+// API بازی جورنگ (همه زیر /api/color روی سرور)
 import { call, postJson } from '../../shared/api.js'
 
 export function getColorGame() {
@@ -15,7 +15,7 @@ export function sendColorGuess(hsb) {
   return postJson('/api/color/guess', hsb)
 }
 
-// آمار حافظه‌ی رنگ برای صفحه‌ی حساب (فقط کاربر واردشده)
+// آمار جورنگ برای صفحه‌ی حساب (فقط کاربر واردشده)
 export function getColorStats() {
   return call('/api/color/stats')
 }

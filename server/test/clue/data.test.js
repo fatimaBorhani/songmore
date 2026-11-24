@@ -1,4 +1,4 @@
-// چک فایل‌های واقعی «کلمه‌ی پنهان» (server/games/clue/words/)؛ اگه vectors.bin هنوز ساخته نشده، تست رد می‌شه (skip)
+// چک فایل‌های واقعی «جوربندی» (server/games/clue/words/)؛ اگه vectors.bin هنوز ساخته نشده، تست رد می‌شه (skip)
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'

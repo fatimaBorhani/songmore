@@ -45,7 +45,7 @@ function playSong(key, date, results) {
   })
 }
 
-// واژه‌یاب: wins = چندتا از ۳ کلمه با یه حدس پیدا شده؛ بقیه «جواب رو ببینم» بعد از ۶ حدس
+// جورچین: wins = چندتا از ۳ کلمه با یه حدس پیدا شده؛ بقیه «جواب رو ببینم» بعد از ۶ حدس
 const WORDS = { 3: 'دست', 4: 'کتاب', 5: 'پرنده' }
 function playWord(key, date, wins) {
   const insert = db.prepare('INSERT INTO word_guesses (player_key, date, length, guess_number, word, created_at) VALUES (?, ?, ?, ?, ?, ?)')
@@ -67,7 +67,7 @@ function playColor(key, date, offset, rounds = 5) {
   }
 }
 
-// کلمه‌ی پنهان: words به ترتیب؛ '*' اول کلمه یعنی راهنما
+// جوربندی: words به ترتیب؛ '*' اول کلمه یعنی راهنما
 function playClue(key, date, answer, words, gaveUp = false) {
   db.prepare('INSERT OR IGNORE INTO clue_daily (date, word) VALUES (?, ?)').run(date, answer)
   words.forEach((w, i) =>

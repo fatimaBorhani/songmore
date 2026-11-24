@@ -43,6 +43,36 @@
   border-radius: 10px;
 }
 
+/* آیکون جایزه (جدول هفته) توی سربرگ، کنار ورود؛ فاصله‌ی خالی سمت اسم سایت می‌افته */
+.site-weekly {
+  margin-inline-start: auto;
+  width: 44px;
+  height: 44px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: #14143a;
+  color: #a9a9ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.site-weekly:hover {
+  color: #fff;
+}
+
+/* وقتی توی صفحه‌ی جدول هفته هستیم (مثل اسم کاربر توی صفحه‌ی حساب) */
+.site-weekly[aria-current='page'] {
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.site-weekly:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 /* فرم ورود زیر سربرگ، تمام‌عرض */
 .site-header .auth-card {
   flex-basis: 100%;

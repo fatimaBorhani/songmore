@@ -1,24 +1,31 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { searchSongs } from '../api.js'
 
 // جستجو با تاخیر کوتاه (debounce) تا هر حرف مستقیم به سرور نره
 function SearchBox({ disabled, onChoose }) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
-  const timerRef = useRef(null)
 
   useEffect(() => {
-    clearTimeout(timerRef.current)
-    if (!query.trim()) {
-      setResults([])
-      return
-    }
-    timerRef.current = setTimeout(async () => {
-      const found = await searchSongs(query)
-      setResults(found)
+    if (!query.trim()) return
+
+    let active = true
+    const timer = setTimeout(async () => {
+      const found = await searchSongs(query).catch(() => [])
+      if (active) setResults(found)
     }, 250)
-    return () => clearTimeout(timerRef.current)
+
+    return () => {
+      active = false
+      clearTimeout(timer)
+    }
   }, [query])
+
+  function changeQuery(event) {
+    const nextQuery = event.target.value
+    setQuery(nextQuery)
+    if (!nextQuery.trim()) setResults([])
+  }
 
   function choose(song) {
     onChoose(song)
@@ -33,7 +40,7 @@ function SearchBox({ disabled, onChoose }) {
         placeholder="اسم آهنگ یا خواننده..."
         value={query}
         disabled={disabled}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={changeQuery}
       />
       {results.length > 0 && (
         <ul className="search-results">

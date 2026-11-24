@@ -1,3 +1,11 @@
+/* فونت Radio برای ساعت «۰۰:۰۰» (همون فونت ساعت صفحه‌ی اول، self-hosted) */
+@font-face {
+  font-family: 'Radio';
+  src: url('../assets/fonts/Radio.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
 /* صفحه‌ی «درباره»: گوشی یه فهرست جمع‌وجور، کامپیوتر (از ۷۶۰ پیکسل) چینش بنتو با تصویر */
 .about-page {
   --about-blue-deep: #14143a;
@@ -511,8 +519,9 @@
   }
 
   .about-clock {
-    font-size: 64px;
-    font-weight: 900;
+    font-family: 'Radio', monospace;
+    font-size: 56px;
+    font-weight: 400;
     line-height: 1;
     letter-spacing: 2px;
     text-align: center;

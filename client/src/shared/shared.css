@@ -73,11 +73,66 @@
   outline-offset: 3px;
 }
 
-/* فرم ورود زیر سربرگ، تمام‌عرض */
-.site-header .auth-card {
-  flex-basis: 100%;
-  max-width: 488px;
-  margin: 0 auto;
+/* پنجره‌ی ورود: وسط صفحه روی یه پس‌زمینه‌ی تیره */
+.auth-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  box-sizing: border-box;
+  padding: 24px 16px;
+  background: rgba(9, 9, 11, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  animation: fade-in 0.15s ease-out;
+}
+
+.auth-backdrop .auth-card {
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  padding: 24px 22px;
+  border-radius: 28px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.auth-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.auth-head h2 {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.auth-close {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.auth-close:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.auth-lead {
+  margin-top: -6px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-soft);
 }
 
 .game-page {

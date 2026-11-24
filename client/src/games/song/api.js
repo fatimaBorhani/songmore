@@ -63,3 +63,8 @@ export function sendPracticeGiveUp() {
 export function nextPracticeGame() {
   return postJson('/api/song/practice/next')
 }
+
+// «آهنگم توی لیست نیست»: پیشنهاد یه آهنگ برای اضافه شدن (مهمان هم می‌تونه)
+export function suggestSong(title, artist) {
+  return postJson('/api/song/suggest', { title, artist })
+}

@@ -361,6 +361,62 @@
   background: var(--surface);
 }
 
+/* آخر لیست جستجو: «آهنگت توی لیست نیست؟ پیشنهادش بده» */
+.search-results .search-suggest {
+  margin-top: 4px;
+  border-top: 1px solid var(--border);
+  padding-top: 4px;
+}
+
+.search-results .search-suggest button {
+  color: var(--text-soft);
+}
+
+.search-suggest-cta {
+  font-weight: 700;
+  color: #8f8fff;
+  white-space: nowrap;
+}
+
+/* پنجره‌ی پیشنهاد آهنگ (پنجره خودش help-dialog مشترکه) */
+.song-suggest form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.song-suggest h2 {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.song-suggest p {
+  line-height: 1.8;
+}
+
+.song-suggest-icon {
+  align-self: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #14143a;
+  color: #8f8fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.song-suggest:has(.song-suggest-icon) {
+  align-items: center;
+  text-align: center;
+}
+
+.song-suggest:has(.song-suggest-icon) .help-ok {
+  align-self: stretch;
+  flex: none;
+}
+
 .song-credit {
   color: var(--text-muted);
 }

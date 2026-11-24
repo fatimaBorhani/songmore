@@ -1,21 +1,24 @@
 import { useEffect, useRef, useState } from 'react'
 import { searchSongs } from '../api.js'
+import SongSuggestDialog from './SongSuggestDialog.jsx'
 
-// جستجو با تاخیر کوتاه (debounce) تا هر حرف مستقیم به سرور نره
+// جستجو با تاخیر کوتاه (debounce) تا هر حرف مستقیم به سرور نره.
+// آخر لیست نتیجه‌ها همیشه «آهنگت توی لیست نیست؟» میاد که پنجره‌ی پیشنهاد آهنگ رو باز می‌کنه
 function SearchBox({ disabled, onChoose }) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
+  const [searchedFor, setSearchedFor] = useState('') // جستجوی کدوم متن تموم شده
+  const [suggesting, setSuggesting] = useState(null) // متنی که پنجره‌ی پیشنهاد باهاش باز شده
   const timerRef = useRef(null)
 
   useEffect(() => {
     clearTimeout(timerRef.current)
-    if (!query.trim()) {
-      setResults([])
-      return
-    }
+    // جعبه خالیه: لیست خودش نشون داده نمی‌شه (showList)، لازم نیست چیزی پاک بشه
+    if (!query.trim()) return
     timerRef.current = setTimeout(async () => {
       const found = await searchSongs(query)
       setResults(found)
+      setSearchedFor(query)
     }, 250)
     return () => clearTimeout(timerRef.current)
   }, [query])
@@ -26,6 +29,15 @@ function SearchBox({ disabled, onChoose }) {
     setResults([])
   }
 
+  function openSuggest() {
+    setSuggesting(query.trim())
+    setQuery('')
+    setResults([])
+  }
+
+  // لیست فقط وقتی میاد که جستجوی همین متن تموم شده باشه (تا «پیدا نشد» زودتر از نتیجه‌ها نیاد)
+  const showList = query.trim() !== '' && searchedFor === query
+
   return (
     <div className="search-box">
       <input
@@ -35,7 +47,7 @@ function SearchBox({ disabled, onChoose }) {
         disabled={disabled}
         onChange={(e) => setQuery(e.target.value)}
       />
-      {results.length > 0 && (
+      {showList && (
         <ul className="search-results">
           {results.map((song) => (
             <li key={song.id}>
@@ -45,8 +57,15 @@ function SearchBox({ disabled, onChoose }) {
               </button>
             </li>
           ))}
+          <li className="search-suggest">
+            <button type="button" onClick={openSuggest}>
+              <span>{results.length ? 'آهنگت توی لیست نیست؟' : 'چیزی پیدا نشد!'}</span>
+              <span className="search-suggest-cta">پیشنهادش بده ←</span>
+            </button>
+          </li>
         </ul>
       )}
+      {suggesting !== null && <SongSuggestDialog initialTitle={suggesting} onClose={() => setSuggesting(null)} />}
     </div>
   )
 }

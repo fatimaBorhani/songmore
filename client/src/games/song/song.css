@@ -500,9 +500,23 @@
   background: var(--surface);
 }
 
-@media (max-width: 420px) {
-  .guess-row {
-    flex-direction: column;
+/* گوشی: کارت موج و فاصله‌ها جمع‌وجورتر تا کل بازی بدون اسکرول توی صفحه جا بشه */
+@media (max-width: 640px) {
+  .game-page:has(.player) {
+    padding-top: 16px;
+  }
+
+  .player-card {
+    padding: 14px 16px 40px;
+    gap: 10px;
+  }
+
+  .player-time strong {
+    font-size: 24px;
+  }
+
+  .wave {
+    height: 56px;
   }
 }
 

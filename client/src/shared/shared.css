@@ -409,25 +409,6 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* برگشت به صفحه‌ی اول */
-.back-link {
-  align-self: flex-start;
-  min-height: 44px;
-  padding: 0 14px 0 16px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text-soft);
-  font-size: 14px;
-  text-decoration: none;
-}
-
-.back-link:hover {
-  color: var(--text);
-  background: var(--surface);
-}
-
 /* ---------- راهنمای بازی‌ها (HelpDialog و HelpButton؛ برای همه‌ی بازی‌ها یه شکل) ---------- */
 
 .help-backdrop {

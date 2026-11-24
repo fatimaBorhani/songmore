@@ -88,29 +88,138 @@
   border-radius: 28px;
 }
 
+/* کارت شروع هر دور: سه تا کارت پشت‌ورو با «؟» وسط، متن و دکمه پایین */
 .color-ready {
-  min-height: 300px;
   padding: 28px 22px;
   background: var(--card);
   border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
+  justify-content: space-between;
+  gap: 18px;
   text-align: center;
 }
 
-.color-ready-round {
-  font-size: 22px;
-  font-weight: 900;
+.color-deck {
+  position: relative;
+  flex: 1 1 auto;
+  width: min(220px, 62%);
+  max-height: 290px;
+  min-height: 170px;
+  margin: 8px 0 18px;
+  aspect-ratio: 220 / 290;
 }
 
+.color-deck > span {
+  position: absolute;
+  inset: 0;
+  border-radius: 26px;
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease;
+}
 
+.deck-back.one {
+  background: var(--border);
+  transform: rotate(-10deg) translate(-18px, 6px);
+}
 
+.deck-back.two {
+  background: #3f3f46;
+  transform: rotate(7deg) translate(14px, 4px);
+}
 
+.deck-front {
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid #3f3f46;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
 
+/* خط‌چین داخل کارت، مثل پشت کارت بازی */
+.deck-front::before {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border-radius: 18px;
+  border: 2px dashed var(--border);
+}
 
+.deck-front b {
+  font-size: 110px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.deck-front span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.color-ready-bottom {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  transition: opacity 0.25s ease;
+}
+
+.color-ready-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.color-ready-text b {
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.5;
+}
+
+.color-ready-text span {
+  font-size: 15px;
+  color: var(--text-soft);
+}
+
+.color-btn.round {
+  border-radius: 999px;
+}
+
+/* «برگردونش!»: کارت‌های پشتی زیر کارت بالایی جمع می‌شن، کارت بالایی کوچیک و محو می‌شه */
+.color-ready.leaving .deck-back {
+  transform: rotate(0) scale(0.9);
+  opacity: 0;
+}
+
+.color-ready.leaving .deck-front {
+  transform: scale(0.6) rotateY(90deg);
+  opacity: 0;
+}
+
+.color-ready.leaving .color-ready-bottom {
+  opacity: 0;
+}
+
+/* بعدش رنگ از وسط کارت مثل یه دایره‌ی بزرگ‌شونده روی کل کارت پخش می‌شه */
+.color-stage.reveal {
+  animation: color-reveal 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes color-reveal {
+  from {
+    clip-path: circle(0% at 50% 42%);
+  }
+  to {
+    clip-path: circle(150% at 50% 42%);
+  }
+}
 
 /* ---------- کارت رنگ: حفظ کردن، ساختن و نتیجه ----------
    وسط صفحه، توی هر سه مرحله یه اندازه (مثل dialed.gg)؛ سربرگ سایت دیده می‌شه */
@@ -622,6 +731,13 @@
 @media (prefers-reduced-motion: reduce) {
   .color-timebar > div {
     transition: none;
+  }
+  .color-deck > span,
+  .color-ready-bottom {
+    transition: none;
+  }
+  .color-stage.reveal {
+    animation: none;
   }
 }
 

@@ -12,6 +12,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { getOrCreateSessionId } from './core/session.js'
 import { authRouter } from './core/authRoutes.js'
+import { helpRouter } from './core/helpRoutes.js'
 import { attachPlayer } from './core/player.js'
 import { songRouter, RANDOM_SONG_MODE } from './games/song/routes.js'
 import { wordRouter } from './games/word/routes.js'
@@ -48,6 +49,7 @@ app.get('/api/health', (req, res) => {
 })
 
 app.use('/api/auth', authRouter)
+app.use('/api/help', helpRouter)
 app.use('/api/song', songRouter)
 app.use('/api/word', wordRouter)
 app.use('/api/color', colorRouter)

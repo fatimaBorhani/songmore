@@ -71,6 +71,14 @@ db.exec(`
   );
 
   -- نشست‌های ورود؛ خود توکن فقط توی کوکی کاربره، اینجا فقط هش SHA-256 ش
+  -- راهنمای کدوم بازی رو هر حساب دیده (راهنما برای هر حساب فقط بار اول خودش باز می‌شه، روی همه‌ی دستگاه‌ها)
+  CREATE TABLE IF NOT EXISTS help_seen (
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    game TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, game)
+  );
+
   CREATE TABLE IF NOT EXISTS auth_sessions (
     token_hash TEXT PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,

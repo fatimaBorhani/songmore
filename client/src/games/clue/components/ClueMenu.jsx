@@ -48,8 +48,9 @@ function ClueMenu({ busy, onHint, onGiveUp }) {
             }}
           >
             <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 18h6M10 21h4" />
-              <path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z" />
+              {/* کتاب باز: «راهنما»ی خود بازی (کلمه‌ی نزدیک‌تر)؛ چراغ فقط مال راهنمای قوانین بازی‌هاست */}
+              <path d="M2 5c3-1.5 6.5-1.5 10 1 3.5-2.5 7-2.5 10-1v14c-3-1.5-6.5-1.5-10 1-3.5-2.5-7-2.5-10-1z" />
+              <path d="M12 6v14" />
             </svg>
             راهنما
             <small>یه کلمه‌ی نزدیک‌تر</small>

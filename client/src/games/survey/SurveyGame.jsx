@@ -4,7 +4,6 @@ import {
   requestMore,
   resetSurveyTest,
   sendAnswer,
-  sendSkip,
 } from "./api.js";
 import QuestionView from "./components/QuestionView.jsx";
 import DoneView from "./components/DoneView.jsx";
@@ -62,7 +61,7 @@ function SurveyGame({ user }) {
     load();
   }, [userId]);
 
-  // یه کار (ثبت، رد کردن، ...) رو انجام می‌ده و وضعیت تازه رو می‌ذاره؛ خطا رو به فارسی نشون می‌ده
+  // یه کار (ثبت، سؤال بیشتر، ...) رو انجام می‌ده و وضعیت تازه رو می‌ذاره؛ خطا رو به فارسی نشون می‌ده
   async function run(action) {
     if (sending.current) return;
     sending.current = true;
@@ -135,7 +134,6 @@ function SurveyGame({ user }) {
         busy={busy}
         error={error}
         onSubmit={(answer) => run(() => sendAnswer(state.current.id, answer))}
-        onSkip={() => run(() => sendSkip(state.current.id))}
       />
       {help}
     </>

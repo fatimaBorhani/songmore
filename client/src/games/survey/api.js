@@ -14,10 +14,6 @@ export function sendAnswer(questionId, answer) {
   return postJson('/api/survey/answer', { questionId, answer })
 }
 
-export function sendSkip(questionId) {
-  return postJson('/api/survey/skip', { questionId })
-}
-
 // «۵ سؤال دیگه» (فقط وقتی سؤال‌های الان تموم شدن)
 export function requestMore() {
   return postJson('/api/survey/more')

@@ -12,7 +12,7 @@ const ERROR_TEXT = {
     "تلاش‌های ناموفق زیاد بود. ۱۵ دقیقه‌ی دیگه دوباره امتحان کن.",
 };
 
-// نوار بالای صفحه: اگه وارد شده اسمش و دکمه‌ی خروج، وگرنه دکمه‌ی ورود و فرم ورود/ثبت‌نام
+// نوار بالای صفحه: اگه وارد شده آیکن حساب، وگرنه دکمه‌ی ورود و پنجره‌ی ورود/ثبت‌نام
 function AuthPanel({ user, onUserChange }) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState("login"); // 'login' یا 'signup'
@@ -56,15 +56,16 @@ function AuthPanel({ user, onUserChange }) {
     }
   }
 
-  // وارد شده: اسمش لینک به صفحه‌ی حسابه (خروج از حساب هم اونجاست)
+  // وارد شده: آیکن آدمک لینک به صفحه‌ی حسابه (خروج از حساب هم اونجاست)
   if (user) {
     return (
       <div className="auth-bar">
-        <NavLink to="/profile" className="auth-chip">
-          <span className="auth-chip-avatar" aria-hidden="true">
-            {user.username[0].toUpperCase()}
-          </span>
-          <bdi>{user.username}</bdi>
+        {/* فقط آیکن آدمک؛ اسم کاربر فقط برای صفحه‌خوان و موقع نگه داشتن موس */}
+        <NavLink to="/profile" className="auth-chip" aria-label={`حساب کاربری ${user.username}`} title={user.username}>
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 21a8 8 0 0 1 16 0" />
+          </svg>
         </NavLink>
       </div>
     );

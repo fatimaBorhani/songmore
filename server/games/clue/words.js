@@ -3,6 +3,9 @@
 //   answers.txt   جواب‌های ممکن
 //   vectors.bin   «معنی» هر کلمه (بردار) به همون ترتیب valid.txt:
 //                 count و dim (uint32)، بعد count تا ضریب float32، بعد count×dim تا int8
+//   forms.txt     (اختیاری) شکل‌های دیگه‌ی یه کلمه: هر خط «شکل<Tab>کلمه‌ی اصلی»، مثل «کتاب‌ها	کتاب».
+//                 این شکل‌ها جای جدا توی رتبه‌ها نمی‌گیرن و همون رتبه‌ی کلمه‌ی اصلی رو می‌گیرن
+//                 (شکل‌های خود جواب رتبه‌ی ۲، چون ۱ یعنی پیدا شدن)
 // رتبه‌ی همه‌ی کلمه‌ها تا جواب، هر بار که لازم بشه یه بار حساب و نگه داشته می‌شه.
 import fs from 'node:fs'
 import path from 'node:path'
@@ -36,7 +39,17 @@ function load() {
   const vectors = new Int8Array(buf.buffer, buf.byteOffset + 8 + count * 4, count * dim)
 
   const answers = readLines('answers.txt').map(normalizeWord).filter((k) => index.has(k))
-  data = { words, keys, index, count, dim, scales, vectors, answers }
+
+  // شکل -> کلمه‌ی اصلی (هر دو باید توی valid.txt باشن؛ کلمه‌ی اصلی خودش نباید شکلِ چیز دیگه باشه)
+  const baseOf = new Map()
+  if (fs.existsSync(path.join(WORDS_DIR, 'forms.txt'))) {
+    for (const line of readLines('forms.txt')) {
+      const [form, base] = line.split('\t').map(normalizeWord)
+      if (form && base && form !== base && index.has(form) && index.has(base)) baseOf.set(form, base)
+    }
+    for (const base of baseOf.values()) baseOf.delete(base)
+  }
+  data = { words, keys, index, count, dim, scales, vectors, answers, baseOf }
   return data
 }
 
@@ -58,7 +71,7 @@ const CACHE_SIZE = 4 // رتبه‌های چند جواب آخر توی حافظ
 //   list:   شکل نمایشی کلمه‌ها به ترتیب رتبه
 export function ranksFor(answer) {
   if (rankCache.has(answer)) return rankCache.get(answer)
-  const { words, keys, index, count, dim, scales, vectors } = load()
+  const { words, keys, index, count, dim, scales, vectors, baseOf } = load()
   const a = index.get(answer)
   if (a === undefined) throw new Error(`جواب «${answer}» توی valid.txt نیست`)
 
@@ -73,9 +86,15 @@ export function ranksFor(answer) {
   }
   sims[a] = Infinity // خود جواب همیشه رتبه‌ی ۱
 
-  const order = Array.from({ length: count }, (_, i) => i).sort((x, y) => sims[y] - sims[x] || x - y)
+  // فقط کلمه‌های اصلی رتبه می‌گیرن؛ شکل‌ها (جمع، صفت برتر و ...) بعداً رتبه‌ی کلمه‌ی اصلی‌شون رو می‌گیرن
+  const order = Array.from({ length: count }, (_, i) => i)
+    .filter((i) => i === a || !baseOf.has(keys[i])) // خود جواب همیشه هست، حتی اگه توی forms.txt بوده
+    .sort((x, y) => sims[y] - sims[x] || x - y)
   const byWord = new Map()
   order.forEach((i, r) => byWord.set(keys[i], r + 1))
+  for (const [form, base] of baseOf) {
+    if (form !== answer) byWord.set(form, base === answer ? 2 : byWord.get(base))
+  }
   const result = { byWord, list: order.map((i) => words[i]) }
 
   rankCache.set(answer, result)

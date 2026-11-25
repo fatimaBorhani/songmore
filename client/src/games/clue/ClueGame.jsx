@@ -117,6 +117,8 @@ function ClueGame({ user }) {
     <main className="clue-page">
       <div className="clue-title-row">
         <h1>{GAME_TITLE}</h1>
+        {/* بازی آزمایشیه: رتبه‌بندی معنایی هنوز خوب نیست */}
+        <span className="beta-badge">آزمایشی</span>
         <span className="clue-help-slot">
           <HelpButton onClick={openHelp} />
         </span>

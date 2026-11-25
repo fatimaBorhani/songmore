@@ -23,7 +23,7 @@
   white-space: nowrap;
 }
 
-/* عنوان درشت وسط، دکمه‌ی «؟» گوشه */
+/* عنوان درشت وسط (با برچسب «آزمایشی»)، دکمه‌ی چراغ گوشه */
 .clue-title-row {
   position: relative;
   display: flex;

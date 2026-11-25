@@ -56,7 +56,10 @@ function SmallCard({ game }) {
       <span className="small-icon">
         <GameIcon type={game.icon} />
       </span>
-      <span className="small-title">{game.title}</span>
+      <span className="small-title">
+        {game.title}
+        {game.beta && <span className="beta-badge">آزمایشی</span>}
+      </span>
       <span className="small-desc">{game.description}</span>
       {game.ready ? (
         <span className="small-cta">{game.cta ?? 'بازی کن ←'}</span>

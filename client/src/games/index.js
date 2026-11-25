@@ -33,6 +33,7 @@ export const GAMES = [
     description: 'کلمه‌ی امروز رو از روی نزدیکی معنی حدس‌هات پیدا کن.',
     icon: 'search',
     ready: true,
+    beta: true, // برچسب «آزمایشی» (رتبه‌بندی معنایی هنوز خوب نیست)
   },
   {
     id: 'survey',

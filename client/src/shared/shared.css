@@ -587,3 +587,17 @@ button:disabled {
   color: #fff;
 }
 
+/* برچسب «آزمایشی» (بازی‌ای که هنوز کامل نیست؛ games/index.js → beta) */
+.beta-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-inline-start: 8px;
+  padding: 1px 10px;
+  border-radius: 999px;
+  border: 1px dashed #8f8fff;
+  color: #a9a9ff;
+  font-size: 12px;
+  font-weight: 700;
+  vertical-align: middle;
+  white-space: nowrap;
+}

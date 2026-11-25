@@ -1,3 +1,4 @@
+import { copyText } from '../../../shared/copy.js'
 import { useState } from 'react'
 import { STAGES } from '../stages.js'
 import { faNumber, faSeconds } from '../../../shared/format.js'
@@ -21,16 +22,11 @@ function GameOver({ answer, guesses, score, onNext, busy, celebrating, practice,
   const dayDone = Boolean(day?.dayFinished)
   const correctGuess = guesses.find((g) => g.result === 'correct')
   const gaveUp = guesses.some((g) => g.result === 'gaveup')
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false) // false، 'ok' یا 'fail'
 
   async function copyResult() {
-    try {
-      await navigator.clipboard.writeText(buildShareText(day))
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch {
-      // کپی خودکار همه‌جا کار نمی‌کنه؛ مشکلی نیست
-    }
+    setCopied((await copyText(buildShareText(day))) ? 'ok' : 'fail')
+    setTimeout(() => setCopied(false), 2000)
   }
 
   const answerText = `${answer.title}${answer.altTitle ? ` (${answer.altTitle})` : ''} — ${answer.credit}`
@@ -83,7 +79,7 @@ function GameOver({ answer, guesses, score, onNext, busy, celebrating, practice,
       <div className="game-over-actions">
         {!practice && dayDone && (
           <button type="button" className="primary" onClick={copyResult}>
-            {copied ? 'کپی شد' : 'کپی نتیجه'}
+            {copied === 'ok' ? 'کپی شد' : copied === 'fail' ? 'کپی نشد' : 'کپی نتیجه'}
           </button>
         )}
         {onNext && (

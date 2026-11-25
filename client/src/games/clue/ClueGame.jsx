@@ -1,3 +1,4 @@
+import { copyText } from '../../shared/copy.js'
 import { useEffect, useRef, useState } from 'react'
 import { getClueGame, resetClueTest, sendClueGiveUp, sendClueGuess, sendClueHint } from './api.js'
 import { shareText, sortGuesses } from './clue.js'
@@ -82,12 +83,7 @@ function ClueGame({ user }) {
 
   async function handleShare() {
     const share = shareText(game, GAME_TITLE)
-    try {
-      await navigator.clipboard.writeText(share)
-      setMessage('نتیجه کپی شد')
-    } catch {
-      setMessage('کپی نشد')
-    }
+    setMessage((await copyText(share)) ? 'نتیجه کپی شد' : 'کپی نشد')
   }
 
   if (loadError && !game) {

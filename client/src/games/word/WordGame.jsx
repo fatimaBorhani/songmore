@@ -1,3 +1,4 @@
+import { copyText, shareText as shareResult } from '../../shared/copy.js'
 import { useEffect, useRef, useState } from 'react'
 import { getWordGame, resetWordTest, sendWordGiveUp, sendWordGuess, sendWordSuggestion } from './api.js'
 import { isUnknownCharacterKey, letterFromKeyEvent, letterStatuses, shareText } from './letters.js'
@@ -266,20 +267,8 @@ function WordGame({ user }) {
   async function handleShare() {
     const text = shareText(game, GAME_TITLE)
     // روی گوشی منوی اشتراک خود گوشی؛ روی کامپیوتر کپی
-    if (!isDesktop && navigator.share) {
-      try {
-        await navigator.share({ text })
-        return
-      } catch {
-        // کاربر بستش یا پشتیبانی نشد؛ می‌ریم سراغ کپی
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(text)
-      showToast('نتیجه کپی شد')
-    } catch {
-      showToast('کپی نشد')
-    }
+    if (!isDesktop && (await shareResult(text))) return
+    showToast((await copyText(text)) ? 'نتیجه کپی شد' : 'کپی نشد')
   }
 
   if (loadError && !game) {

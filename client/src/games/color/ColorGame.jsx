@@ -1,3 +1,4 @@
+import { copyText } from '../../shared/copy.js'
 import { useEffect, useRef, useState } from 'react'
 import { getColorGame, sendColorGuess, startColorRound } from './api.js'
 import { INITIAL_HSB, randomStartHsb, shareText } from './color.js'
@@ -154,12 +155,7 @@ function ColorGame({ user }) {
   }
 
   async function share() {
-    try {
-      await navigator.clipboard.writeText(shareText(game, GAME_TITLE))
-      notify('نتیجه کپی شد')
-    } catch {
-      notify('کپی نشد')
-    }
+    notify((await copyText(shareText(game, GAME_TITLE))) ? 'نتیجه کپی شد' : 'کپی نشد')
   }
 
   if (error && !game) {

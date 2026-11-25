@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { searchSongs } from '../api.js'
 import SongSuggestDialog from './SongSuggestDialog.jsx'
 
@@ -9,19 +9,30 @@ function SearchBox({ disabled, onChoose }) {
   const [results, setResults] = useState([])
   const [searchedFor, setSearchedFor] = useState('') // جستجوی کدوم متن تموم شده
   const [suggesting, setSuggesting] = useState(null) // متنی که پنجره‌ی پیشنهاد باهاش باز شده
-  const timerRef = useRef(null)
 
   useEffect(() => {
-    clearTimeout(timerRef.current)
     // جعبه خالیه: لیست خودش نشون داده نمی‌شه (showList)، لازم نیست چیزی پاک بشه
     if (!query.trim()) return
-    timerRef.current = setTimeout(async () => {
-      const found = await searchSongs(query)
+
+    let active = true // اگه متن عوض شد، جواب قدیمی دیر رسیده رو نادیده بگیر
+    const timer = setTimeout(async () => {
+      const found = await searchSongs(query).catch(() => [])
+      if (!active) return
       setResults(found)
       setSearchedFor(query)
     }, 250)
-    return () => clearTimeout(timerRef.current)
+
+    return () => {
+      active = false
+      clearTimeout(timer)
+    }
   }, [query])
+
+  function changeQuery(event) {
+    const nextQuery = event.target.value
+    setQuery(nextQuery)
+    if (!nextQuery.trim()) setResults([])
+  }
 
   function choose(song) {
     onChoose(song)
@@ -45,7 +56,7 @@ function SearchBox({ disabled, onChoose }) {
         placeholder="اسم آهنگ یا خواننده..."
         value={query}
         disabled={disabled}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={changeQuery}
       />
       {showList && (
         <ul className="search-results">

@@ -24,6 +24,7 @@
   --border: #2a3140;
   --border-strong: #3a4252;
   --line: #0a0c10; /* دور برچسب‌ها و کارت‌های کاغذی */
+  --edge: #3a4252; /* دور کارت‌ها روی پس‌زمینه (توی شب باید دیده بشه) */
   --shadow: #05070a; /* سایه‌ی سخت */
   --elev-shadow: rgba(0, 0, 0, 0.5); /* سایه‌ی نرم پنجره‌ها */
   --overlay: rgba(5, 7, 11, 0.72);
@@ -90,6 +91,7 @@
   --border: #d6cdbd;
   --border-strong: #b9ae9b;
   --line: #1a1714;
+  --edge: #1a1714;
   --shadow: #1a1714;
   --elev-shadow: rgba(26, 23, 20, 0.22);
   --overlay: rgba(26, 23, 20, 0.45);

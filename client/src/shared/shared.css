@@ -762,3 +762,71 @@ html {
     transition: none;
   }
 }
+
+/* ---------- سبک کارت‌ها: «برچسب کج» ----------
+   همه‌ی کارت‌ها: گوشه‌ی تقریباً تیز (۴)، دور ۲ پیکسلی (--edge) و سایه‌ی سخت.
+   «.site» جلوشون هست تا از استایل خود هر بازی (که بعداً لود می‌شه) قوی‌تر باشن. */
+.site .help-dialog,
+.site .auth-backdrop .auth-card,
+.site .leaderboard,
+.site .giveup-dialog,
+.site .continue-dialog,
+.site .player-card,
+.site .search-results,
+.site .mode-switch,
+.site .word-result,
+.site .word-keyboard.map,
+.site .clue-menu-list,
+.site .color-stage,
+.site .color-ready,
+.site .color-panel,
+.site .color-rounds,
+.site .survey-card,
+.site .survey-done-card,
+.site .profile-card,
+.site .profile-side,
+.site .profile-tabs,
+.site .profile-badge,
+.site .profile-rank-card,
+.site .about-hero,
+.site .about-league,
+.site .about-night,
+.site .about-us-card,
+.site .about-games,
+.site .about-one-game,
+.site .about-contact,
+.site .bento-card.featured {
+  border-radius: 4px;
+  border: 2px solid var(--edge);
+  box-shadow: 5px 5px 0 var(--shadow);
+}
+
+/* ردیف‌های لیست‌ها: همون شکل، سایه‌ی کوچیک‌تر */
+.site .guess-history li,
+.site .day-summary li,
+.site .word-day-summary li,
+.site .about-mini-table .row {
+  border-radius: 4px;
+  border: 2px solid var(--edge);
+  box-shadow: 3px 3px 0 var(--shadow);
+}
+
+/* کارت‌های رنگی بزرگ (hero) یه کم کج، مثل برچسب */
+.site .survey-done-card,
+.site .profile-rank-card {
+  transform: rotate(-0.8deg);
+}
+
+/* تب‌ها و دکمه‌های داخل این کارت‌ها هم گوشه‌ی کم */
+.site .profile-tabs button,
+.site .mode-switch a,
+.site .clue-menu-list button {
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site .survey-done-card,
+  .site .profile-rank-card {
+    transform: none;
+  }
+}

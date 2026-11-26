@@ -9,7 +9,7 @@ import './weekly.css'
 const GAME_NAMES = [
   ['song', 'جورزیک'],
   ['word', 'جورچین'],
-  ['color', 'رنگ'],
+  ['color', 'جورنگ'],
   ['clue', 'جوربندی'],
 ]
 
@@ -41,7 +41,7 @@ function MyCard({ me, user }) {
       </div>
       <ul className="weekly-me-games">
         {GAME_NAMES.map(([id, name]) => (
-          <li key={id}>
+          <li key={id} className={`game-${id}`}>
             {name} <b>{faNumber(me[id])}</b>
           </li>
         ))}

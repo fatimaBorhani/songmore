@@ -5,11 +5,18 @@ import { getTodayDateString } from '../../core/today.js'
 import { hasLyricsData } from './puzzles.js'
 import { pickNewRandomLyrics } from './daily.js'
 import { clearLyricsGames, getLyricsState, submitLyricsAnswer } from './game.js'
+import { getLyricsStats } from './playerStats.js'
 
 // حالت تست (همون پرچم npm run dev)
 export const LYRICS_TEST_MODE = process.argv.includes('--random-song')
 
 export const lyricsRouter = express.Router()
+
+// آمار برای صفحه‌ی حساب (فقط کاربر واردشده). قبل از چک داده‌ست تا بدون فایل داده هم جواب بده
+lyricsRouter.get('/stats', (req, res) => {
+  if (!req.user) return res.status(401).json({ error: 'NOT_LOGGED_IN' })
+  res.json(getLyricsStats(req.playerKey, getTodayDateString()))
+})
 
 // تا وقتی داده‌ی بازی ساخته نشده (tools/build_lyrics_game.py)، همه‌ی درخواست‌ها NO_DATA می‌گیرن
 lyricsRouter.use((req, res, next) => {

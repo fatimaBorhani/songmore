@@ -5,11 +5,12 @@ import { getWordStats } from '../games/word/api.js'
 import { getColorStats } from '../games/color/api.js'
 import { getSurveyStats } from '../games/survey/api.js'
 import { getClueStats } from '../games/clue/api.js'
+import { getLyricsStats } from '../games/lyrics/api.js'
 import { logout } from '../shared/api.js'
 import { faNumber } from '../shared/format.js'
 import { SITE_NAME } from '../shared/site.js'
 import ProfileCalendar from './ProfileCalendar.jsx'
-import { ClueStatsPanel, ColorStatsPanel, SurveyStatsPanel, WordStatsPanel } from './ProfileStats.jsx'
+import { ClueStatsPanel, ColorStatsPanel, LyricsStatsPanel, SurveyStatsPanel, WordStatsPanel } from './ProfileStats.jsx'
 import { faMonthYear } from './calendar.js'
 import '../games/survey/survey.css' // برای کارت هدف جمعی (توی تب نظرسنجی)
 import './profile.css'
@@ -34,6 +35,7 @@ const TABS = [
   { id: 'word', label: 'جورچین', load: getWordStats, Panel: WordStatsPanel },
   { id: 'color', label: 'جورنگ', load: getColorStats, Panel: ColorStatsPanel },
   { id: 'clue', label: 'جوربندی', load: getClueStats, Panel: ClueStatsPanel },
+  { id: 'lyrics', label: 'شعر یادت نره', load: getLyricsStats, Panel: LyricsStatsPanel },
   { id: 'survey', label: 'صد جور', load: getSurveyStats, Panel: SurveyStatsPanel },
 ]
 

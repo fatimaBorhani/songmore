@@ -440,7 +440,8 @@
 }
 
 .profile-stats .total dt {
-  color: var(--hero-soft-ink);
+  color: var(--text-soft);
+  font-weight: 700;
 }
 
 .profile-stats .total dd {

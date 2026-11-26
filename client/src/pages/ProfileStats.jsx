@@ -113,6 +113,26 @@ export function ClueStatsPanel({ stats }) {
   )
 }
 
+export function LyricsStatsPanel({ stats }) {
+  if (stats.songs === 0) return <EmptyStats text="هنوز شعر یادت نره بازی نکردی." to="/lyrics" linkText="برو به شعر یادت نره" />
+  const rows = [
+    ['آهنگ‌های جواب‌داده', faNumber(stats.songs)],
+    ['میانگین امتیاز هر روز', stats.played ? withOf(faNumber(stats.averageDay, Number.isInteger(stats.averageDay) ? 0 : 1), faNumber(stats.maxDay)) : '—'],
+    ['بهترین روز', stats.played ? withOf(faNumber(stats.bestDay), faNumber(stats.maxDay)) : '—'],
+    ['آهنگ‌هایی که هر دو خطش درست بود', faNumber(stats.perfectSongs)],
+    ['خط‌های درست', faNumber(stats.okLines)],
+    ['خط‌های نزدیک', faNumber(stats.closeLines)],
+    ['خط‌های غلط', faNumber(stats.wrongLines)],
+    ['روزهای پشت‌سرهم', faNumber(stats.currentStreak)],
+    ['بهترین رکورد', faNumber(stats.maxStreak)],
+  ]
+  return (
+    <div className="profile-panels">
+      <StatsList label="آمار شعر یادت نره" rows={rows} total={['روزهای تموم‌شده', faNumber(stats.played)]} />
+    </div>
+  )
+}
+
 export function SurveyStatsPanel({ stats }) {
   if (stats.answered === 0 && stats.skipped === 0) {
     return <EmptyStats text="هنوز به سؤالی جواب ندادی." to="/survey" linkText="برو به نظرسنجی" />

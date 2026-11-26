@@ -19,3 +19,8 @@ export function resetLyricsTest() {
 export function clipAddress(path) {
   return `${API_URL}${path}`
 }
+
+// آمار برای صفحه‌ی حساب (فقط کاربر واردشده)
+export function getLyricsStats() {
+  return call('/api/lyrics/stats')
+}

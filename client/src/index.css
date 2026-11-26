@@ -43,6 +43,8 @@
   --hero: #2e3d5c; /* کارت‌های رنگی بزرگ (کارت اول صفحه‌ی اول، آخر نظرسنجی) */
   --hero-ink: #ece6d8;
   --hero-soft-ink: #c3cbd9;
+  --meter: #2e3d5c; /* نوار نزدیکی جوربندی (متن روش همون --text) */
+  --meter-cold: #2a303c; /* نوار حدس‌های دورتر: کم‌رنگ‌تر از --meter */
 
   --paper: #ece6d8; /* برچسب کاغذی */
   --paper-ink: #12151c;
@@ -110,6 +112,8 @@
   --hero: #1f2b4d;
   --hero-ink: #fffaf0;
   --hero-soft-ink: #cfd6e6;
+  --meter: #e0a526;
+  --meter-cold: #d3c8b5;
 
   --paper: #fffaf0;
   --paper-ink: #1a1714;

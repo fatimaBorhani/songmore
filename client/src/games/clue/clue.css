@@ -1,8 +1,8 @@
 /* بازی «جوربندی»: یه ستون باریک وسط صفحه؛ رنگ‌ها همه از تم سایت (index.css) */
 .clue-page {
-  --heat-hot: var(--accent);
-  --heat-warm: var(--accent);
-  --heat-cold: var(--incorrect);
+  --heat-hot: var(--meter);
+  --heat-warm: var(--meter);
+  --heat-cold: var(--meter-cold);
 
   max-width: 540px;
   margin: 0 auto;
@@ -170,7 +170,7 @@
 }
 
 /* یه ردیف حدس: مثل نوار پیشرفت از راست به اندازه‌ی نزدیکی (--fill) رنگ می‌خوره؛
-   داغ و ولرم آبی سایت، سردتر طوسی؛ خیلی دورها فقط یه نوار باریک کنارشون */
+   داغ و ولرم --meter (شب سرمه‌ای، روز خردلی؛ متن روش همیشه خوانا)، سردتر طوسی؛ خیلی دورها فقط یه نوار باریک کنارشون */
 .clue-row {
   --fill-color: var(--heat-cold);
   position: relative;
@@ -189,7 +189,7 @@
 
 .clue-row.heat-hot,
 .clue-row.heat-warm {
-  --fill-color: var(--accent);
+  --fill-color: var(--meter);
 }
 
 .clue-row.filled {

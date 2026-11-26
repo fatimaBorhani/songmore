@@ -39,7 +39,7 @@
   width: 56px;
   height: 56px;
   flex-shrink: 0;
-  border-radius: 16px;
+  border-radius: 4px;
   background: var(--chip);
   display: flex;
   align-items: center;
@@ -84,7 +84,7 @@
   overflow-x: auto;
   scrollbar-width: none;
   padding: 4px;
-  border-radius: 16px;
+  border-radius: 4px;
   background: var(--sunken);
   border: 1px solid var(--border);
 }
@@ -94,7 +94,7 @@
   min-height: 44px;
   padding: 0 12px; /* تب‌ها یه خطی می‌مونن */
   white-space: nowrap;
-  border-radius: 12px;
+  border-radius: 4px;
   border: none;
   background: transparent;
   color: var(--text-soft);
@@ -117,7 +117,7 @@
 
 .profile-card {
   box-sizing: border-box;
-  border-radius: 20px;
+  border-radius: 4px;
   background: var(--surface);
   border: 1px solid var(--border);
 }
@@ -183,14 +183,14 @@
 .profile-dist-bar {
   flex-grow: 1;
   height: 12px;
-  border-radius: 6px;
+  border-radius: 4px;
   background: var(--border);
   overflow: hidden;
 }
 
 .profile-dist-bar div {
   height: 100%;
-  border-radius: 6px;
+  border-radius: 4px;
   background: var(--accent);
 }
 
@@ -239,7 +239,7 @@
 .profile-badge {
   box-sizing: border-box;
   padding: 14px 12px;
-  border-radius: 16px;
+  border-radius: 4px;
   border: 1px solid var(--border);
   background: var(--sunken);
   display: flex;
@@ -257,7 +257,7 @@
 .profile-badge-disc {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
+  border-radius: 4px;
   background: var(--border);
   color: var(--text-muted);
   display: flex;
@@ -290,7 +290,7 @@
 .profile-badge-state {
   margin-top: auto;
   padding: 2px 12px;
-  border-radius: 999px;
+  border-radius: 4px;
   background: color-mix(in srgb, var(--accent) 25%, transparent);
   color: var(--hero-soft-ink);
   font-size: 12px;
@@ -363,7 +363,7 @@
 .heatmap i,
 .heatmap-legend i {
   display: block;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 .heatmap i {
@@ -450,7 +450,7 @@
 
 .profile-logout {
   min-height: 48px;
-  border-radius: 14px;
+  border-radius: 4px;
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text-soft);
@@ -477,7 +477,7 @@
     flex: 0 0 280px;
     box-sizing: border-box;
     padding: 28px 22px 22px;
-    border-radius: 24px;
+    border-radius: 4px;
     background: var(--card);
     border: 1px solid var(--chip);
     flex-direction: column;
@@ -487,7 +487,7 @@
   .profile-avatar {
     width: 96px;
     height: 96px;
-    border-radius: 50%;
+    border-radius: 4px;
     border: 3px solid var(--accent);
     font-size: 42px;
   }
@@ -511,7 +511,7 @@
     margin-top: 12px;
     box-sizing: border-box;
     padding: 14px 16px;
-    border-radius: 16px;
+    border-radius: 4px;
     background: var(--hero);
     box-shadow: inset 0 0 0 1px var(--accent);
     display: flex;

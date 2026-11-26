@@ -33,7 +33,7 @@
 
 .song-help-stages span {
   padding: 2px 10px;
-  border-radius: 999px;
+  border-radius: 4px;
   background: var(--surface);
   border: 1px solid var(--border);
   font-size: 13px;
@@ -63,7 +63,7 @@
   min-height: 46px;
   padding: 8px 16px;
   box-sizing: border-box;
-  border-radius: 12px;
+  border-radius: 4px;
   background: var(--surface);
   animation: fade-in 0.25s ease;
 }
@@ -73,7 +73,7 @@
   height: 8px;
   flex-shrink: 0;
   box-sizing: border-box;
-  border-radius: 50%;
+  border-radius: 4px;
 }
 
 .guess-text {
@@ -133,7 +133,7 @@
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-  border-radius: 50%;
+  border-radius: 4px;
   background: var(--accent);
   color: var(--accent-ink);
   display: flex;
@@ -152,7 +152,7 @@
   width: 100%;
   box-sizing: border-box;
   padding: 22px 22px 52px;
-  border-radius: 24px;
+  border-radius: 4px;
   background: var(--card);
   border: 1px solid var(--border);
   display: flex;
@@ -201,7 +201,7 @@
 .wave.seekable:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 6px;
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
 .wave.dragging {
@@ -236,7 +236,7 @@
   left: -4px;
   width: 10px;
   height: 10px;
-  border-radius: 50%;
+  border-radius: 4px;
   background: var(--text);
 }
 
@@ -246,7 +246,7 @@
   top: -30px;
   transform: translateX(-50%);
   padding: 2px 8px;
-  border-radius: 6px;
+  border-radius: 4px;
   background: var(--bg);
   border: 1px solid var(--border);
   color: var(--text);
@@ -258,7 +258,7 @@
 
 .wave-bar {
   flex: 1;
-  border-radius: 999px;
+  border-radius: 4px;
   background: var(--wave-locked);
   transition: background-color 0.15s ease;
 }
@@ -276,7 +276,7 @@
   width: 72px;
   height: 72px;
   margin-top: -36px;
-  border-radius: 50%;
+  border-radius: 4px;
   border: 6px solid var(--bg);
   background: var(--accent);
   color: var(--accent-ink);
@@ -307,7 +307,7 @@
   height: 60px;
   padding: 0 14px;
   box-sizing: border-box;
-  border-radius: 14px;
+  border-radius: 4px;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
@@ -333,7 +333,7 @@
   padding: 4px;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 4px;
   max-height: 260px;
   overflow-y: auto;
 }
@@ -345,7 +345,7 @@
   gap: 8px;
   padding: 10px 12px;
   border: none;
-  border-radius: 10px;
+  border-radius: 4px;
   background: none;
   color: var(--text);
   font-size: 14px;
@@ -395,7 +395,7 @@
   align-self: center;
   width: 52px;
   height: 52px;
-  border-radius: 50%;
+  border-radius: 4px;
   background: var(--accent-soft);
   color: var(--accent-text);
   display: flex;
@@ -422,7 +422,7 @@
   height: 60px;
   flex-shrink: 0;
   padding: 0;
-  border-radius: 16px;
+  border-radius: 4px;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
@@ -477,7 +477,7 @@
 .game-over-actions button {
   height: 46px;
   padding: 0 22px;
-  border-radius: 14px;
+  border-radius: 4px;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
@@ -641,7 +641,7 @@
   display: flex;
   gap: 4px;
   padding: 4px;
-  border-radius: 16px;
+  border-radius: 4px;
   background: var(--sunken);
   border: 1px solid var(--border);
 }
@@ -649,7 +649,7 @@
 .mode-switch a {
   flex: 1;
   min-height: 44px;
-  border-radius: 12px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -699,7 +699,7 @@
   max-width: 360px;
   box-sizing: border-box;
   padding: 26px 22px 22px;
-  border-radius: 28px;
+  border-radius: 4px;
   background: var(--card);
   border: 1px solid var(--border);
   box-shadow: 0 20px 60px var(--elev-shadow);
@@ -713,7 +713,7 @@
 .giveup-icon {
   width: 52px;
   height: 52px;
-  border-radius: 50%;
+  border-radius: 4px;
   background: var(--accent-soft);
   color: var(--accent-text);
   display: flex;
@@ -743,7 +743,7 @@
 .giveup-actions button {
   flex: 1;
   min-height: 52px;
-  border-radius: 16px;
+  border-radius: 4px;
   font: inherit;
   font-size: 15px;
   cursor: pointer;
@@ -813,7 +813,7 @@
   align-items: center;
   gap: 10px;
   padding: 10px 14px;
-  border-radius: 14px;
+  border-radius: 4px;
   background: var(--surface);
   border: 1px solid var(--border);
   font-size: 14px;

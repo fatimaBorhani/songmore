@@ -41,7 +41,7 @@
   min-height: 210px;
   box-sizing: border-box;
   padding: 22px;
-  border-radius: 26px;
+  border-radius: 4px;
   background: var(--hero);
   color: var(--hero-ink);
   display: flex;
@@ -68,7 +68,7 @@
   position: relative;
   align-self: flex-start;
   padding: 2px 12px;
-  border-radius: 999px;
+  border-radius: 4px;
   background: color-mix(in srgb, var(--text-strong) 16%, transparent);
   font-size: 13px;
   font-weight: 700;
@@ -80,7 +80,7 @@
   top: 20px;
   right: 20px;
   padding: 3px 12px;
-  border-radius: 999px;
+  border-radius: 4px;
   background: var(--paper);
   color: var(--accent);
   font-size: 13px;
@@ -136,7 +136,7 @@
   order: 1;
   margin-bottom: 12px;
   padding: 18px;
-  border-radius: 24px;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -174,7 +174,7 @@
 .about-mini-table .row {
   height: 36px;
   box-sizing: border-box;
-  border-radius: 10px;
+  border-radius: 4px;
   background: var(--surface);
   display: flex;
   align-items: center;
@@ -186,7 +186,7 @@
 .about-mini-table .row b {
   width: 22px;
   height: 22px;
-  border-radius: 50%;
+  border-radius: 4px;
   background: var(--border);
   color: var(--text);
   font-size: 11px;
@@ -198,7 +198,7 @@
 /* جای اسم: فقط یه نوار طوسی (اسم الکی نمی‌نویسیم) */
 .about-mini-table .row i {
   height: 7px;
-  border-radius: 999px;
+  border-radius: 4px;
   background: var(--border-strong);
 }
 
@@ -234,11 +234,11 @@
 
 .about-night {
   border-top: 1px solid var(--border);
-  border-radius: 24px 24px 0 0;
+  border-radius: 4px 4px 0 0;
 }
 
 .about-join {
-  border-radius: 0 0 24px 24px;
+  border-radius: 0 0 4px 4px;
 }
 
 .about-fact .about-art,
@@ -252,7 +252,7 @@
   width: 36px;
   height: 36px;
   flex: 0 0 36px;
-  border-radius: 11px;
+  border-radius: 4px;
   background: var(--about-blue-deep);
   color: var(--about-blue-soft);
   display: flex;
@@ -295,12 +295,12 @@
 
 .about-us-card {
   padding: 22px 20px 6px;
-  border-radius: 24px 24px 0 0;
+  border-radius: 4px 4px 0 0;
 }
 
 .about-contact {
   padding: 6px 20px 22px;
-  border-radius: 0 0 24px 24px;
+  border-radius: 0 0 4px 4px;
 }
 
 .about-us-card h2 {
@@ -334,7 +334,7 @@
   margin-top: 4px;
   min-height: 48px;
   padding: 0 26px;
-  border-radius: 999px;
+  border-radius: 4px;
   background: var(--accent);
   color: var(--accent-ink);
   text-decoration: none;
@@ -386,7 +386,7 @@
     grid-column: span 4;
     min-height: 340px;
     padding: 40px;
-    border-radius: 32px;
+    border-radius: 4px;
     gap: 12px;
   }
 
@@ -429,7 +429,7 @@
   .about-games {
     padding: 28px;
     border: 1px solid var(--border);
-    border-radius: 28px;
+    border-radius: 4px;
     flex-direction: column;
     justify-content: space-between;
     gap: 18px;
@@ -437,7 +437,7 @@
 
   .about-night {
     grid-column: span 2;
-    border-radius: 32px;
+    border-radius: 4px;
   }
   .about-league,
   .about-together {
@@ -488,7 +488,7 @@
 
   .about-mini-table .row {
     height: 44px;
-    border-radius: 12px;
+    border-radius: 4px;
   }
 
   /* ساعت نیمه‌شب */
@@ -537,7 +537,7 @@
     width: 48px;
     height: 48px;
     box-sizing: border-box;
-    border-radius: 50%;
+    border-radius: 4px;
     border: 3px solid var(--card);
   }
   .about-faces span + span {
@@ -559,7 +559,7 @@
   .about-one-game {
     width: 72px;
     height: 72px;
-    border-radius: 22px;
+    border-radius: 4px;
     background: var(--about-blue-deep);
     border: 1px solid var(--accent);
     color: var(--text-strong);
@@ -572,7 +572,7 @@
   .about-bulb {
     width: 76px;
     height: 76px;
-    border-radius: 50%;
+    border-radius: 4px;
     background: var(--about-blue-deep);
     color: var(--hero-soft-ink);
     box-shadow:
@@ -586,7 +586,7 @@
   /* مهمان ← توی لیگ */
   .about-guest {
     padding: 8px 14px;
-    border-radius: 999px;
+    border-radius: 4px;
     border: 1px dashed var(--text-muted);
     font-size: 14px;
     color: var(--text-soft);
@@ -594,7 +594,7 @@
 
   .about-in-league {
     padding: 8px 14px;
-    border-radius: 999px;
+    border-radius: 4px;
     background: var(--accent);
     color: var(--accent-ink);
     font-size: 14px;
@@ -617,7 +617,7 @@
 
   .about-game-tile {
     height: 52px;
-    border-radius: 14px;
+    border-radius: 4px;
     background: var(--about-blue-deep);
     color: var(--text-strong);
     display: flex;
@@ -642,7 +642,7 @@
   .about-us-card,
   .about-contact {
     padding: 36px;
-    border-radius: 28px;
+    border-radius: 4px;
     gap: 12px;
   }
 

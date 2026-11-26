@@ -6,7 +6,8 @@
 //   /api/clue/...  بازی «جوربندی»
 //   /api/weekly    جدول هفته (امتیاز یکسان همه‌ی بازی‌ها)
 //   /api/survey/.. نظرسنجی «صد جور» (جمع کردن داده برای بازی‌های بعدی)
-//   /clips/...     فایل‌های کلیپ بازی آهنگ
+//   /api/lyrics/.. بازی «شعر یادت نره»
+//   /clips/...     فایل‌های کلیپ بازی آهنگ (و clips/lyrics/ برای «شعر یادت نره»)
 import express from 'express'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -20,6 +21,7 @@ import { colorRouter } from './games/color/routes.js'
 import { surveyRouter } from './games/survey/routes.js'
 import { clueRouter } from './games/clue/routes.js'
 import { weeklyRouter } from './games/weekly/routes.js'
+import { lyricsRouter } from './games/lyrics/routes.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..')
@@ -56,6 +58,7 @@ app.use('/api/color', colorRouter)
 app.use('/api/survey', surveyRouter)
 app.use('/api/clue', clueRouter)
 app.use('/api/weekly', weeklyRouter)
+app.use('/api/lyrics', lyricsRouter)
 app.use('/clips', express.static(CLIPS_DIR))
 
 // آدرس API که وجود نداره: جواب JSON (نه صفحه‌ی HTML پیش‌فرض Express)

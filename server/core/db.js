@@ -235,6 +235,25 @@ db.exec(`
     created_at INTEGER NOT NULL,
     PRIMARY KEY (player_key, date)
   );
+
+  -- «شعر یادت نره»: ۳ تیکه‌ی هر روز (شناسه‌ها از data/lyrics/lyrics_game.json)
+  CREATE TABLE IF NOT EXISTS lyrics_daily (
+    date TEXT NOT NULL,
+    slot INTEGER NOT NULL,
+    puzzle_id TEXT NOT NULL,
+    PRIMARY KEY (date, slot)
+  );
+
+  -- «شعر یادت نره»: دو خطی که بازیکن برای هر تیکه نوشته (نمره ذخیره نمی‌شه، هر بار حساب می‌شه)
+  CREATE TABLE IF NOT EXISTS lyrics_answers (
+    player_key TEXT NOT NULL,
+    date TEXT NOT NULL,
+    slot INTEGER NOT NULL,
+    line1 TEXT NOT NULL,
+    line2 TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    PRIMARY KEY (player_key, date, slot)
+  );
 `)
 
 // جدول حدس‌های مسابقه‌ای (اگه از قبل نباشه). دیتابیس‌های قدیمی پایین‌تر ارتقا پیدا می‌کنن.

@@ -4,7 +4,7 @@ import express from 'express'
 import { db } from './db.js'
 
 // بازی‌هایی که راهنما دارن (همون شناسه‌های games/index.js کلاینت)
-export const HELP_GAMES = ['song', 'word', 'color', 'clue', 'survey']
+export const HELP_GAMES = ['song', 'word', 'color', 'clue', 'survey', 'lyrics']
 
 export const helpRouter = express.Router()
 

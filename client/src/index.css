@@ -61,10 +61,10 @@
   --vinyl-2: #26334d;
   --vinyl-label: #ece6d8;
 
-  --correct: #6d9a8c; /* جورچین: جای درست */
-  --correct-ink: #0d1512;
-  --present: #c9a45a; /* توی کلمه هست */
-  --present-ink: #12151c;
+  --correct: #22796b; /* جورچین: جای درست (توی هر دو حالت یه رنگ، همون رنگ روز) */
+  --correct-ink: #fffaf0;
+  --present: #e0a526; /* توی کلمه هست (همون رنگ روز) */
+  --present-ink: #1a1714;
   --absent: #222833;
   --absent-ink: #6c7585;
   --incorrect: #4b5363;

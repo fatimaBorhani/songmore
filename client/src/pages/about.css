@@ -64,15 +64,6 @@
   color: var(--hero-soft-ink);
 }
 
-.about-badge {
-  position: relative;
-  align-self: flex-start;
-  padding: 2px 12px;
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--text-strong) 16%, transparent);
-  font-size: 13px;
-  font-weight: 700;
-}
 
 /* برچسب کج سفید گوشه‌ی کارت */
 .about-sticker {
@@ -356,14 +347,6 @@
   color: var(--text-muted);
 }
 
-.about-note {
-  margin-top: 28px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-  font-size: 12px;
-  color: var(--text-muted);
-  line-height: 1.9;
-}
 
 /* ---------- کامپیوتر: بنتو ۶ ستونه با تصویر ---------- */
 @media (min-width: 760px) {
@@ -407,10 +390,6 @@
     line-height: 2;
   }
 
-  .about-badge {
-    padding: 2px 14px;
-    font-size: 14px;
-  }
 
   .about-sticker {
     top: 34px;
@@ -691,10 +670,6 @@
     color: var(--border);
   }
 
-  .about-note {
-    margin-top: 48px;
-    font-size: 14px;
-  }
 }
 
 /* لینک «درباره» پایین صفحه‌ی اول */

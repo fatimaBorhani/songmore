@@ -7,13 +7,14 @@ build_lyrics_game.py
 
 ۱. پیشنهاد تطبیق (یه بار، یا هر وقت آهنگ تازه اومد):
        python tools/build_lyrics_game.py --suggest
-   هر آهنگ فایل ملودیفای رو با آهنگ‌های songs.json تطبیق می‌ده (از روی اسم فارسی خواننده
-   توی artists.json و طول آهنگ) و نتیجه رو توی tools/lyrics_match.csv می‌نویسه.
+   هر آهنگ فایل ملودیفای رو با آهنگ‌های songs.json تطبیق می‌ده: اول خواننده (اسم فارسی توی
+   artists.json)، بعد بین آهنگ‌های همون خواننده با اسم آهنگ (فارسی رو به فینگلیش برمی‌گردونه و
+   با اسم لاتین مقایسه می‌کنه) و طول آهنگ. نتیجه رو توی tools/lyrics_match.csv می‌نویسه.
    ستون‌ها: position, title, artist, song_id, offset_ms, note
    * ردیف‌هایی که song_id دارن وارد بازی می‌شن؛ اگه خالیه یا اشتباهه، دستی درستش کن.
    * offset_ms: اگه متن با فایل خودمون هم‌زمان نبود (مثلاً فایل ما چند ثانیه سکوت اول داره)،
      این‌قدر میلی‌ثانیه به همه‌ی زمان‌ها اضافه می‌شه (منفی هم می‌شه).
-   * ردیف‌هایی که از قبل song_id دارن دست نمی‌خورن (فقط ردیف‌های تازه اضافه می‌شن).
+   * ردیف‌هایی که از قبل song_id دارن دست نمی‌خورن؛ ردیف‌های بی song_id دوباره امتحان می‌شن.
 
 ۲. ساختن داده‌ی بازی:
        python tools/build_lyrics_game.py
@@ -38,6 +39,7 @@ import shutil
 import subprocess
 import sys
 import unicodedata
+from difflib import SequenceMatcher
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SONGS_JSON = os.path.join(ROOT, "data", "songs.json")
@@ -62,6 +64,9 @@ STOP_BEFORE_MS = 150        # این‌قدر قبل از شروع خط جواب
 AFTER_LINES = 4             # بعد از جواب تا شروع چندمین خط پخش می‌شه
 MAX_AFTER_MS = 20000
 DURATION_TOLERANCE_MS = 2500  # برای پیشنهاد تطبیق: فرق طول آهنگ ما و ملودیفای
+TITLE_AUTO = 0.8              # شباهت اسم آهنگ از این بیشتر = تطبیق خودکار
+TITLE_HINT = 0.6              # از این بیشتر = فقط پیشنهاد توی note
+DURATION_WARN_MS = 8000       # اسم جوره ولی طول این‌قدر فرق داره: احتمالاً نسخه‌ی دیگه‌ست (زنده، ریمیکس)
 
 
 def need_tool(name):
@@ -77,6 +82,47 @@ def norm(text):
     text = (text or "").lower().replace("ي", "ی").replace("ك", "ک")
     text = re.sub(r"[‌ً-ٰٟ]", "", text)
     return "".join(ch for ch in text if unicodedata.category(ch)[0] in "LN")
+
+
+# فارسی -> فینگلیش خیلی ساده، فقط برای مقایسه با اسم لاتین آهنگ‌ها
+FA_TO_LATIN = {
+    "ا": "a", "آ": "a", "ب": "b", "پ": "p", "ت": "t", "ث": "s", "ج": "j", "چ": "ch", "ح": "h",
+    "خ": "kh", "د": "d", "ذ": "z", "ر": "r", "ز": "z", "ژ": "zh", "س": "s", "ش": "sh", "ص": "s",
+    "ض": "z", "ط": "t", "ظ": "z", "ع": "", "غ": "gh", "ف": "f", "ق": "gh", "ک": "k", "گ": "g",
+    "ل": "l", "م": "m", "ن": "n", "و": "v", "ه": "h", "ی": "i", "ئ": "", "ء": "",
+}
+
+
+def strip_extra(title):
+    """«(اجرای زنده)»، «(ورژن جدید)» و مثل اینا رو برمی‌داره."""
+    return re.sub(r"[(\[].*?[)\]]", "", title or "").strip()
+
+
+def skeleton(latin):
+    """اسکلت حروف بی‌صدا (مصوت‌ها توی فینگلیش هر بار یه جور نوشته می‌شن)."""
+    t = latin.lower()
+    for a, b in (("kh", "x"), ("gh", "q"), ("sh", "c"), ("ch", "c"), ("zh", "j"), ("ou", "u")):
+        t = t.replace(a, b)
+    t = re.sub(r"[aeiouyvw]", "", t).replace("q", "g").replace("x", "k")
+    t = "".join(ch for ch in t if ch.isalnum())
+    return re.sub(r"(.)\1+", r"\1", t)
+
+
+def title_similarity(fa_title, song):
+    """اسم فارسی ملودیفای چقدر شبیه اسم (یا alt_title) آهنگ ماست؟ بین ۰ و ۱."""
+    fa = strip_extra(fa_title)
+    best = 0.0
+    for cand in (song.get("title"), song.get("alt_title")):
+        cand = strip_extra(cand)
+        if not cand:
+            continue
+        if re.search("[\u0600-\u06FF]", cand):
+            score = SequenceMatcher(None, norm(fa), norm(cand)).ratio()
+        else:
+            latin = "".join(FA_TO_LATIN.get(ch, ch) for ch in norm(fa))
+            score = SequenceMatcher(None, skeleton(latin), skeleton(cand)).ratio()
+        best = max(best, score)
+    return best
 
 
 def load_json(path):
@@ -132,12 +178,36 @@ def artist_ids_for(name, artists):
     return found
 
 
+def pick_song(track, candidates, duration_of, row):
+    """بین آهنگ‌های همون خواننده، درستش رو پیدا می‌کنه و song_id و note رو پر می‌کنه."""
+    target = track.get("durationMs", 0)
+    scored = sorted(((title_similarity(track.get("title"), s), s) for s in candidates), key=lambda x: -x[0])
+    if scored and scored[0][0] >= TITLE_AUTO and (len(scored) == 1 or scored[1][0] < scored[0][0]):
+        song = scored[0][1]
+        row["song_id"] = song["id"]
+        dur = duration_of(song)
+        if dur is not None and abs(dur - target) > DURATION_WARN_MS:
+            row["note"] = f"اسم جوره: {song['title']}، ولی طولش {abs(dur - target) // 1000} ثانیه فرق داره (نسخه‌ی دیگه؟ چک کن)"
+        else:
+            row["note"] = f"خودکار (اسم): {song['title']}"
+        return
+    close = [s for s in candidates if (d := duration_of(s)) is not None and abs(d - target) <= DURATION_TOLERANCE_MS]
+    if len(close) == 1:
+        row["song_id"] = close[0]["id"]
+        row["note"] = f"خودکار (طول): {close[0]['title']} (چک کن)"
+        return
+    hints = [f"{s['id']}={s['title']}" for sim, s in scored if sim >= TITLE_HINT][:2]
+    if hints:
+        row["note"] = "شاید: " + "، ".join(hints)
+    else:
+        row["note"] = f"این آهنگ توی بازی نیست ({len(candidates)} آهنگ دیگه از این خواننده هست)"
+
+
 def suggest(tracks):
     ffprobe = need_tool("ffprobe")
     songs = load_json(SONGS_JSON)
     artists = load_json(ARTISTS_JSON)
     rows = read_match_csv()
-    known = {row_key(r) for r in rows}
     durations = {}
 
     def duration_of(song):
@@ -146,38 +216,33 @@ def suggest(tracks):
             durations[song["id"]] = audio_duration_ms(ffprobe, path) if os.path.exists(path) else None
         return durations[song["id"]]
 
+    # ردیف‌های بی song_id دوباره امتحان می‌شن؛ ردیف‌هایی که song_id دارن (شاید دستی) دست نمی‌خورن
+    old = {row_key(r): r for r in rows}
+    rows = []
     added = 0
     for track in tracks:
-        if track_key(track) in known:
+        prev = old.get(track_key(track))
+        if prev and (prev.get("song_id") or "").strip():
+            rows.append(prev)
             continue
         row = {"position": track.get("position"), "title": track.get("title"), "artist": track.get("artist"),
-               "song_id": "", "offset_ms": "0", "note": ""}
+               "song_id": "", "offset_ms": (prev or {}).get("offset_ms") or "0", "note": ""}
         if track.get("status") != "ok":
             row["note"] = "متن هم‌زمان نداره"
         else:
             ids = artist_ids_for(track.get("artist"), artists)
             if not ids:
-                row["note"] = "خواننده توی artists.json پیدا نشد"
+                row["note"] = "خواننده توی بازی نیست (اول آهنگ‌هاش رو به بازی اضافه کن)"
             else:
                 candidates = [s for s in songs if any(a["id"] in ids for a in s.get("artists", []))]
-                close = []
-                for song in candidates:
-                    dur = duration_of(song)
-                    if dur is not None and abs(dur - track.get("durationMs", 0)) <= DURATION_TOLERANCE_MS:
-                        close.append(song)
-                if len(close) == 1:
-                    row["song_id"] = close[0]["id"]
-                    row["note"] = f"خودکار: {close[0]['title']} (چک کن)"
-                elif len(close) > 1:
-                    row["note"] = "چند تا شبیه: " + "، ".join(f"{s['id']}={s['title']}" for s in close)
-                else:
-                    row["note"] = f"{len(candidates)} آهنگ از این خواننده هست ولی طولشون نمی‌خونه"
+                pick_song(track, candidates, duration_of, row)
         rows.append(row)
-        added += 1
+        if not prev:
+            added += 1
 
     write_match_csv(rows)
     auto = sum(1 for r in rows if r.get("song_id"))
-    print(f"✓ {added} ردیف تازه نوشته شد توی {os.path.relpath(MATCH_CSV, ROOT)}")
+    print(f"✓ {os.path.relpath(MATCH_CSV, ROOT)} به‌روز شد ({added} ردیف تازه)")
     print(f"  {auto} از {len(rows)} ردیف song_id دارن. بقیه رو دستی پر کن (یا خالی بذار تا وارد بازی نشن).")
 
 

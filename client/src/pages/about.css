@@ -317,6 +317,11 @@
   line-height: 2;
 }
 
+/* «درباره‌ی ما» چند پاراگرافه */
+.about-us-card p + p {
+  margin-top: 8px;
+}
+
 .about-contact b {
   font-size: 15px;
   font-weight: 900;

@@ -549,8 +549,9 @@
     gap: 16px;
   }
 
+  /* نوار تب‌ها وسط */
   .profile-tabs {
-    align-self: flex-start;
+    align-self: center;
   }
 
   .profile-tabs button {

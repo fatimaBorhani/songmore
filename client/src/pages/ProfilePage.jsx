@@ -32,9 +32,9 @@ function statRows(stats, practiceGames) {
 const TABS = [
   { id: 'song', label: 'جورزیک' },
   { id: 'word', label: 'جورچین', load: getWordStats, Panel: WordStatsPanel },
-  { id: 'color', label: 'رنگ', load: getColorStats, Panel: ColorStatsPanel },
+  { id: 'color', label: 'جورنگ', load: getColorStats, Panel: ColorStatsPanel },
   { id: 'clue', label: 'جوربندی', load: getClueStats, Panel: ClueStatsPanel },
-  { id: 'survey', label: 'نظرسنجی', load: getSurveyStats, Panel: SurveyStatsPanel },
+  { id: 'survey', label: 'صد جور', load: getSurveyStats, Panel: SurveyStatsPanel },
 ]
 
 // صفحه‌ی حساب کاربری (آدرس /profile)

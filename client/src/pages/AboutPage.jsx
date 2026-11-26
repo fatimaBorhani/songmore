@@ -4,6 +4,7 @@ import { GAMES } from '../games/index.js'
 import { SITE_NAME } from '../shared/site.js'
 import { faNumber } from '../shared/format.js'
 import GameIcon from '../shared/components/GameIcon.jsx'
+import lockup from '../assets/logo/lockup-night.svg'
 import './about.css'
 
 // صفحه‌ی «درباره» (آدرس /about): سایت چطوری کار می‌کنه + درباره‌ی ما
@@ -76,6 +77,8 @@ function AboutPage() {
             <span className="label" />
           </span>
           <span className="about-sticker">هر شب تازه!</span>
+          {/* لوگوی عمودی (نت بالا، اسم پایین)؛ کارت همیشه تیره‌ست، پس نسخه‌ی سفید */}
+          <img src={lockup} alt={SITE_NAME} className="about-lockup" />
           <h1>روزی چند دقیقه بازی</h1>
           <p>قول می‌دیم فقط چند دقیقه‌ست. خب… شاید یه کم بیشتر.</p>
         </section>

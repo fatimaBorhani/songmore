@@ -65,6 +65,15 @@
 }
 
 
+/* لوگوی عمودی: روی گوشی وسط بالای کارت، روی کامپیوتر سمت چپ (پایین CSS) */
+.about-lockup {
+  position: relative;
+  align-self: center;
+  width: 110px;
+  height: auto;
+  margin: 18px 0 10px;
+}
+
 /* برچسب کج سفید گوشه‌ی کارت */
 .about-sticker {
   position: absolute;
@@ -391,6 +400,14 @@
   }
 
 
+  .about-lockup {
+    position: absolute;
+    left: 46px;
+    bottom: 34px;
+    width: 112px;
+    margin: 0;
+  }
+
   .about-sticker {
     top: 34px;
     right: 36px;
@@ -399,11 +416,12 @@
     box-shadow: 4px 4px 0 var(--about-blue-deep);
   }
 
+  /* کوچیک‌تر از قبل تا لوگوی عمودی زیرش جا بشه */
   .about-record {
     left: -60px;
     top: -60px;
-    width: 280px;
-    height: 280px;
+    width: 200px;
+    height: 200px;
     box-shadow: 12px 12px 0 var(--about-blue-deep);
   }
 

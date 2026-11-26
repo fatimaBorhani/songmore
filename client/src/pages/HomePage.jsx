@@ -4,6 +4,7 @@ import { GAMES } from '../games/index.js'
 import { SITE_NAME } from '../shared/site.js'
 import Countdown from '../shared/components/Countdown.jsx'
 import GameIcon from '../shared/components/GameIcon.jsx'
+import markDay from '../assets/logo/mark-day.svg'
 import './home.css'
 import './about.css'
 
@@ -15,8 +16,9 @@ function Record() {
       <span className="record-groove g2" />
       <span className="record-groove g3" />
       <span className="record-shine" />
+      {/* وسط صفحه: نت لوگو (برچسب همیشه کاغذیه، پس نسخه‌ی روز) */}
       <span className="record-label">
-        <GameIcon type="wave" size={30} />
+        <img src={markDay} alt="" className="record-mark" />
       </span>
     </span>
   )

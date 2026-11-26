@@ -80,7 +80,7 @@ function AuthPanel({ user, onUserChange }) {
           onClick={() => setOpen(true)}
           aria-haspopup="dialog"
         >
-          ورود / ثبت‌نام
+          ورود<span className="auth-link-more"> / ثبت‌نام</span>
         </button>
       </div>
 

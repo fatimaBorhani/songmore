@@ -286,12 +286,18 @@ a.bento-card:focus-visible {
 
 .record-label {
   inset: 32%;
-  background: var(--vinyl-label);
+  background: var(--paper);
   color: var(--paper-ink);
   border: 2px solid var(--line);
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.record-mark {
+  display: block;
+  width: 92%;
+  height: auto;
 }
 
 @keyframes record-spin {
@@ -452,9 +458,8 @@ a.bento-card.small:hover,
     bottom: -30px;
     box-shadow: 6px 6px 0 var(--shadow);
   }
-  .record-label svg {
-    width: 22px;
-    height: 22px;
+  .record-mark {
+    width: 88%;
   }
 }
 
@@ -478,6 +483,18 @@ a.bento-card.small:hover,
   font-size: 34px;
 }
 
+/* نت لوگو، درشت و کمی کج */
+.not-found-mark {
+  width: 150px;
+  height: 150px;
+  transform: rotate(-12deg);
+}
+
+.not-found-code {
+  font-size: 54px;
+  line-height: 1;
+}
+
 .not-found p {
   color: var(--text-muted);
 }
@@ -485,5 +502,13 @@ a.bento-card.small:hover,
 .not-found .ghost-button {
   display: inline-flex;
   align-items: center;
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: 4px;
+  border: 2px solid var(--line);
+  background: var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 3px 3px 0 var(--shadow);
+  font-weight: 800;
   text-decoration: none;
 }

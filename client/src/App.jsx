@@ -4,6 +4,7 @@ import { getMe } from './shared/api.js'
 import { SITE_NAME } from './shared/site.js'
 import AuthPanel from './shared/components/AuthPanel.jsx'
 import ThemeToggle from './shared/components/ThemeToggle.jsx'
+import Logo from './shared/components/Logo.jsx'
 import HomePage from './pages/HomePage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
@@ -43,9 +44,9 @@ function App() {
   return (
     <div className="site">
       <header className="site-header">
-        {/* لوگو: یه برچسب کاغذی کج */}
-        <Link to="/" className="site-logo">
-          {SITE_NAME}
+        {/* لوگو: اسم کامل (مشکی توی روز، سفید توی شب) */}
+        <Link to="/" className="site-logo" aria-label={`${SITE_NAME}، صفحه‌ی اول`}>
+          <Logo className="site-logo-img" alt={SITE_NAME} />
         </Link>
         {/* جدول هفته: فقط آیکون جایزه، توی همه‌ی صفحه‌ها */}
         <NavLink to="/weekly" className="site-weekly" aria-label="جدول هفته" title="جدول هفته">

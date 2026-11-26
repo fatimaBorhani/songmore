@@ -11,7 +11,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fontsource/lalezar": "^5.3.0",
     "@fontsource/space-mono": "^5.3.0",
     "@fontsource/vazirmatn": "^5.3.0",
     "react": "^19.3.1",

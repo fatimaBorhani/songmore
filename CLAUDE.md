@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 یه سایت با چند بازی روزانه؛ صفحه‌ی اول بازی رو انتخاب می‌کنی. بازی اول «جورزیک» (شبیه Songless): هر روز ۳ آهنگ، کلیپ‌های کوتاه (از ۰.۱۵ تا ۱۵ ثانیه) و حداکثر ۵ حدس. بازی دوم: وردل فارسی به اسم «جورچین» (هر روز سه کلمه‌ی ۳، ۴ و ۵ حرفی) (`/word`؛ اسم Wordle و ظاهر نیویورک‌تایمز رو کپی نکن). بازی سوم: «جورنگ» (`/color`): چند ثانیه یه رنگ رو می‌بینی و بعد از حافظه با اسلایدرهای HSB بازسازیش می‌کنی. بازی چهارم: «جوربندی» (`/clue`؛ شبیه Contexto و Clueless ولی با ظاهر خودمون): هر روز یه کلمه، هر حدس یه رتبه‌ی نزدیکی معنایی می‌گیره. بخش پنجم (نه بازی): «صد جور» (`/survey`)، یه نظرسنجی کوتاه و بدون امتیاز برای جمع کردن داده‌ی بازی‌های بعدی (مثل Family Feud یا «نادرترین جواب»).
 
 ## استک
-- فرانت: React + Vite + react-router (JavaScript، نه TypeScript)، راست‌به‌چپ، فونت‌ها از npm: Vazirmatn (متن)، Lalezar (همه‌ی h1 و h2 و تیترهای پوستری، `--font-display`) و Space Mono (فقط عدد و برچسب لاتین، `--font-mono`)
+- فرانت: React + Vite + react-router (JavaScript، نه TypeScript)، راست‌به‌چپ، فونت‌ها: Vazirmatn از npm (همه‌ی متن‌ها)، «دیما مکین» (`assets/fonts/DimaMakeen.ttf`، لایسنس GNU GPL v2، با `@font-face` توی `index.css`، متغیر `--font-display`) **فقط برای تیترها**: همه‌ی h1 و h2، اسم بازی روی کارت‌های صفحه‌ی اول و لوگو؛ h2هایی که تیتر نیستن (`.survey-question`، `.word-result-answer`) وزیرمتن می‌مونن. Space Mono از npm فقط برای عدد و برچسب لاتین (`--font-mono`)
 - بک‌اند: Node.js (نسخه‌ی ۲۰ به بالا) + Express + SQLite با پکیج better-sqlite3 (بدون ORM)؛ تست با node --test؛ هر دو بخش JavaScript با ESM (import/export)
 - صدا: Web Audio API
 - ابزار داده: Python 3 + ffmpeg
@@ -17,7 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## ساختار پوشه‌ها
 client/src/
   App.jsx           پوسته‌ی سایت: سربرگ مشترک (اسم سایت + ورود) و مسیرها (react-router)
-  assets/fonts/     Radio (فقط ساعت صفحه‌ی اول؛ با @font-face توی pages/home.css). فایل‌های Doran هم هست ولی فعلاً استفاده نمی‌شه
+  assets/fonts/     DimaMakeen.ttf (تیترها، `--font-display`)، Radio (فقط ساعت صفحه‌ی اول؛ با @font-face توی pages/home.css). فایل‌های Doran هم هست ولی فعلاً استفاده نمی‌شه
   pages/            صفحه‌ی اول (انتخاب بازی، چینش بنتو)، «پیدا نشد»، «درباره» (AboutPage.jsx، about.css)، جدول هفته (WeeklyPage.jsx، weekly.css) و حساب کاربری (ProfilePage.jsx، ProfileStats.jsx، BadgeGrid.jsx، ProfileCalendar.jsx، calendar.js، profile.css)
   games/index.js    فهرست بازی‌ها (کارت‌های صفحه‌ی اول از روی همینه)
   games/song/       همه‌چیزِ جورزیک (SongGame.jsx، api.js، اجزا، song.css)

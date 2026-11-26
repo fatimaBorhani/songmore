@@ -4,8 +4,7 @@ import { BrowserRouter } from 'react-router'
 import '@fontsource/vazirmatn/400.css'
 import '@fontsource/vazirmatn/700.css'
 import '@fontsource/vazirmatn/900.css'
-// تیترها (لاله‌زار) و عدد/برچسب لاتین (Space Mono)
-import '@fontsource/lalezar/400.css'
+// عدد و برچسب لاتین (Space Mono)؛ فونت تیترها توی index.css با @font-face میاد
 import '@fontsource/space-mono/400.css'
 import '@fontsource/space-mono/700.css'
 import './index.css'

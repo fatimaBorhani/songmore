@@ -4,6 +4,14 @@
    حالت روی <html data-theme="..."> می‌شینه (shared/theme.js)؛ اگه بازیکن انتخاب نکرده باشه، از تنظیم سیستم میاد.
    همه‌ی رنگ‌های سایت فقط از این متغیرها خونده می‌شن؛ رنگ ثابت توی CSS بقیه‌ی فایل‌ها ننویس. */
 
+/* فونت تیترها و اسم بازی‌ها: «دیما مکین» (DimaMakeen، لایسنس GNU GPL v2)؛ فایلش توی خود پروژه‌ست، نه CDN */
+@font-face {
+  font-family: 'Dima Makeen';
+  src: url('./assets/fonts/DimaMakeen.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
 /* ---------- شب: نیمه‌شب ملایم (پیش‌فرض) ---------- */
 :root,
 :root[data-theme='night'] {
@@ -138,8 +146,8 @@
 }
 
 :root {
-  /* فونت‌ها: متن وزیرمتن، تیترها لاله‌زار (پوستری)، عدد و برچسب لاتین Space Mono */
-  --font-display: 'Lalezar', 'Vazirmatn', system-ui, sans-serif;
+  /* فونت‌ها: متن وزیرمتن، اسم بازی‌ها و تیترها «دیما مکین»، عدد و برچسب لاتین Space Mono */
+  --font-display: 'Dima Makeen', 'Vazirmatn', system-ui, sans-serif;
   --font-mono: 'Space Mono', ui-monospace, monospace;
 
   font-family: 'Vazirmatn', system-ui, sans-serif;

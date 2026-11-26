@@ -4,6 +4,15 @@
    حالت روی <html data-theme="..."> می‌شینه (shared/theme.js)؛ اگه بازیکن انتخاب نکرده باشه، از تنظیم سیستم میاد.
    همه‌ی رنگ‌های سایت فقط از این متغیرها خونده می‌شن؛ رنگ ثابت توی CSS بقیه‌ی فایل‌ها ننویس. */
 
+/* فونت همه‌ی متن‌ها و تیترها: «میخک» (Mikhak، لایسنس SIL OFL 1.1، assets/fonts/Mikhak-NOTICE.txt)؛
+   نسخه‌ی variable: یه فایل با همه‌ی وزن‌ها از ۱۰۰ تا ۹۰۰ */
+@font-face {
+  font-family: 'Mikhak';
+  src: url('./assets/fonts/Mikhak.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 /* فونت اسم سایت و اسم بازی‌ها: «دیما مکین» (DimaMakeen، لایسنس GNU GPL v2)؛ فایلش توی خود پروژه‌ست، نه CDN */
 @font-face {
   font-family: 'Dima Makeen';
@@ -160,12 +169,13 @@
 }
 
 :root {
-  /* فونت‌ها: متن وزیرمتن، اسم سایت و اسم بازی‌ها «دیما مکین»، بقیه‌ی تیترها و عددهای تنها «بهمن»، برچسب لاتین Space Mono */
-  --font-display: 'Dima Makeen', 'Vazirmatn', system-ui, sans-serif;
+  /* فونت‌ها: متن‌ها و تیترها «میخک»، اسم سایت و اسم بازی‌ها «دیما مکین»، عددهای تنها «بهمن»، برچسب لاتین Space Mono */
+  --font-body: 'Mikhak', system-ui, sans-serif;
+  --font-display: 'Dima Makeen', 'Mikhak', system-ui, sans-serif;
   --font-mono: 'Space Mono', ui-monospace, monospace;
-  --font-score: 'Bahman', 'Vazirmatn', system-ui, sans-serif; /* عدد امتیازها */
+  --font-score: 'Bahman', 'Mikhak', system-ui, sans-serif; /* عدد امتیازها */
 
-  font-family: 'Vazirmatn', system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.6;
   color: var(--text);

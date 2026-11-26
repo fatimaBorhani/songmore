@@ -703,29 +703,30 @@ h3 {
 }
 
 /* ---------- «صفحه‌ی گرامافون»: زبان مشترک همه‌ی صفحه‌ها ---------- */
-/* تیترها با «بهمن» (فقط یه وزن داره، پس بولد مصنوعی نه).
+/* تیترها با «میخک» پررنگ (Black).
    «دیما مکین» فقط برای اسم سایت (لوگو) و اسم بازی‌ها: عنوان بالای صفحه‌ی هر بازی (.game-title)
-   و اسم بازی روی کارت‌های صفحه‌ی اول (home.css) */
+   و اسم بازی روی کارت‌های صفحه‌ی اول (home.css)؛ دیما فقط یه وزن داره، پس ۴۰۰ (بولد مصنوعی نه) */
 h1,
 h2 {
-  font-family: var(--font-score);
-  font-weight: 400 !important;
+  font-family: var(--font-body);
+  font-weight: 900 !important;
   letter-spacing: 0;
 }
 
 .site .game-title {
   font-family: var(--font-display);
+  font-weight: 400 !important;
 }
 
 html {
   font-synthesis: none;
 }
 
-/* این‌ها h1/h2 هستن ولی تیتر نیستن (متن سؤال، کلمه‌ی جواب، نام کاربری که لاتینه): همون وزیرمتن پررنگ */
+/* این‌ها h1/h2 هستن ولی تیتر نیستن (متن سؤال، کلمه‌ی جواب، نام کاربری): همون فونت متن، پررنگ */
 .survey-question,
 .word-result-answer,
 .profile-username {
-  font-family: 'Vazirmatn', system-ui, sans-serif;
+  font-family: var(--font-body);
   font-weight: 900 !important;
 }
 
@@ -887,11 +888,11 @@ html {
 .site .color-summary-score small,
 .site .profile-stats dd small,
 .site .profile-rank-card b small {
-  font-family: 'Vazirmatn', system-ui, sans-serif;
+  font-family: var(--font-body);
 }
 
 /* «/» بین دو عدد: توی فونت «بهمن» شبیه ممیز فارسیه، پس با وزیرمتن و با فاصله */
 .site .num-sep {
-  font-family: 'Vazirmatn', system-ui, sans-serif;
+  font-family: var(--font-body);
   margin: 0 4px;
 }

@@ -12,6 +12,14 @@
   font-display: swap;
 }
 
+/* فونت عددهای امتیاز همه‌ی بازی‌ها: «بهمن» (Bahman، © Maryam Soft)؛ فقط برای عدد امتیاز */
+@font-face {
+  font-family: 'Bahman';
+  src: url('./assets/fonts/Bahman.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
 /* ---------- شب: نیمه‌شب ملایم (پیش‌فرض) ---------- */
 :root,
 :root[data-theme='night'] {
@@ -155,6 +163,7 @@
   /* فونت‌ها: متن وزیرمتن، اسم بازی‌ها و تیترها «دیما مکین»، عدد و برچسب لاتین Space Mono */
   --font-display: 'Dima Makeen', 'Vazirmatn', system-ui, sans-serif;
   --font-mono: 'Space Mono', ui-monospace, monospace;
+  --font-score: 'Bahman', 'Vazirmatn', system-ui, sans-serif; /* عدد امتیازها */
 
   font-family: 'Vazirmatn', system-ui, sans-serif;
   font-size: 16px;

@@ -601,6 +601,11 @@
   color: var(--text-soft);
 }
 
+/* روی کارت سرمه‌ای «امتیاز امروز» */
+.color-summary-total .color-summary-score small {
+  color: var(--hero-soft-ink);
+}
+
 .color-bar {
   height: 10px;
   border-radius: 4px;
@@ -629,6 +634,7 @@
 .color-summary-total {
   padding: 22px 20px;
   background: var(--hero);
+  color: var(--hero-ink);
   border: 1px solid var(--accent);
   display: flex;
   flex-direction: column;

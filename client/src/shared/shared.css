@@ -830,3 +830,26 @@ html {
     transform: none;
   }
 }
+
+/* ---------- عدد امتیازها: فونت «بهمن» (--font-score) ----------
+   فقط خود عددِ امتیاز؛ وزن ۴۰۰ چون فونت خودش پررنگه (مرورگر نباید پررنگ‌ترش کنه) */
+.site .worth-value,
+.site .final-score-value,
+.site .day-summary .day-song-score,
+.site .day-total b,
+.site .lb-score,
+.site .color-score-head .color-big,
+.site .color-summary-score,
+.site .color-rounds b,
+.site .weekly-me-points b,
+.site .weekly-me-games b,
+.site .weekly-points {
+  font-family: var(--font-score);
+  font-weight: 400;
+  font-synthesis: none;
+}
+
+/* «از ۵۰» کنار امتیاز جورنگ متن معمولیه، نه عدد امتیاز */
+.site .color-summary-score small {
+  font-family: 'Vazirmatn', system-ui, sans-serif;
+}

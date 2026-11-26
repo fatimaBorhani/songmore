@@ -365,9 +365,11 @@
   gap: 12px;
 }
 
-/* وقتی پنل زیر کارته، کارت رنگ کوتاه‌تر می‌شه تا هر دو با دکمه توی یه صفحه جا بشن */
+/* وقتی پنل زیر کارته، کارت رنگ کوتاه‌تر می‌شه تا هر دو با دکمه توی یه صفحه جا بشن؛
+   کارت حفظ کردن (short) هم همین اندازه‌ست تا رنگ بین حفظ کردن و ساختن بزرگ و کوچیک نشه */
 @media (max-width: 1239px) {
-  .color-scene.has-panel .color-stage {
+  .color-scene.has-panel .color-stage,
+  .color-scene.short .color-stage {
     height: clamp(170px, calc(100dvh - 520px), 480px);
   }
 }

@@ -6,7 +6,7 @@ import Scene from './Scene.jsx'
 function MemorizeCard({ color, secondsLeft, totalSeconds, round, roundCount }) {
   const remaining = Math.max(0, Math.min(1, secondsLeft / totalSeconds))
   return (
-    <Scene label="رنگ برای حفظ کردن" background={hsbToCss(color)} ink={readableOn(color)} reveal>
+    <Scene label="رنگ برای حفظ کردن" background={hsbToCss(color)} ink={readableOn(color)} reveal short>
       <span className="color-round">
         {faNumber(round)} / {faNumber(roundCount)}
       </span>

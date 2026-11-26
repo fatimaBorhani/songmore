@@ -589,3 +589,92 @@ button:disabled {
   vertical-align: middle;
   white-space: nowrap;
 }
+
+/* ---------- متن: یه کلمه‌ی تنها توی خط آخر نمونه ---------- */
+/* pretty: مرورگر خط‌ها رو طوری می‌شکنه که خط آخر فقط یه کلمه نباشه؛ balance: تیترها خط‌های هم‌اندازه */
+p,
+li,
+label,
+small {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+/* ---------- پنجره‌ها روی صفحه‌ی بزرگ‌تر: بزرگ‌تر و خواناتر ---------- */
+/* ورود، راهنما، پیشنهاد آهنگ/سؤال، «ادامه می‌دی؟» و «جواب رو ببینم؟» */
+@media (min-width: 640px) {
+  .auth-backdrop .auth-card {
+    max-width: 480px;
+    padding: 32px 30px;
+    gap: 18px;
+  }
+
+  .auth-head h2 {
+    font-size: 26px;
+  }
+
+  .auth-lead {
+    font-size: 16px;
+  }
+
+  .auth-tabs button {
+    height: 46px;
+    font-size: 16px;
+  }
+
+  .auth-field {
+    font-size: 15px;
+  }
+
+  .auth-field input {
+    height: 54px;
+    font-size: 17px;
+  }
+
+  .auth-submit {
+    height: 54px;
+    font-size: 17px;
+  }
+
+  .help-dialog {
+    max-width: 520px;
+    padding: 30px 28px;
+    border-radius: 28px;
+    gap: 18px;
+    font-size: 16px;
+    line-height: 1.9;
+  }
+
+  .help-head h2 {
+    font-size: 22px;
+  }
+
+  .help-slide {
+    min-height: 220px;
+    gap: 16px;
+  }
+
+  .help-slide-title {
+    font-size: 18px;
+  }
+
+  .help-list {
+    gap: 12px;
+  }
+
+  .help-skip {
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  .help-prev,
+  .help-ok {
+    height: 54px;
+    font-size: 16px;
+  }
+}

@@ -850,3 +850,24 @@
   color: var(--text);
   font-variant-numeric: tabular-nums;
 }
+
+/* پنجره‌ی «جواب رو ببینم؟» روی صفحه‌ی بزرگ‌تر */
+@media (min-width: 640px) {
+  .giveup-dialog {
+    max-width: 440px;
+    padding: 32px 30px 28px;
+  }
+
+  .giveup-dialog h2 {
+    font-size: 24px;
+  }
+
+  .giveup-dialog p {
+    font-size: 16px;
+  }
+
+  .giveup-actions button {
+    min-height: 56px;
+    font-size: 16px;
+  }
+}

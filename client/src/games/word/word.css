@@ -559,6 +559,18 @@ kbd {
   line-height: 1.8;
 }
 
+/* صفحه‌ی بزرگ‌تر: پنجره بزرگ‌تر */
+@media (min-width: 640px) {
+  .continue-dialog {
+    max-width: 420px;
+    padding: 30px 28px 26px;
+  }
+
+  .continue-text h2 {
+    font-size: 26px;
+  }
+}
+
 .continue-actions {
   align-self: stretch;
   display: flex;

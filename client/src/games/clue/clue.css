@@ -122,7 +122,7 @@
   border-radius: 12px;
   background: var(--card);
   border: 1px solid var(--border);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 32px var(--elev-shadow);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -159,7 +159,7 @@
 .clue-menu-list button.danger {
   display: block;
   background: var(--surface);
-  color: var(--present);
+  color: var(--text-soft);
 }
 
 .clue-message {
@@ -293,7 +293,7 @@
 
 .clue-result-stats {
   font-size: 15px;
-  color: var(--present);
+  color: var(--text-soft);
 }
 
 .clue-result-stats b {

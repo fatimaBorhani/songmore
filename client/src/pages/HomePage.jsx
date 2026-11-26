@@ -69,11 +69,11 @@ function SmallCard({ game }) {
     </>
   )
   return game.ready ? (
-    <Link to={game.path} className="bento-card small">
+    <Link to={game.path} className={`bento-card small game-${game.id}`}>
       {body}
     </Link>
   ) : (
-    <div className="bento-card small soon" aria-disabled="true">
+    <div className={`bento-card small soon game-${game.id}`} aria-disabled="true">
       {body}
     </div>
   )

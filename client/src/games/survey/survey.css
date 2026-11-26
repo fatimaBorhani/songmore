@@ -80,7 +80,7 @@
   font-size: 260px;
   font-weight: 900;
   line-height: 1;
-  color: #1f1f23;
+  color: var(--border);
   pointer-events: none;
 }
 
@@ -127,7 +127,7 @@
   box-sizing: border-box;
   padding: 0 22px 0 70px;
   border-radius: 999px;
-  border: 1px solid #3f3f46;
+  border: 1px solid var(--border-strong);
   background: var(--card);
   color: var(--text);
   font: inherit;
@@ -152,7 +152,7 @@
   border: 0;
   border-radius: 50%;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -167,7 +167,7 @@
 
 .survey-error {
   font-size: 14px;
-  color: #ff8a8a;
+  color: var(--danger);
 }
 
 /* ---------- هدف جمعی: نوار باریک با عدد ---------- */
@@ -206,20 +206,20 @@
 
 .survey-goal.on-blue {
   font-size: 14px;
-  color: #d6d6ff;
+  color: var(--hero-soft-ink);
 }
 
 .survey-goal.on-blue b {
-  color: #fff;
+  color: var(--text-strong);
 }
 
 .survey-goal.on-blue .survey-bar {
   height: 8px;
-  background: rgba(255, 255, 255, 0.2);
+  background: color-mix(in srgb, var(--text-strong) 20%, transparent);
 }
 
 .survey-goal.on-blue .survey-bar-fill {
-  background: #fff;
+  background: var(--paper);
 }
 
 /* ---------- آخر امروز: کارت آبی ---------- */
@@ -227,8 +227,8 @@
 .survey-done-card {
   padding: 40px 32px 32px;
   border-radius: 32px;
-  background: var(--accent);
-  color: #fff;
+  background: var(--hero);
+  color: var(--hero-ink);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -245,7 +245,7 @@
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: #fff;
+  background: var(--paper);
   color: var(--accent);
   display: flex;
   align-items: center;
@@ -260,7 +260,7 @@
 
 .survey-done-card p {
   font-size: 16px;
-  color: #d6d6ff;
+  color: var(--hero-soft-ink);
 }
 
 .survey-done-card .survey-goal {
@@ -288,7 +288,7 @@
 }
 
 .survey-ghost {
-  border: 1px solid #3f3f46;
+  border: 1px solid var(--border-strong);
   background: transparent;
   color: var(--text);
   font-weight: 800;
@@ -300,8 +300,8 @@
 
 .survey-more {
   border: 0;
-  background: var(--text);
-  color: var(--bg);
+  background: var(--accent);
+  color: var(--accent-ink);
   font-weight: 900;
 }
 
@@ -334,7 +334,7 @@
   box-sizing: border-box;
   padding: 14px;
   border-radius: 16px;
-  border: 1px solid #3f3f46;
+  border: 1px solid var(--border-strong);
   background: var(--bg);
   color: var(--text);
   font: inherit;

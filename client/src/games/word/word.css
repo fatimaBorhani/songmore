@@ -58,7 +58,7 @@
 
 .icon-button:hover {
   color: var(--text);
-  border-color: #3f3f46;
+  border-color: var(--border-strong);
 }
 
 .word-top-spacer {
@@ -111,7 +111,7 @@
   /* رنگ‌ها با متغیر، تا انیمیشن برگشتن بتونه رنگ آخر رو از همین‌ها برداره */
   --tile-bg: transparent;
   --tile-fg: var(--text);
-  --tile-border: #27272a;
+  --tile-border: var(--chip);
   aspect-ratio: 1;
   box-sizing: border-box;
   border-radius: 10px;
@@ -128,7 +128,7 @@
 }
 
 .tile.future {
-  --tile-border: #1f1f23;
+  --tile-border: var(--border);
 }
 
 .tile.cursor {
@@ -137,7 +137,7 @@
 
 .tile.filled,
 .tile.plain {
-  --tile-border: #71717a;
+  --tile-border: var(--text-muted);
 }
 
 .tile.filled {
@@ -145,21 +145,21 @@
 }
 
 .tile.correct {
-  --tile-bg: var(--accent);
-  --tile-fg: #fff;
-  --tile-border: var(--accent);
+  --tile-bg: var(--correct);
+  --tile-fg: var(--correct-ink);
+  --tile-border: var(--correct);
 }
 
 .tile.present {
   --tile-bg: var(--present);
-  --tile-fg: var(--bg);
+  --tile-fg: var(--present-ink);
   --tile-border: var(--present);
 }
 
 .tile.absent {
-  --tile-bg: var(--border);
-  --tile-fg: var(--text-soft);
-  --tile-border: var(--border);
+  --tile-bg: var(--absent);
+  --tile-fg: var(--absent-ink);
+  --tile-border: var(--absent);
 }
 
 /* برگشتن کاشی بعد از ثبت؛ تأخیر هر کاشی از Board میاد. طولش با timing.js جوره */
@@ -186,13 +186,13 @@
     transform: rotateX(0);
     background: transparent;
     color: var(--text);
-    border-color: #71717a;
+    border-color: var(--text-muted);
   }
   50% {
     transform: rotateX(90deg);
     background: transparent;
     color: var(--text);
-    border-color: #71717a;
+    border-color: var(--text-muted);
   }
   51% {
     transform: rotateX(90deg);
@@ -226,7 +226,7 @@
   }
   35% {
     transform: translateY(-14px);
-    box-shadow: 0 10px 24px rgba(48, 48, 230, 0.45);
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 45%, transparent);
   }
   60% {
     transform: translateY(2px);
@@ -252,7 +252,7 @@
   color: var(--bg);
   font-size: 14px;
   font-weight: 700;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 20px var(--elev-shadow);
   animation: fade-in 0.15s ease-out;
 }
 
@@ -311,7 +311,7 @@
   padding: 0;
   border: none;
   border-radius: 7px;
-  background: #3f3f46;
+  background: var(--border-strong);
   color: var(--text);
   font: inherit;
   font-size: clamp(15px, 4.6vw, 19px);
@@ -335,18 +335,18 @@
 }
 
 .kb-key.correct {
-  background: var(--accent);
-  color: #fff;
+  background: var(--correct);
+  color: var(--correct-ink);
 }
 
 .kb-key.present {
   background: var(--present);
-  color: var(--bg);
+  color: var(--present-ink);
 }
 
 .kb-key.absent {
-  background: #18181b;
-  color: #52525b;
+  background: var(--absent);
+  color: var(--absent-ink);
 }
 
 /* نسخه‌ی کامپیوتر: نقشه‌ی کوچیک، فقط برای دیدن رنگ‌ها */
@@ -359,8 +359,8 @@
   width: min(100%, calc(13 * 32px + 12 * 4px + 34px));
   padding: 14px 16px;
   border-radius: 16px;
-  background: #111113;
-  border: 1px solid #1f1f23;
+  background: var(--sunken);
+  border: 1px solid var(--border);
 }
 
 .word-keyboard.map .kb-row {
@@ -386,7 +386,7 @@
 }
 
 .word-keyboard.map .kb-key.correct {
-  background: var(--accent);
+  background: var(--correct);
 }
 
 .word-keyboard.map .kb-key.present {
@@ -404,9 +404,9 @@ kbd {
   padding: 2px 8px;
   border-radius: 6px;
   background: var(--card);
-  border: 1px solid #3f3f46;
+  border: 1px solid var(--border-strong);
   border-bottom-width: 2px;
-  color: #e4e4e7;
+  color: var(--text);
 }
 
 /* ---------- کارت آخر بازی ---------- */
@@ -440,7 +440,7 @@ kbd {
 }
 
 .word-result-message.won {
-  color: #fff;
+  color: var(--text-strong);
   font-weight: 700;
 }
 
@@ -465,7 +465,7 @@ kbd {
   border: none;
   border-radius: 14px;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-ink);
   font: inherit;
   font-size: 15px;
   font-weight: 700;
@@ -473,7 +473,7 @@ kbd {
 }
 
 .primary-button:hover {
-  background: #4040f0;
+  background: var(--accent-hover);
 }
 
 .word-result-note {
@@ -501,8 +501,8 @@ kbd {
   min-height: 32px;
   padding: 0 12px;
   border-radius: 999px;
-  background: rgba(48, 48, 230, 0.18);
-  color: #a8a8ff;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent-text);
   font-size: 12px;
   font-weight: 700;
 }
@@ -519,7 +519,7 @@ kbd {
 
 /* پنجره‌ی «ادامه می‌دی؟» */
 .continue-backdrop {
-  background: rgba(9, 9, 11, 0.78);
+  background: var(--overlay);
 }
 
 .continue-dialog {
@@ -529,15 +529,15 @@ kbd {
   align-items: center;
   gap: 14px;
   text-align: center;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 24px 60px var(--elev-shadow);
 }
 
 .continue-icon {
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: rgba(48, 48, 230, 0.18);
-  color: #8c8cff;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -688,8 +688,8 @@ kbd {
   padding: 10px 12px;
   border-radius: 10px;
   background: #000;
-  border: 1px solid #3030e6;
-  color: #fff;
+  border: 1px solid var(--accent);
+  color: var(--text-strong);
   font: 12px/1.5 monospace;
 }
 
@@ -759,7 +759,7 @@ kbd {
 }
 
 .word-day-summary li.lost .day-score {
-  color: #ff8a8a;
+  color: var(--danger);
 }
 
 .word-test-reset {

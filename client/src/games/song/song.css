@@ -88,17 +88,17 @@
 
 /* غلط: کم‌رنگ و خاکستری */
 .guess-history li.incorrect {
-  background: #111113;
-  color: #71717a;
+  background: var(--sunken);
+  color: var(--text-muted);
 }
 
 .incorrect .guess-dot {
-  background: #3f3f46;
+  background: var(--border-strong);
 }
 
 /* خواننده درسته: معمولی، با دایره‌ی توخالی */
 .guess-history li.present {
-  color: #e4e4e7;
+  color: var(--text);
 }
 
 .present .guess-dot {
@@ -112,11 +112,11 @@
 /* درست: پس‌زمینه‌ی آبی تیره، حاشیه‌ی آبی و هاله‌ی ملایم */
 .guess-history li.correct {
   min-height: 50px;
-  background: #14143a;
+  background: var(--accent-soft);
   box-shadow:
     inset 0 0 0 1px var(--accent),
-    0 0 24px rgba(48, 48, 230, 0.25);
-  color: #fff;
+    0 0 24px color-mix(in srgb, var(--accent) 25%, transparent);
+  color: var(--text-strong);
 }
 
 .correct .guess-text {
@@ -126,7 +126,7 @@
 
 .correct .guess-label {
   font-weight: 700;
-  color: #fff;
+  color: var(--text-strong);
 }
 
 .guess-check {
@@ -135,7 +135,7 @@
   flex-shrink: 0;
   border-radius: 50%;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -279,7 +279,7 @@
   border-radius: 50%;
   border: 6px solid var(--bg);
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -370,7 +370,7 @@
 
 .search-suggest-cta {
   font-weight: 700;
-  color: #8f8fff;
+  color: var(--accent-text);
   white-space: nowrap;
 }
 
@@ -396,8 +396,8 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: #14143a;
-  color: #8f8fff;
+  background: var(--accent-soft);
+  color: var(--accent-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -486,7 +486,7 @@
 .game-over-actions .primary {
   border: none;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-ink);
 }
 
 .game-over-actions .secondary {
@@ -548,7 +548,7 @@
     transform: scale(1);
     box-shadow:
       inset 0 0 0 1px var(--accent),
-      0 0 0 0 rgba(48, 48, 230, 0.6);
+      0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent);
   }
   35% {
     transform: scale(1.03);
@@ -557,7 +557,7 @@
     transform: scale(1);
     box-shadow:
       inset 0 0 0 1px var(--accent),
-      0 0 0 18px rgba(48, 48, 230, 0);
+      0 0 0 18px color-mix(in srgb, var(--accent) 0%, transparent);
   }
 }
 
@@ -616,7 +616,7 @@
   font-size: 44px;
   font-weight: 900;
   line-height: 1.1;
-  color: #fff;
+  color: var(--text-strong);
 }
 
 .final-score.zero .final-score-value {
@@ -642,8 +642,8 @@
   gap: 4px;
   padding: 4px;
   border-radius: 16px;
-  background: #111113;
-  border: 1px solid #1f1f23;
+  background: var(--sunken);
+  border: 1px solid var(--border);
 }
 
 .mode-switch a {
@@ -663,8 +663,8 @@
 }
 
 .mode-switch a[aria-current='page'] {
-  background: #27272a;
-  color: #fff;
+  background: var(--chip);
+  color: var(--text-strong);
   font-weight: 700;
 }
 
@@ -673,12 +673,12 @@
 
 /* دکمه‌ی دیدن جواب هم‌شکل رد کردن؛ لبه‌ی روشن‌تر تا فرق داشته باشه */
 .giveup-button {
-  border-color: #3f3f46;
+  border-color: var(--border-strong);
 }
 
 .giveup-button .skip-time {
   font-size: 11px;
-  color: #c9c9cf;
+  color: var(--text-soft);
 }
 
 .giveup-backdrop {
@@ -687,7 +687,7 @@
   z-index: 20;
   box-sizing: border-box;
   padding: 24px;
-  background: rgba(9, 9, 11, 0.72);
+  background: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -702,7 +702,7 @@
   border-radius: 28px;
   background: var(--card);
   border: 1px solid var(--border);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 20px 60px var(--elev-shadow);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -714,8 +714,8 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: #14143a;
-  color: #8f8fff;
+  background: var(--accent-soft);
+  color: var(--accent-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -750,7 +750,7 @@
 }
 
 .giveup-cancel {
-  border: 1px solid #3f3f46;
+  border: 1px solid var(--border-strong);
   background: transparent;
   color: var(--text);
   font-weight: 700;
@@ -759,7 +759,7 @@
 .giveup-confirm {
   border: none;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-ink);
   font-weight: 900;
 }
 

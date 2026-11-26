@@ -3,6 +3,7 @@ import { Link, NavLink, Route, Routes } from 'react-router'
 import { getMe } from './shared/api.js'
 import { SITE_NAME } from './shared/site.js'
 import AuthPanel from './shared/components/AuthPanel.jsx'
+import ThemeToggle from './shared/components/ThemeToggle.jsx'
 import HomePage from './pages/HomePage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
@@ -40,11 +41,9 @@ function App() {
   return (
     <div className="site">
       <header className="site-header">
+        {/* لوگو: یه برچسب کاغذی کج */}
         <Link to="/" className="site-logo">
-          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-            <path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2" />
-          </svg>
-          <span>{SITE_NAME}</span>
+          {SITE_NAME}
         </Link>
         {/* جدول هفته: فقط آیکون جایزه، توی همه‌ی صفحه‌ها */}
         <NavLink to="/weekly" className="site-weekly" aria-label="جدول هفته" title="جدول هفته">
@@ -53,6 +52,7 @@ function App() {
             <path d="M17 6h3a3 3 0 0 1-3 4M7 6H4a3 3 0 0 0 3 4" />
           </svg>
         </NavLink>
+        <ThemeToggle />
         <AuthPanel user={user} onUserChange={setUser} />
       </header>
 

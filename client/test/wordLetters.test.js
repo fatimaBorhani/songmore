@@ -77,8 +77,8 @@ test('متن اشتراک: تیتر هر کلمه، مربع‌ها، X برای
   const lines = shareText(game, 'واژه‌یاب 12').split('\n')
   assert.equal(lines[0], 'واژه‌یاب ۱۲')
   assert.equal(lines[1], '‏۳ حرفی ۲/۶')
-  assert.equal(lines[2], '‏⬛⬜🟦')
-  assert.equal(lines[3], '‏🟦🟦🟦')
+  assert.equal(lines[2], '‏⬛🟨🟩')
+  assert.equal(lines[3], '‏🟩🟩🟩')
   assert.equal(lines[4], '‏۴ حرفی X/۶')
   assert.equal(lines.length, 5 + 6) // ۶ ردیف، نه ۸
   assert.equal(/[آ-ی]/.test(lines.slice(2, 4).join('')), false)

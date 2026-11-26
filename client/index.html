@@ -4,7 +4,15 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>حدس آهنگ</title>
+    <title>جورستون</title>
+    <!-- حالت روز/شب قبل از اولین نقاشی صفحه (تا یه لحظه رنگ اشتباه دیده نشه)؛ منطقش توی src/shared/theme.js -->
+    <script>
+      try {
+        var t = localStorage.getItem('songmore_theme')
+        if (t !== 'day' && t !== 'night') t = matchMedia('(prefers-color-scheme: light)').matches ? 'day' : 'night'
+        document.documentElement.dataset.theme = t
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

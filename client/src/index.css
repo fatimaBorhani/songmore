@@ -1,35 +1,168 @@
-/* تم کلی: مشکی و خنثی، با یه رنگ آبی از پالت برای پخش */
+/* تم سایت: دو حالت با رنگ‌های جدا («صفحه‌ی گرامافون»)
+   - شب (night): «نیمه‌شب ملایم»؛ تیره، رنگ‌های خاکی و آروم
+   - روز (day): «روز کاغذی»؛ کرم و کاغذی مثل پوستر قدیمی
+   حالت روی <html data-theme="..."> می‌شینه (shared/theme.js)؛ اگه بازیکن انتخاب نکرده باشه، از تنظیم سیستم میاد.
+   همه‌ی رنگ‌های سایت فقط از این متغیرها خونده می‌شن؛ رنگ ثابت توی CSS بقیه‌ی فایل‌ها ننویس. */
+
+/* ---------- شب: نیمه‌شب ملایم (پیش‌فرض) ---------- */
+:root,
+:root[data-theme='night'] {
+  --bg: #12151c;
+  --bg-dot: rgba(170, 185, 205, 0.08); /* بافت نقطه‌ای پس‌زمینه */
+  --sunken: #0e1117; /* جاهای گود: کیبورد، تب‌ها */
+  --surface: #191d26;
+  --card: #1b2029;
+  --chip: #262c38; /* نقطه‌ها، تب فعال، پس‌زمینه‌ی کوچیک */
+  --border: #2a3140;
+  --border-strong: #3a4252;
+  --line: #0a0c10; /* دور برچسب‌ها و کارت‌های کاغذی */
+  --shadow: #05070a; /* سایه‌ی سخت */
+  --elev-shadow: rgba(0, 0, 0, 0.5); /* سایه‌ی نرم پنجره‌ها */
+  --overlay: rgba(5, 7, 11, 0.72);
+
+  --text: #ece6d8;
+  --text-strong: #fbf7ee;
+  --text-soft: #c3bdb0;
+  --text-muted: #9aa3b2;
+
+  --accent: #a9b8cc; /* دکمه‌ی اصلی، نوار پیشرفت، حلقه‌ی فوکوس */
+  --accent-ink: #12151c; /* متن روی accent */
+  --accent-hover: #bccadb;
+  --accent-soft: #232c3b; /* پس‌زمینه‌ی کم‌رنگ (ردیف من، آیکن‌ها) */
+  --accent-text: #a9b8cc; /* متن/لینک به رنگ accent روی پس‌زمینه */
+
+  --hero: #2e3d5c; /* کارت‌های رنگی بزرگ (کارت اول صفحه‌ی اول، آخر نظرسنجی) */
+  --hero-ink: #ece6d8;
+  --hero-soft-ink: #c3cbd9;
+
+  --paper: #ece6d8; /* برچسب کاغذی */
+  --paper-ink: #12151c;
+  --mustard: #c9a45a;
+  --mustard-ink: #12151c;
+  --tomato: #c96f5b;
+  --tomato-ink: #12151c;
+  --teal: #6d9a8c;
+  --teal-ink: #0d1512;
+  --violet: #8d7bb0;
+  --violet-ink: #0f0c15;
+
+  --vinyl-1: #2e3d5c; /* شیارهای صفحه‌ی گرامافون */
+  --vinyl-2: #26334d;
+  --vinyl-label: #ece6d8;
+
+  --correct: #6d9a8c; /* جورچین: جای درست */
+  --correct-ink: #0d1512;
+  --present: #c9a45a; /* توی کلمه هست */
+  --present-ink: #12151c;
+  --absent: #222833;
+  --absent-ink: #6c7585;
+  --incorrect: #4b5363;
+  --danger: #f08a7a;
+
+  --wave-open: #c3bdb0;
+  --wave-locked: #2a3140;
+
+  --lv0: #1f2430; /* تقویم فعالیت */
+  --lv1: #2e3d5c;
+  --lv2: #4c6286;
+  --lv3: #a9b8cc;
+  --lv4: #c9a45a;
+
+  color-scheme: dark;
+}
+
+/* ---------- روز: روز کاغذی ---------- */
+:root[data-theme='day'] {
+  --bg: #f1ebdf;
+  --bg-dot: rgba(26, 23, 20, 0.07);
+  --sunken: #e6ddcc;
+  --surface: #f7f1e5;
+  --card: #fffaf0;
+  --chip: #e2d9c8;
+  --border: #d6cdbd;
+  --border-strong: #b9ae9b;
+  --line: #1a1714;
+  --shadow: #1a1714;
+  --elev-shadow: rgba(26, 23, 20, 0.22);
+  --overlay: rgba(26, 23, 20, 0.45);
+
+  --text: #1a1714;
+  --text-strong: #0f0d0b;
+  --text-soft: #4f473e;
+  --text-muted: #6b6257;
+
+  --accent: #c23d1e;
+  --accent-ink: #fffaf0;
+  --accent-hover: #a93418;
+  --accent-soft: #f6dbd1;
+  --accent-text: #b33a20;
+
+  --hero: #1f2b4d;
+  --hero-ink: #fffaf0;
+  --hero-soft-ink: #cfd6e6;
+
+  --paper: #fffaf0;
+  --paper-ink: #1a1714;
+  --mustard: #e0a526;
+  --mustard-ink: #1a1714;
+  --tomato: #c23d1e;
+  --tomato-ink: #fffaf0;
+  --teal: #22796b;
+  --teal-ink: #fffaf0;
+  --violet: #1f2b4d;
+  --violet-ink: #fffaf0;
+
+  --vinyl-1: #1d1d22;
+  --vinyl-2: #2b2b33;
+  --vinyl-label: #c23d1e;
+
+  --correct: #22796b;
+  --correct-ink: #fffaf0;
+  --present: #e0a526;
+  --present-ink: #1a1714;
+  --absent: #d6cdbd;
+  --absent-ink: #6b6257;
+  --incorrect: #9a8f80;
+  --danger: #b3261e;
+
+  --wave-open: #4f473e;
+  --wave-locked: #d6cdbd;
+
+  --lv0: #e2d9c8;
+  --lv1: #f3c9b9;
+  --lv2: #e88e74;
+  --lv3: #c23d1e;
+  --lv4: #1f2b4d;
+
+  color-scheme: light;
+}
+
 :root {
-  --bg: #09090b;
-  --surface: #141416;
-  --card: #18181b;
-  --border: #27272a;
-  --text: #f2f2f3;
-  --text-muted: #8b8b93;
-  --text-soft: #a1a1aa;
-  --accent: #3030e6;
-  --wave-open: #d4d4d8;
-  --wave-locked: #2a2a2e;
-  --present: #c9c9cf;
-  --incorrect: #55555d;
+  /* فونت‌ها: متن وزیرمتن، تیترها لاله‌زار (پوستری)، عدد و برچسب لاتین Space Mono */
+  --font-display: 'Lalezar', 'Vazirmatn', system-ui, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
 
   font-family: 'Vazirmatn', system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.6;
-  color-scheme: dark;
   color: var(--text);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* پس‌زمینه با بافت نقطه‌ای ریز، مثل کاغذ چاپی */
 body {
   margin: 0;
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--bg-dot) 1px, transparent 1.5px);
+  background-size: 6px 6px;
+  transition: background-color 0.25s;
 }
 
 button,
-input {
+input,
+textarea {
   font-family: inherit;
 }
 

@@ -8,8 +8,8 @@
 
 /* صفحه‌ی «درباره»: گوشی یه فهرست جمع‌وجور، کامپیوتر (از ۷۶۰ پیکسل) چینش بنتو با تصویر */
 .about-page {
-  --about-blue-deep: #14143a;
-  --about-blue-soft: #a9a9ff;
+  --about-blue-deep: var(--accent-soft);
+  --about-blue-soft: var(--accent-text);
 
   max-width: 1080px;
   margin: 0 auto;
@@ -42,8 +42,8 @@
   box-sizing: border-box;
   padding: 22px;
   border-radius: 26px;
-  background: var(--accent);
-  color: #fff;
+  background: var(--hero);
+  color: var(--hero-ink);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -61,7 +61,7 @@
 .about-hero p {
   position: relative;
   font-size: 15px;
-  color: #e6e6ff;
+  color: var(--hero-soft-ink);
 }
 
 .about-badge {
@@ -69,7 +69,7 @@
   align-self: flex-start;
   padding: 2px 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.16);
+  background: color-mix(in srgb, var(--text-strong) 16%, transparent);
   font-size: 13px;
   font-weight: 700;
 }
@@ -81,7 +81,7 @@
   right: 20px;
   padding: 3px 12px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--paper);
   color: var(--accent);
   font-size: 13px;
   font-weight: 900;
@@ -109,7 +109,7 @@
 .about-record .g1,
 .about-record .g2,
 .about-record .g3 {
-  border: 1px solid #5656f0;
+  border: 1px solid var(--vinyl-2);
 }
 .about-record .g1 {
   inset: 7%;
@@ -123,12 +123,12 @@
 .about-record .shine {
   inset: 10%;
   border: 3px solid transparent;
-  border-bottom-color: #a9a9ff;
-  border-left-color: #6a6af2;
+  border-bottom-color: var(--accent-text);
+  border-left-color: var(--accent-text);
 }
 .about-record .label {
   inset: 32%;
-  background: #f4f4ff;
+  background: var(--vinyl-label);
 }
 
 /* ---------- لیگ هفته (روی گوشی هم با جدول کوچیک) ---------- */
@@ -156,7 +156,7 @@
 .about-league-head a {
   font-size: 13px;
   font-weight: 800;
-  color: #8f8fff;
+  color: var(--accent-text);
   text-decoration: none;
 }
 
@@ -199,7 +199,7 @@
 .about-mini-table .row i {
   height: 7px;
   border-radius: 999px;
-  background: #3f3f46;
+  background: var(--border-strong);
 }
 
 .about-mini-table .row.me {
@@ -313,7 +313,7 @@
 .about-contact p {
   position: relative;
   font-size: 14px;
-  color: #c9c9cf;
+  color: var(--text-soft);
   line-height: 2;
 }
 
@@ -336,7 +336,7 @@
   padding: 0 26px;
   border-radius: 999px;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-ink);
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -455,7 +455,7 @@
     align-items: center;
     justify-content: center;
     gap: 12px;
-    color: #55555d;
+    color: var(--text-muted);
   }
 
   .about-long,
@@ -514,7 +514,7 @@
     margin-right: auto;
     font-size: 13px;
     font-weight: 800;
-    color: #55555d;
+    color: var(--text-muted);
     transform: rotate(-8deg);
   }
 
@@ -547,7 +547,7 @@
     background: var(--accent);
   }
   .about-faces span:nth-child(2) {
-    background: #6a6af2;
+    background: var(--accent-text);
   }
   .about-faces span:nth-child(3) {
     background: var(--present);
@@ -562,7 +562,7 @@
     border-radius: 22px;
     background: var(--about-blue-deep);
     border: 1px solid var(--accent);
-    color: #fff;
+    color: var(--text-strong);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -574,10 +574,10 @@
     height: 76px;
     border-radius: 50%;
     background: var(--about-blue-deep);
-    color: #c9c9ff;
+    color: var(--hero-soft-ink);
     box-shadow:
-      0 0 0 12px rgba(48, 48, 230, 0.14),
-      0 0 48px rgba(48, 48, 230, 0.55);
+      0 0 0 12px color-mix(in srgb, var(--accent) 14%, transparent),
+      0 0 48px color-mix(in srgb, var(--accent) 55%, transparent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -587,7 +587,7 @@
   .about-guest {
     padding: 8px 14px;
     border-radius: 999px;
-    border: 1px dashed #55555d;
+    border: 1px dashed var(--text-muted);
     font-size: 14px;
     color: var(--text-soft);
   }
@@ -596,7 +596,7 @@
     padding: 8px 14px;
     border-radius: 999px;
     background: var(--accent);
-    color: #fff;
+    color: var(--accent-ink);
     font-size: 14px;
     font-weight: 800;
     display: flex;
@@ -619,7 +619,7 @@
     height: 52px;
     border-radius: 14px;
     background: var(--about-blue-deep);
-    color: #fff;
+    color: var(--text-strong);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -627,7 +627,7 @@
 
   .about-game-tile.empty {
     background: none;
-    border: 1px dashed #3f3f46;
+    border: 1px dashed var(--border-strong);
     color: var(--text-muted);
     font-size: 22px;
   }

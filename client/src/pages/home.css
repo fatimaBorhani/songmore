@@ -8,10 +8,10 @@
 
 /* صفحه‌ی اول: چینش بنتو (رنگ‌ها و اندازه‌ها از طرح home-design.html) */
 .home-bento-page {
-  --blue: #3030e6;
-  --blue-deep: #14143a; /* پشت آیکن‌ها و سایه‌ی گرامافون */
-  --blue-link: #8f8fff;
-  --desc: #c9c9cf;
+  --blue: var(--accent);
+  --blue-deep: var(--accent-soft); /* پشت آیکن‌ها و سایه‌ی گرامافون */
+  --blue-link: var(--accent-text);
+  --desc: var(--text-soft);
 
   max-width: 1180px;
   margin: 0 auto;
@@ -37,9 +37,9 @@
 }
 
 .home-title-row h1 {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--desc);
+  font-size: 40px;
+  line-height: 1.25;
+  color: var(--text);
 }
 
 .home-countdown {
@@ -126,9 +126,11 @@ a.bento-card:focus-visible {
   justify-content: space-between;
   gap: 20px;
   padding: 32px;
-  border-radius: 28px;
-  background: var(--blue);
-  color: #fff;
+  border-radius: 22px;
+  background: var(--hero);
+  color: var(--hero-ink);
+  border: 2px solid var(--line);
+  box-shadow: 8px 8px 0 var(--shadow);
 }
 
 .featured-text {
@@ -141,14 +143,15 @@ a.bento-card:focus-visible {
 }
 
 .featured-title {
-  font-size: 40px;
-  font-weight: 800;
-  line-height: 1.3;
+  font-family: var(--font-display);
+  font-size: 46px;
+  font-weight: 400;
+  line-height: 1.2;
 }
 
 .featured-desc {
   font-size: 17px;
-  color: #e6e6ff;
+  color: var(--hero-soft-ink);
 }
 
 .featured-cta {
@@ -160,7 +163,10 @@ a.bento-card:focus-visible {
   min-height: 50px;
   padding: 0 28px;
   border-radius: 999px;
-  background: var(--bg);
+  background: var(--paper);
+  color: var(--paper-ink);
+  border: 2px solid var(--line);
+  box-shadow: 3px 3px 0 var(--shadow);
   font-weight: 800;
 }
 
@@ -172,8 +178,9 @@ a.bento-card:focus-visible {
   width: 300px;
   height: 300px;
   border-radius: 50%;
-  background: var(--blue);
-  box-shadow: 12px 12px 0 var(--blue-deep);
+  background: repeating-radial-gradient(circle, var(--vinyl-1) 0 2px, var(--vinyl-2) 2px 4px);
+  border: 3px solid var(--line);
+  box-shadow: 10px 10px 0 var(--shadow);
 }
 
 .record > span {
@@ -182,7 +189,7 @@ a.bento-card:focus-visible {
 }
 
 .record-groove {
-  border: 1px solid #5656f0;
+  border: 1px solid color-mix(in srgb, var(--hero-ink) 10%, transparent);
 }
 .record-groove.g1 {
   inset: 7%;
@@ -198,15 +205,16 @@ a.bento-card:focus-visible {
 .record-shine {
   inset: 10%;
   border: 3px solid transparent;
-  border-top-color: #a9a9ff;
-  border-right-color: #6a6af2;
+  border-top-color: color-mix(in srgb, var(--hero-ink) 35%, transparent);
+  border-right-color: color-mix(in srgb, var(--hero-ink) 18%, transparent);
   animation: record-spin 2.86s linear infinite;
 }
 
 .record-label {
   inset: 32%;
-  background: #f4f4ff;
-  color: var(--bg);
+  background: var(--vinyl-label);
+  color: var(--paper-ink);
+  border: 2px solid var(--line);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -231,33 +239,80 @@ a.bento-card:focus-visible {
 }
 
 /* کارت‌های کوچیک تیره */
+/* کارت‌های کوچیک: برچسب‌های کاغذی رنگی، کمی کج، با سایه‌ی سخت */
 .bento-card.small {
   gap: 10px;
   padding: 24px;
-  border-radius: 24px;
+  border-radius: 14px;
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 2px solid var(--line);
+  box-shadow: 5px 5px 0 var(--shadow);
   color: var(--text);
+  transform: rotate(-1.2deg);
 }
 
-a.bento-card.small:hover {
-  border-color: var(--blue);
+.bento-item:nth-child(odd) .bento-card.small {
+  transform: rotate(1deg);
+}
+
+a.bento-card.small:hover,
+.bento-item:nth-child(odd) a.bento-card.small:hover {
+  transform: rotate(0deg) translateY(-3px);
+}
+
+.bento-card.small.game-word {
+  background: var(--paper);
+  color: var(--paper-ink);
+}
+
+.bento-card.small.game-color {
+  background: var(--tomato);
+  color: var(--tomato-ink);
+}
+
+.bento-card.small.game-clue {
+  background: var(--teal);
+  color: var(--teal-ink);
+}
+
+.bento-card.small.game-survey {
+  background: var(--violet);
+  color: var(--violet-ink);
+}
+
+/* روی برچسب رنگی همه‌چیز همرنگ متن خود برچسبه */
+.bento-card.small .small-desc,
+.bento-card.small .small-cta,
+.bento-card.small .small-badge {
+  color: inherit;
+}
+
+.bento-card.small .small-desc {
+  opacity: 0.85;
+}
+
+.bento-card.small .beta-badge {
+  border-color: currentColor;
+  color: inherit;
 }
 
 .small-icon {
   width: 48px;
   height: 48px;
-  border-radius: 14px;
-  background: var(--blue-deep);
-  color: #fff;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: var(--paper);
+  color: var(--paper-ink);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .small-title {
-  font-size: 22px;
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.3;
 }
 
 .small-desc {
@@ -315,7 +370,7 @@ a.bento-card.small:hover {
     height: 200px;
     left: -30px;
     bottom: -30px;
-    box-shadow: 8px 8px 0 var(--blue-deep);
+    box-shadow: 6px 6px 0 var(--shadow);
   }
   .record-label svg {
     width: 22px;
@@ -340,8 +395,7 @@ a.bento-card.small:hover {
 }
 
 .not-found h1 {
-  font-size: 26px;
-  font-weight: 900;
+  font-size: 34px;
 }
 
 .not-found p {

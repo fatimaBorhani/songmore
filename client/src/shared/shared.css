@@ -13,23 +13,25 @@
   gap: 12px;
 }
 
+/* لوگو: یه برچسب کاغذی کج با سایه‌ی سخت */
 .site-logo {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  color: var(--text);
-  font-size: 16px;
-  font-weight: 900;
+  padding: 2px 14px 6px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 2px solid var(--line);
+  box-shadow: 3px 3px 0 var(--shadow);
+  transform: rotate(-2deg);
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.3;
   text-decoration: none;
-}
-
-.site-logo svg {
-  color: var(--accent);
+  transition: transform 0.15s;
 }
 
 .site-logo:hover {
-  color: #fff;
+  transform: rotate(-3deg) translateY(-1px);
 }
 
 /* حلقه‌ی فوکوس فقط برای کیبورد (Tab)، نه بعد از کلیک */
@@ -50,22 +52,45 @@
   height: 44px;
   box-sizing: border-box;
   border-radius: 50%;
-  border: 1px solid transparent;
-  background: #14143a;
-  color: #a9a9ff;
+  border: 2px solid var(--line);
+  background: var(--mustard);
+  color: var(--mustard-ink);
+  box-shadow: 3px 3px 0 var(--shadow);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.site-weekly:hover {
-  color: #fff;
+.site-weekly:hover,
+.theme-toggle:hover,
+.auth-chip:hover {
+  transform: translateY(-1px);
 }
 
-/* وقتی توی صفحه‌ی جدول هفته هستیم (مثل اسم کاربر توی صفحه‌ی حساب) */
+/* وقتی توی صفحه‌ی جدول هفته هستیم (مثل آیکن حساب توی صفحه‌ی حساب): یه حلقه دورش */
 .site-weekly[aria-current='page'] {
-  border-color: var(--accent);
-  color: #fff;
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--mustard);
+}
+
+/* دکمه‌ی روز/شب */
+.theme-toggle {
+  width: 44px;
+  height: 44px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: var(--hero);
+  color: var(--hero-ink);
+  box-shadow: 3px 3px 0 var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 .site-weekly:focus-visible {
@@ -80,7 +105,7 @@
   z-index: 30;
   box-sizing: border-box;
   padding: 24px 16px;
-  background: rgba(9, 9, 11, 0.75);
+  background: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -94,7 +119,7 @@
   box-sizing: border-box;
   padding: 24px 22px;
   border-radius: 28px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 20px 60px var(--overlay);
 }
 
 .auth-head {
@@ -151,7 +176,7 @@
 }
 
 .error {
-  color: #ff8a8a;
+  color: var(--danger);
   font-weight: 700;
   text-align: center;
 }
@@ -181,23 +206,19 @@
   height: 44px;
   box-sizing: border-box;
   border-radius: 50%;
-  border: 1px solid var(--border);
+  border: 2px solid var(--line);
+  background: var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 3px 3px 0 var(--shadow);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--text);
   text-decoration: none;
-}
-
-.auth-chip:hover {
-  background: var(--surface);
 }
 
 /* وقتی توی صفحه‌ی حساب هستیم */
 .auth-chip[aria-current='page'] {
-  border-color: var(--accent);
-  background: #14143a;
-  color: #fff;
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--paper);
 }
 
 .auth-user {
@@ -206,17 +227,19 @@
 
 .auth-link {
   min-height: 44px;
-  padding: 0 14px;
+  padding: 0 16px;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: none;
-  color: var(--text);
+  border: 2px solid var(--line);
+  background: var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 3px 3px 0 var(--shadow);
+  font-weight: 700;
   font-size: 14px;
   cursor: pointer;
 }
 
 .auth-link:hover {
-  background: var(--surface);
+  transform: translateY(-1px);
 }
 
 .auth-card {
@@ -286,7 +309,7 @@
 
 .auth-error {
   font-size: 13px;
-  color: #ff8a8a;
+  color: var(--danger);
 }
 
 .auth-submit {
@@ -294,7 +317,7 @@
   border: none;
   border-radius: 12px;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-ink);
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
@@ -355,7 +378,7 @@
 }
 
 .leaderboard-list li.me {
-  background: #14143a;
+  background: var(--accent-soft);
   box-shadow: inset 0 0 0 1px var(--accent);
   font-weight: 700;
 }
@@ -405,7 +428,7 @@ button:disabled {
   z-index: 20;
   box-sizing: border-box;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.65);
+  background: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -488,7 +511,7 @@ button:disabled {
   width: 8px;
   height: 8px;
   border-radius: 4px;
-  background: #3f3f46;
+  background: var(--border-strong);
   transform: translate(-50%, -50%);
   transition: width 0.2s, background 0.2s;
 }
@@ -525,7 +548,7 @@ button:disabled {
 
 .help-button:hover {
   color: var(--text);
-  border-color: #3f3f46;
+  border-color: var(--border-strong);
 }
 
 /* «رد کردن» بالای پنجره */
@@ -572,7 +595,7 @@ button:disabled {
   flex: 2;
   border: none;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-ink);
 }
 
 /* برچسب «آزمایشی» (بازی‌ای که هنوز کامل نیست؛ games/index.js → beta) */
@@ -582,8 +605,8 @@ button:disabled {
   margin-inline-start: 8px;
   padding: 1px 10px;
   border-radius: 999px;
-  border: 1px dashed #8f8fff;
-  color: #a9a9ff;
+  border: 1px dashed var(--accent-text);
+  color: var(--accent-text);
   font-size: 12px;
   font-weight: 700;
   vertical-align: middle;
@@ -676,5 +699,59 @@ h3 {
   .help-ok {
     height: 54px;
     font-size: 16px;
+  }
+}
+
+/* ---------- «صفحه‌ی گرامافون»: زبان مشترک همه‌ی صفحه‌ها ---------- */
+/* تیترها با لاله‌زار (فقط یه وزن داره، پس بولد مصنوعی نه) */
+h1,
+h2 {
+  font-family: var(--font-display);
+  font-weight: 400 !important;
+  letter-spacing: 0;
+}
+
+html {
+  font-synthesis: none;
+}
+
+/* پنجره‌ها و کارت‌های اصلی: دور تیره و سایه‌ی سخت، مثل کارت کاغذی */
+.help-dialog,
+.auth-backdrop .auth-card,
+.giveup-dialog {
+  border: 2px solid var(--line);
+  box-shadow: 7px 7px 0 var(--shadow);
+}
+
+/* دکمه‌های اصلی: برچسبی با سایه‌ی سخت؛ با فشار دادن پایین می‌رن */
+.help-ok,
+.auth-submit,
+.primary-button,
+.giveup-confirm,
+.color-btn,
+.survey-more,
+.game-over-actions .primary {
+  border: 2px solid var(--line) !important;
+  box-shadow: 3px 3px 0 var(--shadow);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.help-ok:active,
+.auth-submit:active,
+.primary-button:active,
+.giveup-confirm:active,
+.color-btn:active,
+.survey-more:active,
+.game-over-actions .primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--shadow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-logo,
+  .help-ok,
+  .auth-submit,
+  .primary-button {
+    transition: none;
   }
 }

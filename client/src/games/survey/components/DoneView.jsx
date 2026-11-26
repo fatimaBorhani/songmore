@@ -1,4 +1,4 @@
-// آخر سؤال‌های امروز (طرح «ج»): کارت آبی با تیک‌ها، «دمت گرم!» و هدف جمعی؛ زیرش «یه سؤال پیشنهاد بده» (پنجره) و «بازم بده!»
+// آخر سؤال‌های امروز (طرح «ج»): کارت آبی با تیک‌ها، «دمت گرم!» و هدف جمعی؛ زیرش «یه سؤال پیشنهاد بده» (پنجره) و «۵ تای دیگه!» (عددش از moreCount)
 import { useState } from 'react'
 import { faNumber } from '../../../shared/format.js'
 import GoalBar from './GoalBar.jsx'
@@ -51,7 +51,7 @@ function DoneView({ title, helpButton, state, busy, error, onMore, onReset }) {
         </button>
         {canMore && (
           <button type="button" className="survey-more" disabled={busy} onClick={onMore} aria-label={`${faNumber(moreCount)} سؤال دیگه`}>
-            بازم بده!
+            {faNumber(moreCount)} تای دیگه!
           </button>
         )}
       </div>

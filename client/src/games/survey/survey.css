@@ -282,7 +282,7 @@
   cursor: pointer;
 }
 
-/* تنها دکمه (وقتی «بازم بده!» نیست) تمام‌عرض */
+/* تنها دکمه (وقتی «۵ تای دیگه!» نیست) تمام‌عرض */
 .survey-done-actions button:only-child {
   grid-column: 1 / -1;
 }

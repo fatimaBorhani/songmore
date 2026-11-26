@@ -1,0 +1,912 @@
+/* بازی «شعر یادت نره»: همه‌ی رنگ‌ها از متغیرهای index.css (روز و شب)
+   صفحه بدون اسکرول: فقط لیست ترانه خودش اسکرول می‌شه */
+
+.lyrics-page {
+  max-width: 560px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 12px 20px 20px;
+  /* ارتفاع صفحه منهای سربرگ سایت، تا خود صفحه اسکرول نخوره */
+  height: calc(100dvh - 70px);
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+}
+
+.lyrics-page .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- بالای صفحه: عنوان، نقطه‌ها، راهنما ---------- */
+
+.lyrics-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lyrics-top h1 {
+  font-size: 30px;
+  line-height: 1.3;
+}
+
+.lyrics-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lyrics-dots {
+  display: flex;
+  gap: 5px;
+}
+
+.lyrics-dots span {
+  width: 22px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--chip);
+}
+
+.lyrics-dots span.on {
+  background: var(--accent);
+}
+
+.lyrics-dots span.done {
+  background: var(--correct);
+}
+
+/* ---------- صفحه‌ی گرامافون (تنها چیز گرد) ---------- */
+
+.lyrics-record {
+  position: relative;
+  flex: none;
+  display: block;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, var(--vinyl-1) 0 2px, var(--vinyl-2) 2px 4px);
+  box-shadow: 0 0 0 3px var(--line), 6px 8px 0 var(--shadow);
+}
+
+/* برق روی صفحه که موقع پخش می‌چرخه */
+.lyrics-record::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 30deg,
+    transparent 0 18%,
+    color-mix(in srgb, var(--hero-ink) 16%, transparent) 24%,
+    transparent 32% 68%,
+    color-mix(in srgb, var(--hero-ink) 10%, transparent) 74%,
+    transparent 82%
+  );
+}
+
+.lyrics-record > i {
+  position: absolute;
+  inset: 33%;
+  border-radius: 50%;
+  background: var(--vinyl-label);
+  border: 2px solid var(--line);
+}
+
+.lyrics-record > i::after {
+  content: '';
+  position: absolute;
+  inset: 42%;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.lyrics-record.big {
+  width: 220px;
+  height: 220px;
+}
+
+.lyrics-record.big::before {
+  animation: lyrics-spin 2.86s linear infinite;
+}
+
+.lyrics-record.mini {
+  width: 44px;
+  height: 44px;
+  box-shadow: 0 0 0 2px var(--line);
+}
+
+.lyrics-record.mini.spinning::before {
+  animation: lyrics-spin 2.86s linear infinite;
+}
+
+@keyframes lyrics-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- قبل از پخش ---------- */
+
+.lyrics-ready {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+}
+
+.lyrics-ready-name {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 22px;
+  background: var(--card);
+  border: 2px solid var(--edge);
+  border-radius: 4px;
+  box-shadow: 5px 5px 0 var(--shadow);
+  transform: rotate(1.5deg);
+}
+
+.lyrics-ready-name h2 {
+  font-size: 28px;
+  line-height: 1.3;
+}
+
+.lyrics-ready-name span {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.lyrics-ready-blanks {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lyrics-ready-blanks span,
+.lyrics-blank {
+  height: 16px;
+  border: 2px dashed var(--border-strong);
+  border-radius: 4px;
+}
+
+.lyrics-ready-blanks span.short,
+.lyrics-blank.short {
+  width: 70%;
+}
+
+.lyrics-play,
+.lyrics-submit,
+.lyrics-share {
+  width: 100%;
+  min-height: 56px;
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 4px 4px 0 var(--shadow);
+  font: inherit;
+  font-size: 17px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.lyrics-play {
+  margin-top: auto;
+}
+
+.lyrics-submit:disabled {
+  background: var(--chip);
+  color: var(--text-muted);
+  border-color: var(--border-strong);
+  box-shadow: none;
+  cursor: default;
+}
+
+/* ---------- وسط آهنگ ---------- */
+
+.lyrics-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 14px;
+}
+
+/* کارت آهنگ = پخش‌کننده (روی گوشی بالای صفحه) */
+.lyrics-songcard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 12px 12px;
+  background: var(--card);
+  border: 2px solid var(--edge);
+  border-radius: 4px;
+  box-shadow: 5px 5px 0 var(--shadow);
+  transform: rotate(-0.6deg);
+}
+
+.lyrics-songrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lyrics-songname {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.4;
+}
+
+.lyrics-songname b {
+  font-size: 15px;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lyrics-songname small {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.lyrics-points {
+  margin-inline-start: auto;
+  padding: 0 12px;
+  background: var(--mustard);
+  color: var(--mustard-ink);
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  box-shadow: 2px 2px 0 var(--shadow);
+  transform: rotate(3deg);
+  font-size: 18px;
+}
+
+.lyrics-again {
+  margin-inline-start: auto;
+  flex: none;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 2px 2px 0 var(--shadow);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transform: rotate(-2deg);
+}
+
+.lyrics-points + .lyrics-again {
+  margin-inline-start: 0;
+}
+
+.lyrics-mini {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lyrics-track {
+  position: relative;
+  flex: 1;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--chip);
+  border: 2px solid var(--edge);
+}
+
+.lyrics-track-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: var(--accent);
+}
+
+/* جای توقف: نوبت تو */
+.lyrics-track-stop {
+  position: absolute;
+  top: -6px;
+  width: 8px;
+  height: 16px;
+  box-sizing: border-box;
+  background: var(--mustard);
+  border: 2px solid var(--line);
+  transform: translateX(50%) rotate(8deg);
+}
+
+.lyrics-time {
+  flex: none;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.lyrics-eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 13px;
+}
+
+.lyrics-eq i {
+  width: 4px;
+  height: 13px;
+  background: var(--accent);
+  transform-origin: bottom;
+  animation: lyrics-eq 0.9s ease-in-out infinite;
+}
+
+.lyrics-eq i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.lyrics-eq i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes lyrics-eq {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* ---------- لیست ترانه (مثل اسپاتیفای) ---------- */
+
+.lyrics-listwrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.lyrics-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 12%, black 88%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, black 12%, black 88%, transparent 100%);
+}
+
+.lyrics-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* فاصله‌ی بالا و پایین تا خط اول و آخر هم بتونن وسط بیان */
+.lyrics-list-inner {
+  padding: 30% 6px 45%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lyrics-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.55;
+  transition: opacity 0.35s;
+}
+
+.lyrics-line.past {
+  opacity: 0.5;
+}
+
+.lyrics-line.next {
+  opacity: 0.28;
+}
+
+.lyrics-line.cur {
+  opacity: 1;
+  font-weight: 900;
+}
+
+.lyrics-line.ans {
+  opacity: 1;
+}
+
+.lyrics-line-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.lyrics-line-button {
+  display: block;
+  width: calc(100% + 16px);
+  margin: 0 -8px;
+  padding: 2px 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  text-align: right;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.lyrics-line-button:hover,
+.lyrics-line-button:focus-visible {
+  background: var(--accent-soft);
+  outline: none;
+}
+
+.lyrics-line:has(.lyrics-line-button:hover),
+.lyrics-line:has(.lyrics-line-button:focus-visible) {
+  opacity: 1;
+}
+
+.lyrics-line-play {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: 8px;
+  color: var(--accent-text);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.lyrics-line-button:hover .lyrics-line-play,
+.lyrics-line-button:focus-visible .lyrics-line-play {
+  opacity: 1;
+}
+
+.lyrics-typed {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+/* علامت هر خط جواب: رنگ‌های جورچین */
+.lyrics-mark {
+  flex: none;
+  margin-top: 6px;
+  width: 26px;
+  height: 26px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 2px solid var(--line);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-4deg);
+}
+
+.lyrics-mark.ok {
+  background: var(--correct);
+  color: var(--correct-ink);
+}
+
+.lyrics-mark.close {
+  background: var(--present);
+  color: var(--present-ink);
+}
+
+.lyrics-mark.wrong {
+  background: var(--absent);
+  color: var(--absent-ink);
+  border-color: var(--border-strong);
+}
+
+/* دکمه‌ی «برگرد به خط جاری» بعد از اسکرول دستی */
+.lyrics-back {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1.5deg);
+  min-height: 38px;
+  padding: 0 14px;
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 3px 3px 0 var(--shadow);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ---------- فرم جواب ---------- */
+
+.lyrics-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 4px 0 20px;
+}
+
+.lyrics-input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 54px;
+  padding: 0 14px;
+  background: var(--card);
+  color: var(--text);
+  border: 2px solid var(--edge);
+  border-radius: 4px;
+  box-shadow: 3px 3px 0 var(--shadow);
+  font: inherit;
+  font-size: 18px;
+  font-weight: 800;
+  outline: none;
+}
+
+.lyrics-input:focus {
+  border-color: var(--accent);
+  box-shadow: 3px 3px 0 var(--accent);
+}
+
+.lyrics-input::placeholder {
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.lyrics-submit {
+  margin-top: 4px;
+}
+
+.lyrics-message {
+  margin: 6px 0 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+/* ---------- آخر آهنگ ---------- */
+
+.lyrics-end {
+  margin-top: 10px;
+  padding: 16px;
+  background: var(--hero);
+  color: var(--hero-ink);
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  box-shadow: 5px 5px 0 var(--shadow);
+  transform: rotate(-1deg);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: lyrics-pop 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes lyrics-pop {
+  from {
+    opacity: 0;
+    transform: translateY(14px) rotate(-1deg);
+  }
+}
+
+.lyrics-end-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.lyrics-score {
+  flex: none;
+  width: 70px;
+  height: 70px;
+  box-sizing: border-box;
+  background: var(--mustard);
+  color: var(--mustard-ink);
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  box-shadow: 3px 3px 0 var(--shadow);
+  transform: rotate(4deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.lyrics-score b {
+  font-size: 34px;
+}
+
+.lyrics-score small {
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.lyrics-score.big {
+  width: 92px;
+  height: 92px;
+}
+
+.lyrics-score.big b {
+  font-size: 46px;
+}
+
+.lyrics-verdict {
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.5;
+}
+
+.lyrics-next {
+  min-height: 52px;
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 4px 4px 0 var(--shadow);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* ---------- خلاصه‌ی روز ---------- */
+
+.lyrics-summary {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+}
+
+.lyrics-dayhero {
+  padding: 18px;
+  background: var(--hero);
+  color: var(--hero-ink);
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  box-shadow: 5px 5px 0 var(--shadow);
+  transform: rotate(-1deg);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.lyrics-dayhero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lyrics-dayhero-text span {
+  font-size: 13px;
+  color: var(--hero-soft-ink);
+}
+
+.lyrics-dayhero-text b {
+  font-size: 19px;
+  font-weight: 900;
+  line-height: 1.5;
+}
+
+.lyrics-daylist {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lyrics-daylist li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--card);
+  border: 2px solid var(--edge);
+  border-radius: 4px;
+  box-shadow: 3px 3px 0 var(--shadow);
+}
+
+.lyrics-daylist li:nth-child(2) {
+  transform: rotate(0.6deg);
+}
+
+.lyrics-daynum {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  box-sizing: border-box;
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  background: var(--mustard);
+  color: var(--mustard-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.lyrics-dayname {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.lyrics-dayname b {
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lyrics-dayname small {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.lyrics-minis {
+  display: flex;
+  gap: 4px;
+  margin-inline-start: auto;
+}
+
+.lyrics-minis i {
+  width: 14px;
+  height: 14px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  border: 2px solid var(--line);
+}
+
+.lyrics-minis .ok {
+  background: var(--correct);
+}
+
+.lyrics-minis .close {
+  background: var(--present);
+}
+
+.lyrics-minis .wrong {
+  background: var(--absent);
+  border-color: var(--border-strong);
+}
+
+.lyrics-daypoints {
+  min-width: 22px;
+  text-align: left;
+  font-size: 20px;
+}
+
+.lyrics-summary-actions {
+  margin-top: auto;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lyrics-next-day {
+  margin: 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.lyrics-next-day b {
+  font-family: var(--font-score);
+  font-weight: 400;
+  font-size: 17px;
+  color: var(--text);
+}
+
+.lyrics-test {
+  margin-top: 12px;
+  align-self: center;
+}
+
+/* راهنما: علامت‌های کوچیک کنار هر نمره */
+.lyrics-help-grades .lyrics-mark {
+  width: 18px;
+  height: 18px;
+  margin: 0 0 0 4px;
+  vertical-align: middle;
+}
+
+/* ---------- کامپیوتر: لیست ترانه وسط، کارت آهنگ و نتیجه کنارش ---------- */
+
+@media (min-width: 900px) {
+  /* سربرگ مشترک روی این صفحه هم‌عرض خود صفحه می‌شه (مثل «درباره») */
+  .site:has(.lyrics-page) .site-header {
+    max-width: 1080px;
+    padding-inline: 20px;
+  }
+
+  .lyrics-page {
+    max-width: 1080px;
+    height: calc(100dvh - 80px);
+  }
+
+  .lyrics-top h1 {
+    font-size: 40px;
+  }
+
+  .lyrics-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'list card'
+      'list end';
+    column-gap: 48px;
+    row-gap: 20px;
+  }
+
+  .lyrics-songcard {
+    grid-area: card;
+  }
+
+  .lyrics-listwrap {
+    grid-area: list;
+  }
+
+  .lyrics-end {
+    grid-area: end;
+    align-self: start;
+    margin-top: 0;
+  }
+
+  .lyrics-body > .lyrics-message {
+    grid-area: end;
+    align-self: start;
+  }
+
+  .lyrics-line {
+    font-size: 27px;
+  }
+
+  .lyrics-ready,
+  .lyrics-summary {
+    width: 100%;
+    max-width: 560px;
+    align-self: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lyrics-record::before,
+  .lyrics-eq i,
+  .lyrics-end {
+    animation: none !important;
+  }
+}

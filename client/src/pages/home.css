@@ -280,6 +280,11 @@ a.bento-card.small:hover,
   color: var(--violet-ink);
 }
 
+.bento-card.small.game-lyrics {
+  background: var(--mustard);
+  color: var(--mustard-ink);
+}
+
 /* روی برچسب رنگی همه‌چیز همرنگ متن خود برچسبه */
 .bento-card.small .small-desc,
 .bento-card.small .small-cta,

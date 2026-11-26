@@ -865,6 +865,11 @@ html {
 .site .profile-dist li > b,
 .site .profile-rank-card b,
 .site .profile-badge-num,
+.site .lyrics-time,
+.site .lyrics-points,
+.site .lyrics-score b,
+.site .lyrics-daynum,
+.site .lyrics-daypoints,
 .site .about-mini-table .row b {
   font-family: var(--font-score);
   font-weight: 400;

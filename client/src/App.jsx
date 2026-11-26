@@ -14,6 +14,7 @@ import WordGame from './games/word/WordGame.jsx'
 import ColorGame from './games/color/ColorGame.jsx'
 import SurveyGame from './games/survey/SurveyGame.jsx'
 import ClueGame from './games/clue/ClueGame.jsx'
+import LyricsGame from './games/lyrics/LyricsGame.jsx'
 import './shared/shared.css'
 
 // پوسته‌ی سایت: سربرگ مشترک (اسم سایت + آیکون جدول هفته + ورود) و صفحه‌ها
@@ -21,6 +22,7 @@ import './shared/shared.css'
 //   /song  جورزیک (مسابقه‌ای)، /song/practice (تمرینی)
 //   /word  بازی جورچین
 //   /color  بازی جورنگ
+//   /lyrics  «شعر یادت نره»
 //   /survey  نظرسنجی «صد جور»
 //   /clue  بازی جوربندی
 //   /profile  حساب کاربری (آمار و تقویم فعالیت)
@@ -66,6 +68,7 @@ function App() {
           <Route path="/color" element={<ColorGame user={user} />} />
           <Route path="/clue" element={<ClueGame user={user} />} />
           <Route path="/survey" element={<SurveyGame user={user} />} />
+          <Route path="/lyrics" element={<LyricsGame user={user} />} />
           <Route path="/profile" element={<ProfilePage user={user} onUserChange={setUser} />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/weekly" element={<WeeklyPage user={user} />} />

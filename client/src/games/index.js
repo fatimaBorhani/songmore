@@ -36,6 +36,15 @@ export const GAMES = [
     beta: true, // برچسب «آزمایشی» (رتبه‌بندی معنایی هنوز خوب نیست)
   },
   {
+    id: 'lyrics',
+    path: '/lyrics',
+    title: 'شعر یادت نره',
+    description: 'یه تیکه آهنگ می‌شنوی؛ دو خط بعدیش رو از حفظ بنویس.',
+    icon: 'mic',
+    ready: true,
+    beta: true, // برچسب «آزمایشی» (تازه‌ست و داده‌ش هنوز کمه)
+  },
+  {
     id: 'survey',
     path: '/survey',
     title: 'صد جور',

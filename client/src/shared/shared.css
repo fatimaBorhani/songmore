@@ -831,25 +831,55 @@ html {
   }
 }
 
-/* ---------- عدد امتیازها: فونت «بهمن» (--font-score) ----------
-   فقط خود عددِ امتیاز؛ وزن ۴۰۰ چون فونت خودش پررنگه (مرورگر نباید پررنگ‌ترش کنه) */
+/* ---------- عددهای تنها: فونت «بهمن» (--font-score) ----------
+   هر عددی که وسط جمله نیست (امتیاز، زمان، رتبه، شماره‌ی دور، آمار)؛ عدد وسط جمله با وزیرمتن می‌مونه.
+   حرف لاتین (s، H S B، #) توی این فونت نیست و خودکار با وزیرمتن نوشته می‌شه.
+   وزن ۴۰۰ چون خود فونت پررنگه (مرورگر نباید پررنگ‌ترش کنه) */
 .site .worth-value,
 .site .final-score-value,
 .site .day-summary .day-song-score,
 .site .day-total b,
+.site .player-time,
+.site .wave-label,
+.site .skip-button:not(.giveup-button) .skip-time,
+.site .lb-rank,
 .site .lb-score,
-.site .color-score-head .color-big,
+.site .word-day-summary .day-score,
+.site .color-big,
+.site .color-round,
+.site .color-slider label b,
+.site .color-half-label b,
 .site .color-summary-score,
 .site .color-rounds b,
+.site .clue-count,
+.site .clue-row-rank,
+.site .survey-goal b,
+.site .survey-card-bg,
+.site .weekly-rank,
+.site .weekly-me-rank b,
 .site .weekly-me-points b,
 .site .weekly-me-games b,
-.site .weekly-points {
+.site .weekly-points,
+.site .profile-stats dd,
+.site .profile-dist li > span,
+.site .profile-dist li > b,
+.site .profile-rank-card b,
+.site .profile-badge-num,
+.site .about-mini-table .row b {
   font-family: var(--font-score);
   font-weight: 400;
   font-synthesis: none;
 }
 
-/* «از ۵۰» کنار امتیاز جورنگ متن معمولیه، نه عدد امتیاز */
-.site .color-summary-score small {
+/* «از ۵۰» و «از ۱۲» کنار عددها متن معمولیه */
+.site .color-summary-score small,
+.site .profile-stats dd small,
+.site .profile-rank-card b small {
   font-family: 'Vazirmatn', system-ui, sans-serif;
+}
+
+/* «/» بین دو عدد: توی فونت «بهمن» شبیه ممیز فارسیه، پس با وزیرمتن و با فاصله */
+.site .num-sep {
+  font-family: 'Vazirmatn', system-ui, sans-serif;
+  margin: 0 4px;
 }

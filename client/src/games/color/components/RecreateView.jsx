@@ -21,7 +21,7 @@ function RecreateView({ hsb, onChange, onSubmit, busy, error, round, roundCount 
       }
     >
       <span className="color-round">
-        {faNumber(round)} / {faNumber(roundCount)}
+        {faNumber(round)} <span className="num-sep">/</span> {faNumber(roundCount)}
       </span>
       <span className="color-corner-end">رنگ تو</span>
     </Scene>

@@ -8,7 +8,7 @@ function MemorizeCard({ color, secondsLeft, totalSeconds, round, roundCount }) {
   return (
     <Scene label="رنگ برای حفظ کردن" background={hsbToCss(color)} ink={readableOn(color)} reveal short>
       <span className="color-round">
-        {faNumber(round)} / {faNumber(roundCount)}
+        {faNumber(round)} <span className="num-sep">/</span> {faNumber(roundCount)}
       </span>
       <span className="color-big" role="timer" aria-label={`${faNumber(Math.ceil(secondsLeft))} ثانیه`}>
         {faNumber(Math.floor(secondsLeft * 10) / 10, 1)}

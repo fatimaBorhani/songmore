@@ -190,7 +190,10 @@ function WavePlayer({ clips, onError, celebrating }) {
             مرحله‌ی {faNumber(clips.length)} از ۵
           </span>
           <span className="player-time" dir="ltr">
-            <strong>{pos.toFixed(2)}</strong> / {limit}s
+            <strong>{faNumber(pos, 2)}</strong>
+            {/* خط جداکننده با وزیرمتن، چون توی فونت عددها شبیه ممیزه */}
+            <span className="num-sep">/</span>
+            {faSeconds(limit)}s
           </span>
         </div>
 
@@ -235,7 +238,7 @@ function WavePlayer({ clips, onError, celebrating }) {
           {/* برچسب ثانیه بالای موس */}
           {seekable && labelSec !== null && (
             <span className="wave-label" style={{ left: `${barPosition(labelSec) * 100}%` }} aria-hidden="true">
-              {labelSec.toFixed(2)}s
+              {faNumber(labelSec, 2)}s
             </span>
           )}
         </div>

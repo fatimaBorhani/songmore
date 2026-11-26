@@ -38,7 +38,11 @@ function WordResult({ game, onShare, onNext, testMode, onReplay }) {
             <li key={s.slot} className={s.won ? 'won' : 'lost'}>
               <span className="day-len">{faNumber(s.length)} حرفی</span>
               <span className="day-word">{s.answer}</span>
-              <span className="day-score">{s.won ? `${faNumber(s.guessCount)}/${faNumber(s.maxGuesses)}` : `✕/${faNumber(s.maxGuesses)}`}</span>
+              <span className="day-score">
+                {s.won ? faNumber(s.guessCount) : '✕'}
+                <span className="num-sep">/</span>
+                {faNumber(s.maxGuesses)}
+              </span>
             </li>
           ))}
         </ul>

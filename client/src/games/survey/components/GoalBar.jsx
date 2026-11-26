@@ -12,7 +12,7 @@ function GoalBar({ goal, onBlue = false }) {
         <span className="survey-bar-fill" style={{ width: `${width}%` }} />
       </span>
       <b>
-        {faNumber(Math.min(goal.completed, goal.target))} / {faNumber(goal.target)}
+        {faNumber(Math.min(goal.completed, goal.target))} <span className="num-sep">/</span> {faNumber(goal.target)}
       </b>
     </div>
   )

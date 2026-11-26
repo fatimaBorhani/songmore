@@ -24,7 +24,7 @@ function ResultView({ result, game, last, busy, onNext }) {
       <section className="color-stage color-result-stage" aria-label="مقایسه‌ی رنگ‌ها">
         <div className="color-half" style={{ background: hsbToCss(result.guess), color: readableOn(result.guess) }}>
           <span className="color-round">
-            {faNumber(game.completed)} / {faNumber(game.roundCount)}
+            {faNumber(game.completed)} <span className="num-sep">/</span> {faNumber(game.roundCount)}
           </span>
           <div className="color-score-head">
             {/* خود عدد در حال شمارشه؛ برای صفحه‌خوان امتیاز نهایی جدا نوشته شده */}

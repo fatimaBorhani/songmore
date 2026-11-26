@@ -1,4 +1,4 @@
-// بدون فایل داده‌ی «شعر یادت نره» همه‌ی درخواست‌ها NO_DATA (503) می‌گیرن
+// بدون فایل داده‌ی «جورشعر» همه‌ی درخواست‌ها NO_DATA (503) می‌گیرن
 import { test, before, after } from 'node:test'
 import assert from 'node:assert/strict'
 import http from 'node:http'

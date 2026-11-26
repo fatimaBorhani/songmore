@@ -114,7 +114,7 @@ export function ClueStatsPanel({ stats }) {
 }
 
 export function LyricsStatsPanel({ stats }) {
-  if (stats.songs === 0) return <EmptyStats text="هنوز شعر یادت نره بازی نکردی." to="/lyrics" linkText="برو به شعر یادت نره" />
+  if (stats.songs === 0) return <EmptyStats text="هنوز جورشعر بازی نکردی." to="/lyrics" linkText="برو به جورشعر" />
   const rows = [
     ['آهنگ‌های جواب‌داده', faNumber(stats.songs)],
     ['میانگین امتیاز هر روز', stats.played ? withOf(faNumber(stats.averageDay, Number.isInteger(stats.averageDay) ? 0 : 1), faNumber(stats.maxDay)) : '—'],
@@ -128,7 +128,7 @@ export function LyricsStatsPanel({ stats }) {
   ]
   return (
     <div className="profile-panels">
-      <StatsList label="آمار شعر یادت نره" rows={rows} total={['روزهای تموم‌شده', faNumber(stats.played)]} />
+      <StatsList label="آمار جورشعر" rows={rows} total={['روزهای تموم‌شده', faNumber(stats.played)]} />
     </div>
   )
 }

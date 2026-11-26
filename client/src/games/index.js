@@ -38,7 +38,7 @@ export const GAMES = [
   {
     id: 'lyrics',
     path: '/lyrics',
-    title: 'شعر یادت نره',
+    title: 'جورشعر',
     description: 'یه تیکه آهنگ می‌شنوی؛ دو خط بعدیش رو از حفظ بنویس.',
     icon: 'mic',
     ready: true,

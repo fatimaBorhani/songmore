@@ -35,7 +35,7 @@ const TABS = [
   { id: 'word', label: 'جورچین', load: getWordStats, Panel: WordStatsPanel },
   { id: 'color', label: 'جورنگ', load: getColorStats, Panel: ColorStatsPanel },
   { id: 'clue', label: 'جوربندی', load: getClueStats, Panel: ClueStatsPanel },
-  { id: 'lyrics', label: 'شعر یادت نره', load: getLyricsStats, Panel: LyricsStatsPanel },
+  { id: 'lyrics', label: 'جورشعر', load: getLyricsStats, Panel: LyricsStatsPanel },
   { id: 'survey', label: 'صد جور', load: getSurveyStats, Panel: SurveyStatsPanel },
 ]
 

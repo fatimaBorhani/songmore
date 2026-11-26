@@ -1,4 +1,4 @@
-// API بازی «شعر یادت نره» (همه زیر /api/lyrics روی سرور)
+// API بازی «جورشعر» (همه زیر /api/lyrics روی سرور)
 import { API_URL, call, postJson } from '../../shared/api.js'
 
 export function getLyricsGame() {

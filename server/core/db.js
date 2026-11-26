@@ -236,7 +236,7 @@ db.exec(`
     PRIMARY KEY (player_key, date)
   );
 
-  -- «شعر یادت نره»: ۳ تیکه‌ی هر روز (شناسه‌ها از data/lyrics/lyrics_game.json)
+  -- «جورشعر»: ۳ تیکه‌ی هر روز (شناسه‌ها از data/lyrics/lyrics_game.json)
   CREATE TABLE IF NOT EXISTS lyrics_daily (
     date TEXT NOT NULL,
     slot INTEGER NOT NULL,
@@ -244,7 +244,7 @@ db.exec(`
     PRIMARY KEY (date, slot)
   );
 
-  -- «شعر یادت نره»: دو خطی که بازیکن برای هر تیکه نوشته (نمره ذخیره نمی‌شه، هر بار حساب می‌شه)
+  -- «جورشعر»: دو خطی که بازیکن برای هر تیکه نوشته (نمره ذخیره نمی‌شه، هر بار حساب می‌شه)
   CREATE TABLE IF NOT EXISTS lyrics_answers (
     player_key TEXT NOT NULL,
     date TEXT NOT NULL,

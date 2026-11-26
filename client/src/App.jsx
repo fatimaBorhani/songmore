@@ -22,7 +22,7 @@ import './shared/shared.css'
 //   /song  جورزیک (مسابقه‌ای)، /song/practice (تمرینی)
 //   /word  بازی جورچین
 //   /color  بازی جورنگ
-//   /lyrics  «شعر یادت نره»
+//   /lyrics  «جورشعر»
 //   /survey  نظرسنجی «صد جور»
 //   /clue  بازی جوربندی
 //   /profile  حساب کاربری (آمار و تقویم فعالیت)

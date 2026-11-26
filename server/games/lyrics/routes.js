@@ -1,4 +1,4 @@
-// مسیرهای API بازی «شعر یادت نره» (همه زیر /api/lyrics)
+// مسیرهای API بازی «جورشعر» (همه زیر /api/lyrics)
 // هر روز ۳ تیکه آهنگ؛ بعد از هر تیکه بازیکن دو خط بعدی رو از حفظ می‌نویسه
 import express from 'express'
 import { getTodayDateString } from '../../core/today.js'

@@ -1,6 +1,6 @@
 import HelpDialog from '../../../shared/components/HelpDialog.jsx'
 
-// راهنمای «شعر یادت نره» (خود پنجره مشترکه: shared/components/HelpDialog.jsx)
+// راهنمای «جورشعر» (خود پنجره مشترکه: shared/components/HelpDialog.jsx)
 // خط‌های نمونه ساختگی‌ان، از هیچ آهنگ واقعی نیستن
 function LyricsHelp({ onClose }) {
   const slides = [

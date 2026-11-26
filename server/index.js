@@ -6,8 +6,8 @@
 //   /api/clue/...  بازی «جوربندی»
 //   /api/weekly    جدول هفته (امتیاز یکسان همه‌ی بازی‌ها)
 //   /api/survey/.. نظرسنجی «صد جور» (جمع کردن داده برای بازی‌های بعدی)
-//   /api/lyrics/.. بازی «شعر یادت نره»
-//   /clips/...     فایل‌های کلیپ بازی آهنگ (و clips/lyrics/ برای «شعر یادت نره»)
+//   /api/lyrics/.. بازی «جورشعر»
+//   /clips/...     فایل‌های کلیپ بازی آهنگ (و clips/lyrics/ برای «جورشعر»)
 import express from 'express'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'

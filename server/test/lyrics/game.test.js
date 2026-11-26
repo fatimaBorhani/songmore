@@ -1,4 +1,4 @@
-// تست بازی «شعر یادت نره»: نمره‌ی خط‌ها، جواب زودتر لو نره، ترتیب تیکه‌ها، خطاها و انتقال بازی مهمان
+// تست بازی «جورشعر»: نمره‌ی خط‌ها، جواب زودتر لو نره، ترتیب تیکه‌ها، خطاها و انتقال بازی مهمان
 import { test, before, after } from 'node:test'
 import assert from 'node:assert/strict'
 import http from 'node:http'

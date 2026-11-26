@@ -87,7 +87,7 @@ export function claimGuestGames(sessionId, userId) {
          AND date NOT IN (SELECT date FROM clue_guesses WHERE player_key = ?)`
     )
     .run(userKey, sessionId, userKey)
-  // بازی «شعر یادت نره» (روزهایی که حساب خودش جواب داده منتقل نمی‌شن)
+  // بازی «جورشعر» (روزهایی که حساب خودش جواب داده منتقل نمی‌شن)
   const lyricsInfo = db
     .prepare(
       `UPDATE lyrics_answers SET player_key = ?

@@ -1,4 +1,4 @@
-// منطق بدون صفحه‌ی «شعر یادت نره» (تست‌ها: client/test/lyrics.test.js)
+// منطق بدون صفحه‌ی «جورشعر» (تست‌ها: client/test/lyrics.test.js)
 import { faNumber } from '../../shared/format.js'
 
 export const GRADE_LABELS = { ok: 'درست', close: 'نزدیک', wrong: 'غلط' }

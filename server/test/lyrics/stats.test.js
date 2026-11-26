@@ -1,4 +1,4 @@
-// تست آمار «شعر یادت نره» برای صفحه‌ی حساب: امتیاز، خط‌ها، روزهای تموم‌شده و روزهای پشت‌سرهم
+// تست آمار «جورشعر» برای صفحه‌ی حساب: امتیاز، خط‌ها، روزهای تموم‌شده و روزهای پشت‌سرهم
 import { test, before, after } from 'node:test'
 import assert from 'node:assert/strict'
 import http from 'node:http'

@@ -1,4 +1,4 @@
-// تست منطق بدون صفحه‌ی «شعر یادت نره» (خط جاری، حالت خط‌ها، ساعت، متن اشتراک)
+// تست منطق بدون صفحه‌ی «جورشعر» (خط جاری، حالت خط‌ها، ساعت، متن اشتراک)
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { clock, currentLineIndex, lineState, shareText, songVerdict } from '../src/games/lyrics/lyrics.js'
@@ -40,7 +40,7 @@ test('متن اشتراک: فقط مربع‌ها و امتیاز، بدون م�
       { finished: false, lines: [] },
     ],
   }
-  const text = shareText(game, 'شعر یادت نره')
-  assert.equal(text, 'شعر یادت نره\n🟩🟨 ۳\n⬛🟨 ۱\nامتیاز: ۵ از ۱۲')
+  const text = shareText(game, 'جورشعر')
+  assert.equal(text, 'جورشعر\n🟩🟨 ۳\n⬛🟨 ۱\nامتیاز: ۵ از ۱۲')
   assert.ok(!text.includes('متن مخفی'))
 })

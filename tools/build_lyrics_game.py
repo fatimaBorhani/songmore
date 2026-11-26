@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 build_lyrics_game.py
-داده‌ی بازی «شعر یادت نره» رو مستقیم از متن‌های هم‌زمان ملودیفای و فایل صدای همون آهنگ‌ها می‌سازه.
+داده‌ی بازی «جورشعر» رو مستقیم از متن‌های هم‌زمان ملودیفای و فایل صدای همون آهنگ‌ها می‌سازه.
 به آهنگ‌های جورزیک (songs.json و data/audio) کاری نداره.
 
 قبلش دو تا چیز لازمه (هر دو توی data/lyrics/ که توی git نمی‌ره، چون متن و صدا مال ما نیست):
@@ -303,7 +303,7 @@ def build(tracks, audio_dir, clips_dir):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="ساختن داده‌ی بازی «شعر یادت نره»")
+    parser = argparse.ArgumentParser(description="ساختن داده‌ی بازی «جورشعر»")
     parser.add_argument("--input", default=DEFAULT_INPUT, help="فایل JSON ملودیفای")
     parser.add_argument("--audio", default=DEFAULT_AUDIO, help="پوشه‌ی فایل‌های صدای همون آهنگ‌ها")
     args = parser.parse_args()

@@ -15,7 +15,7 @@ import { faNumber } from '../../shared/format.js'
 import { SITE_NAME } from '../../shared/site.js'
 import './lyrics.css'
 
-const GAME_TITLE = 'شعر یادت نره'
+const GAME_TITLE = 'جورشعر'
 
 const ERROR_MESSAGES = {
   EMPTY_ANSWER: 'حداقل یه خط بنویس',
@@ -24,7 +24,7 @@ const ERROR_MESSAGES = {
   GAME_OVER: 'بازی امروز تموم شده',
 }
 
-// صفحه‌ی بازی «شعر یادت نره» (آدرس /lyrics)
+// صفحه‌ی بازی «جورشعر» (آدرس /lyrics)
 // مرحله‌ها (phase) برای هر آهنگ:
 //   ready      گرامافون و دکمه‌ی «پخش کن»
 //   playing    کلیپ اول پخش می‌شه و متن هم‌زمان جلو می‌ره

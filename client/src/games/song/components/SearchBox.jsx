@@ -2,6 +2,14 @@ import { useEffect, useState } from 'react'
 import { searchSongs } from '../api.js'
 import SongSuggestDialog from './SongSuggestDialog.jsx'
 
+// هم‌شکل MIN_QUERY_LENGTH سرور (search.js): با کمتر از ۲ حرف جستجو نمی‌کنیم
+const MIN_QUERY_LENGTH = 2
+
+// تعداد حرف‌های واقعی (بدون فاصله و علامت)
+function letterCount(text) {
+  return text.replace(/[^\p{L}\p{N}]/gu, '').length
+}
+
 // جستجو با تاخیر کوتاه (debounce) تا هر حرف مستقیم به سرور نره.
 // آخر لیست نتیجه‌ها همیشه «آهنگت توی لیست نیست؟» میاد که پنجره‌ی پیشنهاد آهنگ رو باز می‌کنه
 function SearchBox({ disabled, onChoose }) {
@@ -11,8 +19,8 @@ function SearchBox({ disabled, onChoose }) {
   const [suggesting, setSuggesting] = useState(null) // متنی که پنجره‌ی پیشنهاد باهاش باز شده
 
   useEffect(() => {
-    // جعبه خالیه: لیست خودش نشون داده نمی‌شه (showList)، لازم نیست چیزی پاک بشه
-    if (!query.trim()) return
+    // جعبه خالیه یا خیلی کوتاهه: لیست خودش نشون داده نمی‌شه (showList)، لازم نیست چیزی پاک بشه
+    if (letterCount(query) < MIN_QUERY_LENGTH) return
 
     let active = true // اگه متن عوض شد، جواب قدیمی دیر رسیده رو نادیده بگیر
     const timer = setTimeout(async () => {
@@ -47,7 +55,7 @@ function SearchBox({ disabled, onChoose }) {
   }
 
   // لیست فقط وقتی میاد که جستجوی همین متن تموم شده باشه (تا «پیدا نشد» زودتر از نتیجه‌ها نیاد)
-  const showList = query.trim() !== '' && searchedFor === query
+  const showList = letterCount(query) >= MIN_QUERY_LENGTH && searchedFor === query
 
   return (
     <div className="search-box">

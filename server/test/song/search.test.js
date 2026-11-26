@@ -82,3 +82,32 @@ test('نتیجه‌ی جستجو فقط چیزهای لازم رو داره و �
   assert.deepEqual(Object.keys(results[0]).sort(), ['altTitle', 'credit', 'id', 'title'])
   assert.equal(JSON.stringify(results).includes('secret-file'), false)
 })
+
+test('کمتر از ۲ حرف چیزی برنمی‌گردونه (تا کل فهرست با یه حرف لو نره)', () => {
+  assert.deepEqual(ids('k'), [])
+  assert.deepEqual(ids('ا'), [])
+  assert.deepEqual(ids(' k '), [])
+})
+
+test('فقط از اول کلمه پیدا می‌شه، نه وسط کلمه', () => {
+  assert.deepEqual(ids('hadmehr'), []) // وسط «Shadmehr»
+  assert.deepEqual(ids('امدی'), []) // وسط «حامدی»
+  assert.deepEqual(ids('lij'), []) // وسط «Khalij»
+  assert.deepEqual(ids('shab'), ['s-kaveh']) // کلمه‌ی سوم «Mosafer-e Shab»
+  assert.deepEqual(ids('kootahe'), ['s-zed']) // کلمه‌ی دوم عنوان
+})
+
+test('حداکثر ۸ نتیجه، اول آهنگ‌های اصلی', async () => {
+  const { MAX_RESULTS } = await import('../../games/song/search.js')
+  const song = db.prepare('INSERT INTO songs (id, title, alt_title, credit, file_name) VALUES (?, ?, ?, ?, ?)')
+  const link = db.prepare('INSERT INTO song_artists (song_id, artist_id, role) VALUES (?, ?, ?)')
+  for (let i = 0; i < 12; i++) {
+    song.run(`many-${i}`, `Many Song ${i}`, null, 'Ebi', `many-${i}.mp3`)
+    link.run(`many-${i}`, 'ebi', 'main')
+  }
+  const found = ids('ebi')
+  assert.equal(found.length, MAX_RESULTS)
+  assert.equal(found.includes('s-feat'), false) // همکاری آخر صفه و جا نمی‌شه
+  for (let i = 0; i < 12; i++) db.prepare('DELETE FROM song_artists WHERE song_id = ?').run(`many-${i}`)
+  for (let i = 0; i < 12; i++) db.prepare('DELETE FROM songs WHERE id = ?').run(`many-${i}`)
+})

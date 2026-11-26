@@ -48,13 +48,15 @@ test('CIEDE2000: نمونه‌های جدول استاندارد (Sharma و هم
   assert.equal(deltaE2000([60, 10, 10], [60, 10, 10]), 0)
 })
 
-test('امتیاز مثل dialed.gg: نمونه‌ی واقعی و ترتیب درست', () => {
+test('امتیاز (از روی dialed.gg ولی سخت‌تر): نمونه‌ها و ترتیب درست', () => {
   const t = { h: 30, s: 70, b: 80 }
   assert.equal(scoreColor(t, t), 10)
-  // نمونه‌ی عکس سایت dialed.gg: H149 S100 B23 در برابر H153 S100 B26 -> ۹٫۸۲
-  assert.equal(scoreColor({ h: 149, s: 100, b: 23 }, { h: 153, s: 100, b: 26 }), 9.82)
-  assert.equal(scoreColor(t, { h: 34, s: 76, b: 77 }), 9.6) // ۹٫۶۴ + لرزش
-  assert.equal(scoreColor(t, { h: 70, s: 70, b: 80 }), 3.91) // ۳٫۹۴ + لرزش
+  // نمونه‌ی عکس سایت dialed.gg: H149 S100 B23 در برابر H153 S100 B26 (اونجا ۹٫۸۲)
+  assert.equal(scoreColor({ h: 149, s: 100, b: 23 }, { h: 153, s: 100, b: 26 }), 9.69)
+  assert.equal(scoreColor(t, { h: 34, s: 76, b: 77 }), 9.32)
+  assert.equal(scoreColor(t, { h: 70, s: 70, b: 80 }), 2.75)
+  // رنگ‌مایه تقریباً درست ولی اشباع و روشنی خیلی پرت: جایزه‌ی رنگ‌مایه نمی‌گیره (قبلاً ۶٫۸۹ بود)
+  assert.equal(scoreColor({ h: 345, s: 44, b: 58 }, { h: 348, s: 100, b: 89 }), 4.6)
   // تا ۹۰ درجه هر چه رنگ‌مایه دورتر، امتیاز کمتر (خیلی دورتر از اون، خود فرمول dialed دقیقاً یکنواخت نیست)
   let last = 10
   for (let dh = 0; dh <= 90; dh += 5) {

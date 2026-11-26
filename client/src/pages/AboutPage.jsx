@@ -76,7 +76,7 @@ function AboutPage() {
             <span className="label" />
           </span>
           <span className="about-sticker">هر شب تازه!</span>
-          <span className="about-badge">درباره</span>
+          {/* <span className="about-badge">درباره</span> */}
           <h1>روزی چند دقیقه بازی</h1>
           <p>قول می‌دیم فقط چند دقیقه‌ست. خب… شاید یه کم بیشتر.</p>
         </section>
@@ -215,10 +215,7 @@ function AboutPage() {
         </div>
       </section>
 
-      <p className="about-note">
-        حق همه‌ی آهنگ‌ها برای خواننده‌ها و صاحبانشونه و فقط تیکه‌های چندثانیه‌ای پخش می‌شه. ایده‌ی بعضی بازی‌ها از بازی‌های
-        روزانه‌ای مثل Songless، Wordle، dialed و Contexto گرفته شده.
-      </p>
+      
     </main>
   )
 }

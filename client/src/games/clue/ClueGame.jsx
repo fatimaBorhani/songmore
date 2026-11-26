@@ -112,7 +112,7 @@ function ClueGame({ user }) {
   return (
     <main className="clue-page">
       <div className="clue-title-row">
-        <h1>{GAME_TITLE}</h1>
+        <h1 className="game-title">{GAME_TITLE}</h1>
         {/* بازی آزمایشیه: رتبه‌بندی معنایی هنوز خوب نیست */}
         <span className="beta-badge">آزمایشی</span>
         <span className="clue-help-slot">

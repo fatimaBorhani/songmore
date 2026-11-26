@@ -184,7 +184,7 @@ function ColorGame({ user }) {
   return (
     <main className="color-page">
       <header className="color-head">
-        <h1>{GAME_TITLE}</h1>
+        <h1 className="game-title">{GAME_TITLE}</h1>
         <div className="color-head-row">
           <Dots total={game.roundCount} completed={game.completed} current={current} />
           <HelpButton onClick={openHelp} />

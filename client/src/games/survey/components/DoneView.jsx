@@ -20,7 +20,7 @@ function DoneView({ title, helpButton, state, busy, error, onMore, onReset }) {
   return (
     <main className="survey-page">
       <header className="survey-top">
-        <h1>{title}</h1>
+        <h1 className="game-title">{title}</h1>
         {helpButton}
       </header>
 

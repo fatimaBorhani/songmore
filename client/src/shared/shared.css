@@ -703,21 +703,28 @@ h3 {
 }
 
 /* ---------- «صفحه‌ی گرامافون»: زبان مشترک همه‌ی صفحه‌ها ---------- */
-/* تیترها با لاله‌زار (فقط یه وزن داره، پس بولد مصنوعی نه) */
+/* تیترها با «بهمن» (فقط یه وزن داره، پس بولد مصنوعی نه).
+   «دیما مکین» فقط برای اسم سایت (لوگو) و اسم بازی‌ها: عنوان بالای صفحه‌ی هر بازی (.game-title)
+   و اسم بازی روی کارت‌های صفحه‌ی اول (home.css) */
 h1,
 h2 {
-  font-family: var(--font-display);
+  font-family: var(--font-score);
   font-weight: 400 !important;
   letter-spacing: 0;
+}
+
+.site .game-title {
+  font-family: var(--font-display);
 }
 
 html {
   font-synthesis: none;
 }
 
-/* این‌ها h2 هستن ولی تیتر نیستن (متن سؤال، کلمه‌ی جواب): همون وزیرمتن پررنگ */
+/* این‌ها h1/h2 هستن ولی تیتر نیستن (متن سؤال، کلمه‌ی جواب، نام کاربری که لاتینه): همون وزیرمتن پررنگ */
 .survey-question,
-.word-result-answer {
+.word-result-answer,
+.profile-username {
   font-family: 'Vazirmatn', system-ui, sans-serif;
   font-weight: 900 !important;
 }

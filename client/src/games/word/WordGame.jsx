@@ -305,7 +305,7 @@ function WordGame({ user }) {
       <div className="word-top">
         <span className="word-top-spacer" aria-hidden="true" />
         <div className="word-title">
-          <h1>{GAME_TITLE}</h1>
+          <h1 className="game-title">{GAME_TITLE}</h1>
           <div className="word-progress" role="img" aria-label={`کلمه‌ی ${faNumber(game.slot)} از ${faNumber(game.slotCount)}`}>
             {game.slots.map((s) => (
               <span key={s.slot} className={s.finished ? 'done' : s.slot === game.slot ? 'current' : ''} />

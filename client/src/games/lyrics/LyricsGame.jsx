@@ -173,7 +173,7 @@ function LyricsGame({ user }) {
   return (
     <main className={`lyrics-page phase-${phase}`}>
       <header className="lyrics-top">
-        <h1>{GAME_TITLE}</h1>
+        <h1 className="game-title">{GAME_TITLE}</h1>
         <div className="lyrics-tools">
           <div className="lyrics-dots" role="img" aria-label={`${faNumber(finishedCount)} از ${faNumber(game.songCount)} آهنگ تموم شده`}>
             {dots.map((d, i) => (

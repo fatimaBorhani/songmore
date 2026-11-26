@@ -204,7 +204,7 @@ function SongGame({ user, mode = 'daily' }) {
 
       <header className="game-header">
         <div className="game-title-row">
-          <h1>جورزیک</h1>
+          <h1 className="game-title">جورزیک</h1>
           <HelpButton onClick={openHelp} />
         </div>
         {!practice && game.songCount > 1 && <DayProgress game={game} />}

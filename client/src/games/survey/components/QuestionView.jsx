@@ -19,7 +19,7 @@ function QuestionView({ title, helpButton, state, busy, error, onSubmit }) {
   return (
     <main className="survey-page">
       <header className="survey-top">
-        <h1>{title}</h1>
+        <h1 className="game-title">{title}</h1>
         <div className="survey-dots" role="img" aria-label={`سؤال ${faNumber(current.number)} از ${faNumber(current.batchSize)}`}>
           {Array.from({ length: current.batchSize }, (_, i) => (
             <span key={i} className={i + 1 < current.number ? 'done' : i + 1 === current.number ? 'current' : ''} />

@@ -133,7 +133,7 @@ function ProfilePage({ user, onUserChange }) {
           {data.username[0].toUpperCase()}
         </span>
         <div className="profile-id">
-          <h1 dir="ltr">{data.username}</h1>
+          <h1 className="profile-username" dir="ltr">{data.username}</h1>
           <p>
             {since && `عضو از ${since}`}
             {rank && <span className="profile-rank-inline"> · {rankText}</span>}

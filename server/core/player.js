@@ -1,5 +1,5 @@
 // «بازیکن» کیه؟ اگه وارد شده، حساب کاربریش؛ وگرنه همون کوکی مرورگر (مهمان).
-// حدس‌ها با همین کلید ذخیره می‌شن (بازی آهنگ: ستون session_id جدول guesses، واژه‌یاب: player_key جدول word_guesses):
+// حدس‌ها با همین کلید ذخیره می‌شن (بازی آهنگ: ستون session_id جدول guesses، جورچین: player_key جدول word_guesses):
 //   کاربر واردشده -> 'user:<id>'   (روی همه‌ی دستگاه‌هاش یکیه)
 //   مهمان        -> شناسه‌ی تصادفی کوکی (UUID؛ هیچ‌وقت با 'user:' شروع نمی‌شه)
 import { db } from './db.js'
@@ -29,7 +29,7 @@ export function claimGuestGames(sessionId, userId) {
          AND date NOT IN (SELECT date FROM guesses WHERE session_id = ?)`
     )
     .run(userKey, sessionId, userKey)
-  // بازی واژه‌یاب. اول «جواب رو ببینم»ها (شرطشون به حدس‌های حساب کاربره، پس باید قبل از منتقل شدن حدس‌ها بیان)
+  // بازی جورچین. اول «جواب رو ببینم»ها (شرطشون به حدس‌های حساب کاربره، پس باید قبل از منتقل شدن حدس‌ها بیان)
   db.prepare(
     `UPDATE word_gaveup SET player_key = ?
      WHERE player_key = ?
@@ -42,11 +42,17 @@ export function claimGuestGames(sessionId, userId) {
          AND date NOT IN (SELECT date FROM word_guesses WHERE player_key = ?)`
     )
     .run(userKey, sessionId, userKey)
-  // کلمه‌هایی که مهمان برای واژه‌یاب پیشنهاد داده (اگه حساب خودش همون کلمه رو پیشنهاد نداده باشه)
+  // کلمه‌هایی که مهمان برای جورچین پیشنهاد داده (اگه حساب خودش همون کلمه رو پیشنهاد نداده باشه)
   db.prepare(
     `UPDATE word_suggestions SET player_key = ?
      WHERE player_key = ?
        AND word NOT IN (SELECT word FROM word_suggestions WHERE player_key = ?)`
+  ).run(userKey, sessionId, userKey)
+  // آهنگ‌هایی که مهمان پیشنهاد داده (اگه حساب خودش همون آهنگ رو پیشنهاد نداده باشه)
+  db.prepare(
+    `UPDATE song_suggestions SET player_key = ?
+     WHERE player_key = ?
+       AND norm_key NOT IN (SELECT norm_key FROM song_suggestions WHERE player_key = ?)`
   ).run(userKey, sessionId, userKey)
   // نظرسنجی: جواب‌ها و سؤال‌های امروز (جواب به سؤالی که حساب خودش قبلاً جواب داده منتقل نمی‌شه)
   db.prepare(
@@ -59,7 +65,7 @@ export function claimGuestGames(sessionId, userId) {
      WHERE player_key = ?
        AND date NOT IN (SELECT date FROM survey_assign WHERE player_key = ?)`
   ).run(userKey, sessionId, userKey)
-  // بازی حافظه‌ی رنگ
+  // بازی جورنگ
   const colorInfo = db
     .prepare(
       `UPDATE color_guesses SET player_key = ?
@@ -67,5 +73,27 @@ export function claimGuestGames(sessionId, userId) {
          AND date NOT IN (SELECT date FROM color_guesses WHERE player_key = ?)`
     )
     .run(userKey, sessionId, userKey)
-  return songInfo.changes + wordInfo.changes + colorInfo.changes
+  // بازی «جوربندی» (اول تسلیم‌ها، چون شرطشون به حدس‌های حساب کاربره)
+  db.prepare(
+    `UPDATE clue_gaveup SET player_key = ?
+     WHERE player_key = ?
+       AND date NOT IN (SELECT date FROM clue_guesses WHERE player_key = ?)
+       AND date NOT IN (SELECT date FROM clue_gaveup WHERE player_key = ?)`
+  ).run(userKey, sessionId, userKey, userKey)
+  const clueInfo = db
+    .prepare(
+      `UPDATE clue_guesses SET player_key = ?
+       WHERE player_key = ?
+         AND date NOT IN (SELECT date FROM clue_guesses WHERE player_key = ?)`
+    )
+    .run(userKey, sessionId, userKey)
+  // بازی «جورشعر» (روزهایی که حساب خودش جواب داده منتقل نمی‌شن)
+  const lyricsInfo = db
+    .prepare(
+      `UPDATE lyrics_answers SET player_key = ?
+       WHERE player_key = ?
+         AND date NOT IN (SELECT date FROM lyrics_answers WHERE player_key = ?)`
+    )
+    .run(userKey, sessionId, userKey)
+  return songInfo.changes + wordInfo.changes + colorInfo.changes + clueInfo.changes + lyricsInfo.changes
 }

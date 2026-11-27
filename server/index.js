@@ -1,20 +1,27 @@
 // سرور سایت بازی‌ها: چیزهای مشترک (کوکی، ورود، بازیکن) + API هر بازی زیر مسیر خودش
 //   /api/auth/...  ورود و ثبت‌نام (مشترک بین همه‌ی بازی‌ها)
-//   /api/song/...  بازی حدس آهنگ
-//   /api/word/...  بازی واژه‌یاب
-//   /api/color/... بازی حافظه‌ی رنگ
-//   /api/survey/.. نظرسنجی «صد نفر گفتن» (جمع کردن داده برای بازی‌های بعدی)
-//   /clips/...     فایل‌های کلیپ بازی آهنگ
+//   /api/song/...  جورزیک
+//   /api/word/...  بازی جورچین
+//   /api/color/... بازی جورنگ
+//   /api/clue/...  بازی «جوربندی»
+//   /api/weekly    جدول هفته (امتیاز یکسان همه‌ی بازی‌ها)
+//   /api/survey/.. نظرسنجی «صد جور» (جمع کردن داده برای بازی‌های بعدی)
+//   /api/lyrics/.. بازی «جورشعر»
+//   /clips/...     فایل‌های کلیپ بازی آهنگ (و clips/lyrics/ برای «جورشعر»)
 import express from 'express'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { getOrCreateSessionId } from './core/session.js'
 import { authRouter } from './core/authRoutes.js'
+import { helpRouter } from './core/helpRoutes.js'
 import { attachPlayer } from './core/player.js'
 import { songRouter, RANDOM_SONG_MODE } from './games/song/routes.js'
 import { wordRouter } from './games/word/routes.js'
 import { colorRouter } from './games/color/routes.js'
 import { surveyRouter } from './games/survey/routes.js'
+import { clueRouter } from './games/clue/routes.js'
+import { weeklyRouter } from './games/weekly/routes.js'
+import { lyricsRouter } from './games/lyrics/routes.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..')
@@ -44,16 +51,35 @@ app.get('/api/health', (req, res) => {
 })
 
 app.use('/api/auth', authRouter)
+app.use('/api/help', helpRouter)
 app.use('/api/song', songRouter)
 app.use('/api/word', wordRouter)
 app.use('/api/color', colorRouter)
 app.use('/api/survey', surveyRouter)
+app.use('/api/clue', clueRouter)
+app.use('/api/weekly', weeklyRouter)
+app.use('/api/lyrics', lyricsRouter)
 app.use('/clips', express.static(CLIPS_DIR))
+
+// آدرس API که وجود نداره: جواب JSON (نه صفحه‌ی HTML پیش‌فرض Express)
+app.use('/api', (req, res) => {
+  res.status(404).json({ error: 'NOT_FOUND' })
+})
+
+// خطاها: همیشه JSON، بدون لو دادن جزئیات داخلی (مثل مسیر فایل‌ها) به کلاینت
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  // بدنه‌ی درخواست JSON درست نبود یا خیلی بزرگ بود
+  if (err.type === 'entity.parse.failed') return res.status(400).json({ error: 'INVALID_JSON' })
+  if (err.type === 'entity.too.large') return res.status(413).json({ error: 'TOO_LARGE' })
+  if (process.env.NODE_ENV !== 'test') console.error(err)
+  res.status(500).json({ error: 'SERVER_ERROR' })
+})
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {
     console.log(`سرور روی پورت ${PORT} روشن شد`)
-    if (RANDOM_SONG_MODE) console.log('حالت تست: بازی واژه‌یاب و رنگ با هر رفرش از اول شروع می‌شن؛ بازی آهنگ فقط با دکمه‌ی «بازی دوباره (تست)»')
+    if (RANDOM_SONG_MODE) console.log('حالت تست: بازی جورچین و رنگ با هر رفرش از اول شروع می‌شن؛ بازی آهنگ فقط با دکمه‌ی «بازی دوباره (تست)»')
   })
 }
 

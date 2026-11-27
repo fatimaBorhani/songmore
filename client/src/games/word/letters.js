@@ -62,7 +62,7 @@ export function letterStatuses(guesses) {
 }
 
 // متن اشتراک نتیجه‌ی روز: برای هر کلمه (۳، ۴ و ۵ حرفی) یه تیتر با تعداد حدس و مربع‌های رنگی، بدون لو دادن حرف‌ها
-const SHARE_SQUARES = { correct: '🟦', present: '⬜', absent: '⬛' }
+const SHARE_SQUARES = { correct: '🟩', present: '🟨', absent: '⬛' } // هم‌رنگ کاشی‌ها: یشمی، خردلی، تیره
 export function shareText(game, title) {
   const RLM = '\u200f' // تا توی برنامه‌ها ردیف‌ها راست‌به‌چپ نشون داده بشن
   const lines = [faDigits(title)]

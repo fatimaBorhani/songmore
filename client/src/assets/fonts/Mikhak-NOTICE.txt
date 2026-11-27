@@ -1,0 +1,5 @@
+Mikhak (میخک) v3.4, variable webfont (Mikhak[DSTY,KSHD,wght].woff2, renamed to Mikhak.woff2)
+Copyright 2022 The Mikhak Project Authors (https://github.com/aminabedi68/Mikhak)
+Designer: Amin Abedi (www.fontamin.com)
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+The license is available with a FAQ at: https://scripts.sil.org/OFL

@@ -1,102 +1,68 @@
-// بعد از آخرین سؤال: تشکر، هدف جمعی، «۵ سؤال دیگه» (اختیاری) و پیشنهاد سؤال
+// آخر سؤال‌های امروز (طرح «ج»): کارت آبی با تیک‌ها، «دمت گرم!» و هدف جمعی؛ زیرش «یه سؤال پیشنهاد بده» (پنجره) و «۵ تای دیگه!» (عددش از moreCount)
 import { useState } from 'react'
-import { Link } from 'react-router'
 import { faNumber } from '../../../shared/format.js'
-import { sendSuggestion } from '../api.js'
 import GoalBar from './GoalBar.jsx'
+import SuggestDialog from './SuggestDialog.jsx'
 
-const SUGGEST_ERRORS = {
-  INVALID_SUGGESTION: 'سؤال باید بین ۱۰ تا ۲۰۰ حرف باشه.',
-  TOO_MANY_SUGGESTIONS: 'امروز به اندازه‌ی کافی پیشنهاد دادی. فردا دوباره امتحان کن.',
-}
+// تیک‌های کج بالای کارت (فقط تزئین)
+const TILTS = [-8, 5, -3, 7, -6]
 
-function DoneView({ title, state, busy, error, onMore, onReset }) {
+function DoneView({ title, helpButton, state, busy, error, onMore, onReset }) {
   const { todayAnswered, canMore, goal, moreCount, dailyCount, testMode } = state
-  const [text, setText] = useState('')
-  const [suggestState, setSuggestState] = useState({ status: 'idle', message: '' }) // idle | sending | sent | error
+  const [suggesting, setSuggesting] = useState(false)
 
-  async function handleSuggest(e) {
-    e.preventDefault()
-    if (!text.trim() || suggestState.status === 'sending') return
-    setSuggestState({ status: 'sending', message: '' })
-    try {
-      await sendSuggestion(text)
-      setText('')
-      setSuggestState({ status: 'sent', message: 'ممنون! سؤالت ثبت شد.' })
-    } catch (err) {
-      setSuggestState({ status: 'error', message: SUGGEST_ERRORS[err.message] || err.message })
-    }
-  }
+  const headline = !canMore
+    ? 'همه‌ی سؤال‌ها رو جواب دادی!'
+    : todayAnswered > 0
+      ? `${faNumber(todayAnswered)} تا جواب امروز، دمت گرم!`
+      : 'امروز تموم شد!'
 
   return (
     <main className="survey-page">
-      <header className="survey-done-top">
-        <span className="survey-done-icon" aria-hidden="true">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M5 12.5l4.5 4.5L19 7.5" />
-          </svg>
-        </span>
-        <h1>{todayAnswered > 0 ? 'ممنون! جواب‌هات ثبت شد' : title}</h1>
-        <p>
-          {!canMore
-            ? 'همه‌ی سؤال‌های فعلی رو جواب دادی. سؤال‌های تازه به‌زودی میان.'
-            : todayAnswered > 0
-              ? `امروز ${faNumber(todayAnswered)} سؤال رو جواب دادی. فردا ${faNumber(dailyCount)} سؤال تازه میاد.`
-              : `فردا ${faNumber(dailyCount)} سؤال تازه میاد.`}
-        </p>
+      <header className="survey-top">
+        <h1 className="game-title">{title}</h1>
+        {helpButton}
       </header>
 
-      <GoalBar goal={goal} />
-
-      <section className="survey-suggest" aria-label="پیشنهاد سؤال">
-        <h2>یه سؤال پیشنهاد بده</h2>
-        <form onSubmit={handleSuggest}>
-          <label htmlFor="survey-suggest">سؤالی که دوست داری بقیه جواب بدن</label>
-          <textarea
-            id="survey-suggest"
-            rows={2}
-            maxLength={200}
-            value={text}
-            placeholder="مثلاً: یه چیزی که توی کوله‌ی کوهنوردی می‌ذارن"
-            onChange={(e) => {
-              setText(e.target.value)
-              if (suggestState.status !== 'sending') setSuggestState({ status: 'idle', message: '' })
-            }}
-          />
-          <button type="submit" className="survey-secondary" disabled={!text.trim() || suggestState.status === 'sending'}>
-            بفرست
-          </button>
-          {suggestState.message && (
-            <p className={suggestState.status === 'error' ? 'survey-error' : 'survey-ok'} role="status">
-              {suggestState.message}
-            </p>
-          )}
-        </form>
+      <section className="survey-done-card" aria-label="آخر امروز">
+        <div className="survey-ticks" aria-hidden="true">
+          {TILTS.map((deg) => (
+            <span key={deg} style={{ transform: `rotate(${deg}deg)` }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12.5l4.5 4.5L19 7.5" />
+              </svg>
+            </span>
+          ))}
+        </div>
+        <h2>{headline}</h2>
+        <p>{canMore ? `فردا ${faNumber(dailyCount)} سؤال تازه داریم` : 'سؤال‌های تازه به‌زودی میان'}</p>
+        <GoalBar goal={goal} onBlue />
       </section>
 
+      {error && (
+        <p className="survey-error" role="alert">
+          {error}
+        </p>
+      )}
+
       <div className="survey-done-actions">
-        {error && (
-          <p className="survey-error" role="alert">
-            {error}
-          </p>
-        )}
+        <button type="button" className="survey-ghost" onClick={() => setSuggesting(true)}>
+          یه سؤال پیشنهاد بده
+        </button>
         {canMore && (
-          <>
-            <p className="survey-note">اختیاریه. هر چقدر خواستی ادامه بده؛ اول سؤال‌هایی میان که بیشتر به کامل شدن نزدیکن.</p>
-            <button type="button" className="survey-submit" disabled={busy} onClick={onMore}>
-              {faNumber(moreCount)} سؤال دیگه جواب می‌دم
-            </button>
-          </>
-        )}
-        <Link to="/" className="survey-home">
-          برگرد به صفحه‌ی اول
-        </Link>
-        {testMode && (
-          <button type="button" className="ghost-button" disabled={busy} onClick={onReset}>
-            بازی دوباره (تست)
+          <button type="button" className="survey-more" disabled={busy} onClick={onMore} aria-label={`${faNumber(moreCount)} سؤال دیگه`}>
+            {faNumber(moreCount)} تای دیگه!
           </button>
         )}
       </div>
+
+      {testMode && (
+        <button type="button" className="ghost-button survey-test" disabled={busy} onClick={onReset}>
+          بازی دوباره (تست)
+        </button>
+      )}
+
+      {suggesting && <SuggestDialog onClose={() => setSuggesting(false)} />}
     </main>
   )
 }

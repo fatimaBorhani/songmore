@@ -1,27 +1,37 @@
-/* نظرسنجی «صد نفر گفتن»: یه ستون وسط صفحه، سؤال توی کارت بزرگ، جواب و دکمه‌ها زیرش */
+/* نظرسنجی «صد جور» (طرح «ج»): یه ستون وسط صفحه؛ سؤال روی کارت تیره، آخر امروز روی کارت آبی.
+   هیچ توضیحی روی صفحه نیست (همه توی راهنمای چراغه) و روی کامپیوتر بدون اسکرول جا می‌شه */
 
 .survey-page {
-  max-width: 560px;
+  max-width: 760px;
   margin: 0 auto;
   box-sizing: border-box;
-  padding: 8px 16px 32px;
+  padding: 16px 16px 32px;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* ---------- بالای صفحه: اسم، نقطه‌های پیشرفت، شماره‌ی سؤال ---------- */
+/* فقط برای صفحه‌خوان */
+.survey-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- بالای صفحه: اسم، نقطه‌ها، دکمه‌ی چراغ ---------- */
 
 .survey-top {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding-top: 6px;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .survey-top h1 {
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 900;
 }
 
@@ -31,8 +41,8 @@
 }
 
 .survey-dots span {
-  width: 28px;
-  height: 8px;
+  width: 30px;
+  height: 6px;
   border-radius: 4px;
   background: var(--border);
 }
@@ -45,48 +55,60 @@
   background: var(--text);
 }
 
-.survey-caption {
-  font-size: 13px;
-  color: var(--text-soft);
-}
-
-/* ---------- کارت سؤال ---------- */
+/* ---------- کارت سؤال (تیره، نه آبی، که چشم خسته نشه) ---------- */
 
 .survey-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 300px;
   box-sizing: border-box;
-  padding: 22px 20px;
-  border-radius: 28px;
+  padding: 36px;
+  border-radius: 4px;
   background: var(--card);
   border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* «۱۰۰» غول‌پیکر کم‌رنگ پشت سؤال */
+.survey-card-bg {
+  position: absolute;
+  left: -10px;
+  bottom: -70px;
+  font-size: 260px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--border);
+  pointer-events: none;
 }
 
 .survey-chip {
+  position: relative;
   align-self: flex-start;
-  padding: 3px 12px;
-  border-radius: 999px;
-  background: #111113;
+  padding: 3px 14px;
+  border-radius: 4px;
   border: 1px solid var(--border);
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-soft);
 }
 
 .survey-question {
-  font-size: 26px;
+  position: relative;
+  max-width: 560px;
+  font-size: 38px;
   font-weight: 900;
-  line-height: 1.6;
-  text-wrap: balance;
+  line-height: 1.5;
 }
 
-.survey-hint {
-  font-size: 13px;
-  line-height: 1.8;
-  color: var(--text-muted);
+.survey-tagline {
+  position: relative;
+  font-size: 15px;
+  color: var(--text-soft);
 }
 
-/* ---------- جواب ---------- */
+/* ---------- جواب: یه جعبه‌ی گرد با دکمه‌ی فلش داخلش ---------- */
 
 .survey-form {
   display: flex;
@@ -94,306 +116,287 @@
   gap: 8px;
 }
 
-.survey-form label {
-  font-size: 14px;
-  color: #c9c9cf;
+.survey-answer {
+  position: relative;
+  display: block;
 }
 
 .survey-input {
-  height: 56px;
+  width: 100%;
+  height: 62px;
   box-sizing: border-box;
-  padding: 0 16px;
-  border-radius: 16px;
-  border: 1px solid #3f3f46;
-  background: #111113;
+  padding: 0 22px 0 70px;
+  border-radius: 4px;
+  border: 1px solid var(--border-strong);
+  background: var(--card);
   color: var(--text);
+  font: inherit;
   font-size: 17px;
-}
-
-.survey-input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent);
 }
 
 .survey-input::placeholder {
   color: var(--text-muted);
 }
 
-.survey-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-.survey-skip {
-  flex-shrink: 0;
-  width: 96px;
-  min-height: 56px;
-  border-radius: 18px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: #c9c9cf;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.survey-skip:hover:not(:disabled) {
-  background: var(--surface);
-}
-
-.survey-submit {
-  flex-grow: 1;
-  min-height: 56px;
-  border-radius: 18px;
-  border: none;
-  background: var(--accent);
-  color: #fff;
-  font-size: 16px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.survey-submit:hover:not(:disabled) {
-  background: #4040f0;
-}
-
-.survey-submit:disabled {
-  opacity: 0.4;
-}
-
-.survey-skip:focus-visible,
-.survey-submit:focus-visible,
-.survey-secondary:focus-visible,
-.survey-suggest textarea:focus-visible {
+.survey-input:focus {
   outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline-offset: 1px;
 }
 
-.survey-note {
-  text-align: center;
-  font-size: 12px;
+.survey-send {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.survey-send:disabled {
+  background: var(--border);
   color: var(--text-muted);
+  opacity: 1;
 }
 
 .survey-error {
   font-size: 14px;
-  color: #ff8a8a;
-  font-weight: 700;
+  color: var(--danger);
 }
 
-.survey-ok {
-  font-size: 14px;
-  color: #a8a8ff;
+/* ---------- هدف جمعی: نوار باریک با عدد ---------- */
+
+.survey-goal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
-/* ---------- هدف جمعی ---------- */
+.survey-goal span:first-child,
+.survey-goal b {
+  white-space: nowrap;
+}
+
+.survey-goal b {
+  color: var(--text-soft);
+}
 
 .survey-bar {
-  height: 10px;
-  border-radius: 5px;
+  flex-grow: 1;
+  height: 6px;
+  border-radius: 4px;
   background: var(--border);
   overflow: hidden;
 }
 
 .survey-bar-fill {
+  display: block;
   height: 100%;
-  border-radius: 5px;
+  border-radius: inherit;
   background: var(--accent);
 }
 
-.survey-goal-strip {
+.survey-goal.on-blue {
+  font-size: 14px;
+  color: var(--hero-soft-ink);
+}
+
+.survey-goal.on-blue b {
+  color: var(--text-strong);
+}
+
+.survey-goal.on-blue .survey-bar {
+  height: 8px;
+  background: color-mix(in srgb, var(--text-strong) 20%, transparent);
+}
+
+.survey-goal.on-blue .survey-bar-fill {
+  background: var(--paper);
+}
+
+/* ---------- آخر امروز: کارت آبی ---------- */
+
+.survey-done-card {
+  padding: 40px 32px 32px;
+  border-radius: 4px;
+  background: var(--hero);
+  color: var(--hero-ink);
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 14px;
-  font-size: 13px;
-  color: var(--text-soft);
-}
-
-.survey-goal-strip .survey-bar {
-  flex-grow: 1;
-  height: 8px;
-}
-
-.survey-goal {
-  box-sizing: border-box;
-  padding: 18px 20px;
-  border-radius: 24px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.survey-goal-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  font-size: 14px;
-  color: #c9c9cf;
-}
-
-.survey-goal-head b {
-  font-size: 20px;
-  font-weight: 900;
-  color: var(--text);
-}
-
-.survey-goal-head small {
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--text-soft);
-}
-
-.survey-goal p {
-  font-size: 13px;
-  line-height: 1.8;
-  color: var(--text-soft);
-}
-
-.survey-goal .survey-goal-total {
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-/* ---------- بعد از آخرین سؤال ---------- */
-
-.survey-done-top {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding-top: 6px;
   text-align: center;
 }
 
-.survey-done-top h1 {
-  margin-top: 4px;
-  font-size: 24px;
-  font-weight: 900;
+.survey-ticks {
+  display: flex;
+  gap: 10px;
 }
 
-.survey-done-top p {
-  font-size: 14px;
-  line-height: 1.8;
-  color: var(--text-soft);
-}
-
-.survey-done-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: rgba(48, 48, 230, 0.18);
-  color: #8c8cff;
+.survey-ticks span {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.survey-suggest {
-  box-sizing: border-box;
-  padding: 18px 20px;
-  border-radius: 24px;
-  background: var(--card);
-  border: 1px solid var(--border);
+.survey-done-card h2 {
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 1.4;
 }
 
-.survey-suggest h2 {
+.survey-done-card p {
   font-size: 16px;
+  color: var(--hero-soft-ink);
+}
+
+.survey-done-card .survey-goal {
+  align-self: stretch;
+  margin-top: 6px;
+}
+
+.survey-done-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.survey-done-actions button {
+  min-height: 58px;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* تنها دکمه (وقتی «۵ تای دیگه!» نیست) تمام‌عرض */
+.survey-done-actions button:only-child {
+  grid-column: 1 / -1;
+}
+
+.survey-ghost {
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text);
+  font-weight: 800;
+}
+
+.survey-ghost:hover {
+  background: var(--surface);
+}
+
+.survey-more {
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-ink);
   font-weight: 900;
 }
 
-.survey-suggest form {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.survey-test {
+  align-self: center;
 }
 
-.survey-suggest label {
-  font-size: 13px;
-  color: var(--text-soft);
+.survey-send:focus-visible,
+.survey-ghost:focus-visible,
+.survey-more:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ---------- پنجره‌ی پیشنهاد سؤال (خود پنجره help-dialog مشترکه) ---------- */
+
+.survey-suggest form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.survey-suggest h2 {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--text);
 }
 
 .survey-suggest textarea {
   box-sizing: border-box;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid #3f3f46;
-  background: #111113;
+  padding: 14px;
+  border-radius: 4px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg);
   color: var(--text);
-  font-family: inherit;
-  font-size: 15px;
-  line-height: 1.7;
+  font: inherit;
+  font-size: 16px;
   resize: none;
 }
 
-.survey-suggest textarea::placeholder {
-  color: var(--text-muted);
+.survey-suggest textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
-.survey-secondary {
-  min-height: 48px;
-  border-radius: 14px;
-  border: 1px solid #3f3f46;
-  background: transparent;
-  color: var(--text);
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.survey-secondary:hover:not(:disabled) {
-  background: var(--surface);
-}
-
-.survey-done-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 8px;
-}
-
-.survey-done-actions .survey-submit {
-  flex-grow: 0;
-}
-
-.survey-home {
-  align-self: center;
-  display: inline-flex;
+.survey-suggest:not(:has(form)) {
   align-items: center;
-  min-height: 44px;
-  padding: 0 16px;
-  font-size: 14px;
-  color: #c9c9cf;
-  text-decoration: none;
+  text-align: center;
 }
 
-.survey-home:hover {
-  color: #fff;
+.survey-suggest:not(:has(form)) .help-ok {
+  align-self: stretch;
+  flex: none;
 }
 
-.survey-done-actions .ghost-button {
-  align-self: center;
-}
-
-@media (min-width: 640px) {
-  .survey-top h1 {
-    font-size: 28px;
-  }
-
-  .survey-dots span {
-    width: 36px;
-  }
-
+/* ---------- گوشی: کوچیک‌تر تا کمتر اسکرول بخوره ---------- */
+@media (max-width: 639px) {
   .survey-card {
-    padding: 28px;
+    min-height: 240px;
+    padding: 24px;
+    border-radius: 4px;
+  }
+
+  .survey-card-bg {
+    font-size: 180px;
+    bottom: -50px;
   }
 
   .survey-question {
-    font-size: 30px;
+    font-size: 26px;
+  }
+
+  .survey-dots span {
+    width: 20px;
+  }
+
+  .survey-done-card {
+    padding: 28px 20px 24px;
+    border-radius: 4px;
+  }
+
+  .survey-done-card h2 {
+    font-size: 26px;
+  }
+
+  .survey-ticks span {
+    width: 34px;
+    height: 34px;
+  }
+
+  .survey-done-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .survey-done-actions button:only-child {
+    grid-column: auto;
   }
 }

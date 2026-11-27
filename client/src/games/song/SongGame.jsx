@@ -13,7 +13,7 @@ import {
   sendSkip,
 } from './api.js'
 import { STAGES } from './stages.js'
-import { faNumber, faSeconds } from '../../shared/format.js'
+import { faSeconds } from '../../shared/format.js'
 import WavePlayer from './components/WavePlayer.jsx'
 import SearchBox from './components/SearchBox.jsx'
 import GuessHistory from './components/GuessHistory.jsx'
@@ -21,14 +21,16 @@ import GameOver from './components/GameOver.jsx'
 import DayProgress from './components/DayProgress.jsx'
 import GiveUpDialog, { EyeIcon } from './components/GiveUpDialog.jsx'
 import ModeSwitch from './components/ModeSwitch.jsx'
-import BackLink from '../../shared/components/BackLink.jsx'
+import SongHelp from './components/SongHelp.jsx'
+import HelpButton from '../../shared/components/HelpButton.jsx'
+import { useGameHelp } from '../../shared/useGameHelp.js'
 import AnimatedNumber from '../../shared/components/AnimatedNumber.jsx'
 import Leaderboard from '../../shared/components/Leaderboard.jsx'
 import { playWinSound } from './audioPlayer.js'
 import { SITE_NAME } from '../../shared/site.js'
 import './song.css'
 
-// صفحه‌ی بازی حدس آهنگ: مسابقه‌ای (آدرس /song) و تمرینی (آدرس /song/practice)
+// صفحه‌ی جورزیک: مسابقه‌ای (آدرس /song) و تمرینی (آدرس /song/practice)
 // user: کاربر واردشده یا null (از App میاد، چون ورود بین همه‌ی بازی‌ها مشترکه)
 // mode: 'daily' (مسابقه‌ای، روزی ۳ آهنگ و امتیاز) یا 'practice' (تمرینی، نامحدود و بدون امتیاز)
 function SongGame({ user, mode = 'daily' }) {
@@ -40,6 +42,8 @@ function SongGame({ user, mode = 'daily' }) {
   const [testMode, setTestMode] = useState(false)
   const [celebrating, setCelebrating] = useState(false) // جشن حدس درست در حال نمایشه؟
   const celebrateTimer = useRef(null)
+  // راهنما: مهمان هر بار، کاربر واردشده فقط بار اول (useGameHelp)
+  const { helpOpen, openHelp, closeHelp } = useGameHelp('song', user)
 
   // جشن حدس درست: موج می‌رقصه، ردیف درست نبض می‌زنه و صدای پیروزی پخش می‌شه.
   // فقط همون لحظه‌ی حدس درست، نه با باز کردن یا رفرش صفحه.
@@ -71,7 +75,7 @@ function SongGame({ user, mode = 'daily' }) {
   useEffect(loadGame, [])
 
   useEffect(() => {
-    document.title = `${practice ? 'حدس آهنگ (تمرینی)' : 'حدس آهنگ'} · ${SITE_NAME}`
+    document.title = `${practice ? 'جورزیک (تمرینی)' : 'جورزیک'} · ${SITE_NAME}`
   }, [practice])
 
   // اگه صفحه بسته شد، تایمر جشن نمونه
@@ -196,22 +200,20 @@ function SongGame({ user, mode = 'daily' }) {
 
   return (
     <main className="game-page">
-      <BackLink />
-      <ModeSwitch mode={mode} />
+      <ModeSwitch />
 
       <header className="game-header">
-        <h1>بازی حدس آهنگ</h1>
+        <div className="game-title-row">
+          <h1 className="game-title">جورزیک</h1>
+          <HelpButton onClick={openHelp} />
+        </div>
         {!practice && game.songCount > 1 && <DayProgress game={game} />}
-        <p className="guesses-left">
-          {game.finished ? 'این آهنگ تموم شد' : `${faNumber(game.guessesLeft)} حدس و ${faNumber(game.skipsLeft)} رد کردن باقی مونده`}
-        </p>
       </header>
 
       <GuessHistory guesses={game.guesses} celebrating={celebrating} />
 
       {!game.finished && !practice && (
         <div className="worth" aria-live="polite">
-          <span className="worth-label">ارزش الان</span>
           <span className="worth-value">
             <AnimatedNumber value={game.worthNow} />
           </span>
@@ -268,6 +270,7 @@ function SongGame({ user, mode = 'daily' }) {
 
       {error && <p className="error">{error}</p>}
 
+      {helpOpen && <SongHelp onClose={closeHelp} />}
       {confirmGiveUp && !game.finished && (
         <GiveUpDialog busy={busy} onConfirm={handleGiveUp} onCancel={() => setConfirmGiveUp(false)} />
       )}

@@ -1,4 +1,4 @@
-// API نظرسنجی «صد نفر گفتن» (همه زیر /api/survey روی سرور)
+// API نظرسنجی «صد جور» (همه زیر /api/survey روی سرور)
 import { call, postJson } from '../../shared/api.js'
 
 export function getSurveyState() {
@@ -12,10 +12,6 @@ export function getSurveyStats() {
 
 export function sendAnswer(questionId, answer) {
   return postJson('/api/survey/answer', { questionId, answer })
-}
-
-export function sendSkip(questionId) {
-  return postJson('/api/survey/skip', { questionId })
 }
 
 // «۵ سؤال دیگه» (فقط وقتی سؤال‌های الان تموم شدن)

@@ -1,4 +1,4 @@
-// مسیرهای API بازی واژه‌یاب (همه زیر /api/word)
+// مسیرهای API بازی جورچین (همه زیر /api/word)
 // هر روز ۳ کلمه: ۳، ۴ و ۵ حرفی، یکی‌یکی؛ حدس همیشه برای کلمه‌ی جاری ثبت می‌شه
 import express from 'express'
 import { db } from '../../core/db.js'
@@ -20,7 +20,7 @@ wordRouter.get('/game', (req, res) => {
   res.json({ ...getWordGameState(req.playerKey, date, getDailyWords(date)), testMode: WORD_TEST_MODE })
 })
 
-// آمار واژه‌یاب برای صفحه‌ی حساب (فقط کاربر واردشده، مثل آمار بازی آهنگ)
+// آمار جورچین برای صفحه‌ی حساب (فقط کاربر واردشده، مثل آمار بازی آهنگ)
 wordRouter.get('/stats', (req, res) => {
   if (!req.user) return res.status(401).json({ error: 'NOT_LOGGED_IN' })
   res.json(getWordStats(req.playerKey))

@@ -13,23 +13,41 @@
   gap: 12px;
 }
 
+/* لوگو: اسم کامل جورستون (عکس SVG، shared/components/Logo.jsx)، بدون برچسب دورش */
 .site-logo {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  color: var(--text);
-  font-size: 16px;
-  font-weight: 900;
   text-decoration: none;
+  transition: transform 0.15s;
 }
 
-.site-logo svg {
-  color: var(--accent);
+.site-logo-img {
+  display: block;
+  height: 30px;
+  width: auto;
+}
+
+@media (min-width: 640px) {
+  .site-logo-img {
+    height: 44px;
+  }
 }
 
 .site-logo:hover {
-  color: #fff;
+  transform: rotate(-2deg);
+}
+
+/* هر لوگو دو نسخه داره؛ اونی که به تم نمی‌خوره قایم می‌شه */
+:root[data-theme='day'] .logo-night,
+:root[data-theme='night'] .logo-day {
+  display: none !important;
+}
+
+/* روی گوشی دکمه‌ی ورود فقط «ورود» می‌گه تا سربرگ توی یه خط جا بشه */
+@media (max-width: 479px) {
+  .auth-link-more {
+    display: none;
+  }
 }
 
 /* حلقه‌ی فوکوس فقط برای کیبورد (Tab)، نه بعد از کلیک */
@@ -40,14 +58,122 @@
 .site-logo:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
-  border-radius: 10px;
+  border-radius: 4px;
 }
 
-/* فرم ورود زیر سربرگ، تمام‌عرض */
-.site-header .auth-card {
-  flex-basis: 100%;
-  max-width: 488px;
-  margin: 0 auto;
+/* آیکون جایزه (جدول هفته) توی سربرگ، کنار ورود؛ فاصله‌ی خالی سمت اسم سایت می‌افته */
+.site-weekly {
+  margin-inline-start: auto;
+  width: 44px;
+  height: 44px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 2px solid var(--line);
+  background: var(--mustard);
+  color: var(--mustard-ink);
+  box-shadow: 3px 3px 0 var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.site-weekly:hover,
+.theme-toggle:hover,
+.auth-chip:hover {
+  transform: translateY(-1px);
+}
+
+/* وقتی توی صفحه‌ی جدول هفته هستیم (مثل آیکن حساب توی صفحه‌ی حساب): یه حلقه دورش */
+.site-weekly[aria-current='page'] {
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--mustard);
+}
+
+/* دکمه‌ی روز/شب */
+.theme-toggle {
+  width: 44px;
+  height: 44px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 2px solid var(--line);
+  background: var(--hero);
+  color: var(--hero-ink);
+  box-shadow: 3px 3px 0 var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.site-weekly:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* پنجره‌ی ورود: وسط صفحه روی یه پس‌زمینه‌ی تیره */
+.auth-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  box-sizing: border-box;
+  padding: 24px 16px;
+  background: var(--overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  animation: fade-in 0.15s ease-out;
+}
+
+.auth-backdrop .auth-card {
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  padding: 24px 22px;
+  border-radius: 4px;
+  box-shadow: 0 20px 60px var(--overlay);
+}
+
+.auth-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.auth-head h2 {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.auth-close {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.auth-close:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.auth-lead {
+  margin-top: -6px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-soft);
 }
 
 .game-page {
@@ -66,7 +192,7 @@
 }
 
 .error {
-  color: #ff8a8a;
+  color: var(--danger);
   font-weight: 700;
   text-align: center;
 }
@@ -92,39 +218,23 @@
 }
 
 .auth-chip {
-  min-height: 44px;
-  padding: 0 14px 0 12px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
+  width: 44px;
+  height: 44px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 2px solid var(--line);
+  background: var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 3px 3px 0 var(--shadow);
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  color: var(--text);
-  font-size: 13px;
+  justify-content: center;
   text-decoration: none;
-}
-
-.auth-chip:hover {
-  background: var(--surface);
 }
 
 /* وقتی توی صفحه‌ی حساب هستیم */
 .auth-chip[aria-current='page'] {
-  border-color: var(--accent);
-  background: #14143a;
-  color: #fff;
-}
-
-.auth-chip-avatar {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--paper);
 }
 
 .auth-user {
@@ -133,17 +243,19 @@
 
 .auth-link {
   min-height: 44px;
-  padding: 0 14px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: none;
-  color: var(--text);
+  padding: 0 16px;
+  border-radius: 4px;
+  border: 2px solid var(--line);
+  background: var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 3px 3px 0 var(--shadow);
+  font-weight: 700;
   font-size: 14px;
   cursor: pointer;
 }
 
 .auth-link:hover {
-  background: var(--surface);
+  transform: translateY(-1px);
 }
 
 .auth-card {
@@ -151,7 +263,7 @@
   flex-direction: column;
   gap: 14px;
   padding: 20px;
-  border-radius: 20px;
+  border-radius: 4px;
   background: var(--card);
   border: 1px solid var(--border);
   animation: fade-in 0.2s ease;
@@ -162,14 +274,14 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 4px;
   padding: 4px;
-  border-radius: 12px;
+  border-radius: 4px;
   background: var(--bg);
 }
 
 .auth-tabs button {
   height: 40px;
   border: none;
-  border-radius: 9px;
+  border-radius: 4px;
   background: none;
   color: var(--text-muted);
   font-size: 14px;
@@ -194,7 +306,7 @@
   height: 48px;
   padding: 0 14px;
   box-sizing: border-box;
-  border-radius: 12px;
+  border-radius: 4px;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
@@ -213,15 +325,15 @@
 
 .auth-error {
   font-size: 13px;
-  color: #ff8a8a;
+  color: var(--danger);
 }
 
 .auth-submit {
   height: 48px;
   border: none;
-  border-radius: 12px;
+  border-radius: 4px;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-ink);
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
@@ -234,7 +346,7 @@
   flex-direction: column;
   gap: 12px;
   padding: 18px;
-  border-radius: 20px;
+  border-radius: 4px;
   background: var(--card);
   border: 1px solid var(--border);
 }
@@ -273,7 +385,7 @@
   gap: 12px;
   min-height: 40px;
   padding: 0 12px;
-  border-radius: 10px;
+  border-radius: 4px;
   font-size: 14px;
 }
 
@@ -282,7 +394,7 @@
 }
 
 .leaderboard-list li.me {
-  background: #14143a;
+  background: var(--accent-soft);
   box-shadow: inset 0 0 0 1px var(--accent);
   font-weight: 700;
 }
@@ -307,7 +419,7 @@
   align-self: center;
   height: 44px;
   padding: 0 18px;
-  border-radius: 999px;
+  border-radius: 4px;
   border: 1px dashed var(--border);
   background: none;
   color: var(--text-soft);
@@ -324,21 +436,480 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* برگشت به صفحه‌ی اول */
-.back-link {
-  align-self: flex-start;
-  min-height: 44px;
-  padding: 0 14px 0 16px;
-  border-radius: 999px;
-  display: inline-flex;
+/* ---------- راهنمای بازی‌ها (HelpDialog و HelpButton؛ برای همه‌ی بازی‌ها یه شکل) ---------- */
+
+.help-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  box-sizing: border-box;
+  padding: 16px;
+  background: var(--overlay);
+  display: flex;
   align-items: center;
-  gap: 6px;
-  color: var(--text-soft);
-  font-size: 14px;
-  text-decoration: none;
+  justify-content: center;
+  animation: fade-in 0.15s ease-out;
 }
 
-.back-link:hover {
+.help-dialog {
+  width: 100%;
+  max-width: 400px;
+  max-height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 20px;
+  border-radius: 4px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.help-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.help-head h2 {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.help-slide {
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: fade-in 0.2s ease-out;
+}
+
+.help-slide-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.help-list {
+  margin: 0;
+  padding: 0 18px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.help-dots {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* ناحیه‌ی لمس ۲۴ پیکسلی، نقطه‌ی دیده‌شده کوچیک‌تره */
+.help-dot {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+}
+
+.help-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border-strong);
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, background 0.2s;
+}
+
+.help-dot.active::after {
+  width: 22px;
+  background: var(--accent);
+}
+
+.help-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.help-note {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* دکمه‌ی چراغ بالای هر بازی */
+.help-button {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.help-button:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+/* «رد کردن» بالای پنجره */
+.help-skip {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.help-skip:hover {
   color: var(--text);
   background: var(--surface);
+}
+
+.help-prev,
+.help-ok {
+  height: 48px;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.help-prev {
+  flex: 1;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text-soft);
+}
+
+.help-prev:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.help-ok {
+  flex: 2;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* برچسب «آزمایشی» (بازی‌ای که هنوز کامل نیست؛ games/index.js → beta) */
+.beta-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-inline-start: 8px;
+  padding: 1px 10px;
+  border-radius: 4px;
+  border: 1px dashed var(--accent-text);
+  color: var(--accent-text);
+  font-size: 12px;
+  font-weight: 700;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* ---------- متن: یه کلمه‌ی تنها توی خط آخر نمونه ---------- */
+/* pretty: مرورگر خط‌ها رو طوری می‌شکنه که خط آخر فقط یه کلمه نباشه؛ balance: تیترها خط‌های هم‌اندازه */
+p,
+li,
+label,
+small {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+/* ---------- پنجره‌ها روی صفحه‌ی بزرگ‌تر: بزرگ‌تر و خواناتر ---------- */
+/* ورود، راهنما، پیشنهاد آهنگ/سؤال، «ادامه می‌دی؟» و «جواب رو ببینم؟» */
+@media (min-width: 640px) {
+  .auth-backdrop .auth-card {
+    max-width: 480px;
+    padding: 32px 30px;
+    gap: 18px;
+  }
+
+  .auth-head h2 {
+    font-size: 26px;
+  }
+
+  .auth-lead {
+    font-size: 16px;
+  }
+
+  .auth-tabs button {
+    height: 46px;
+    font-size: 16px;
+  }
+
+  .auth-field {
+    font-size: 15px;
+  }
+
+  .auth-field input {
+    height: 54px;
+    font-size: 17px;
+  }
+
+  .auth-submit {
+    height: 54px;
+    font-size: 17px;
+  }
+
+  .help-dialog {
+    max-width: 520px;
+    padding: 30px 28px;
+    border-radius: 4px;
+    gap: 18px;
+    font-size: 16px;
+    line-height: 1.9;
+  }
+
+  .help-head h2 {
+    font-size: 22px;
+  }
+
+  .help-slide {
+    min-height: 220px;
+    gap: 16px;
+  }
+
+  .help-slide-title {
+    font-size: 18px;
+  }
+
+  .help-list {
+    gap: 12px;
+  }
+
+  .help-skip {
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  .help-prev,
+  .help-ok {
+    height: 54px;
+    font-size: 16px;
+  }
+}
+
+/* ---------- «صفحه‌ی گرامافون»: زبان مشترک همه‌ی صفحه‌ها ---------- */
+/* تیترها با «میخک» پررنگ (Black).
+   «دیما مکین» فقط برای اسم سایت (لوگو) و اسم بازی‌ها: عنوان بالای صفحه‌ی هر بازی (.game-title)
+   و اسم بازی روی کارت‌های صفحه‌ی اول (home.css)؛ دیما فقط یه وزن داره، پس ۴۰۰ (بولد مصنوعی نه) */
+h1,
+h2 {
+  font-family: var(--font-body);
+  font-weight: 900 !important;
+  letter-spacing: 0;
+}
+
+.site .game-title {
+  font-family: var(--font-display);
+  font-weight: 400 !important;
+}
+
+html {
+  font-synthesis: none;
+}
+
+/* این‌ها h1/h2 هستن ولی تیتر نیستن (متن سؤال، کلمه‌ی جواب، نام کاربری): همون فونت متن، پررنگ */
+.survey-question,
+.word-result-answer,
+.profile-username {
+  font-family: var(--font-body);
+  font-weight: 900 !important;
+}
+
+/* پنجره‌ها و کارت‌های اصلی: دور تیره و سایه‌ی سخت، مثل کارت کاغذی */
+.help-dialog,
+.auth-backdrop .auth-card,
+.giveup-dialog {
+  border: 2px solid var(--line);
+  box-shadow: 7px 7px 0 var(--shadow);
+}
+
+/* دکمه‌های اصلی: برچسبی با سایه‌ی سخت؛ با فشار دادن پایین می‌رن */
+.help-ok,
+.auth-submit,
+.primary-button,
+.giveup-confirm,
+.color-btn,
+.survey-more,
+.game-over-actions .primary {
+  border: 2px solid var(--line) !important;
+  box-shadow: 3px 3px 0 var(--shadow);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.help-ok:active,
+.auth-submit:active,
+.primary-button:active,
+.giveup-confirm:active,
+.color-btn:active,
+.survey-more:active,
+.game-over-actions .primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--shadow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-logo,
+  .help-ok,
+  .auth-submit,
+  .primary-button {
+    transition: none;
+  }
+}
+
+/* ---------- سبک کارت‌ها: «برچسب کج» ----------
+   همه‌ی کارت‌ها: گوشه‌ی تقریباً تیز (۴)، دور ۲ پیکسلی (--edge) و سایه‌ی سخت.
+   «.site» جلوشون هست تا از استایل خود هر بازی (که بعداً لود می‌شه) قوی‌تر باشن. */
+.site .help-dialog,
+.site .auth-backdrop .auth-card,
+.site .leaderboard,
+.site .giveup-dialog,
+.site .continue-dialog,
+.site .player-card,
+.site .search-results,
+.site .mode-switch,
+.site .word-result,
+.site .word-keyboard.map,
+.site .clue-menu-list,
+.site .color-stage,
+.site .color-ready,
+.site .color-panel,
+.site .color-rounds,
+.site .survey-card,
+.site .survey-done-card,
+.site .profile-card,
+.site .profile-side,
+.site .profile-tabs,
+.site .profile-badge,
+.site .profile-rank-card,
+.site .about-hero,
+.site .about-league,
+.site .about-night,
+.site .about-us-card,
+.site .about-games,
+.site .about-one-game,
+.site .about-contact,
+.site .bento-card.featured {
+  border-radius: 4px;
+  border: 2px solid var(--edge);
+  box-shadow: 5px 5px 0 var(--shadow);
+}
+
+/* ردیف‌های لیست‌ها: همون شکل، سایه‌ی کوچیک‌تر */
+.site .guess-history li,
+.site .day-summary li,
+.site .word-day-summary li,
+.site .about-mini-table .row {
+  border-radius: 4px;
+  border: 2px solid var(--edge);
+  box-shadow: 3px 3px 0 var(--shadow);
+}
+
+/* کارت‌های رنگی بزرگ (hero) یه کم کج، مثل برچسب */
+.site .survey-done-card,
+.site .profile-rank-card {
+  transform: rotate(-0.8deg);
+}
+
+/* تب‌ها و دکمه‌های داخل این کارت‌ها هم گوشه‌ی کم */
+.site .profile-tabs button,
+.site .mode-switch a,
+.site .clue-menu-list button {
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site .survey-done-card,
+  .site .profile-rank-card {
+    transform: none;
+  }
+}
+
+/* ---------- عددهای تنها: فونت «بهمن» (--font-score) ----------
+   هر عددی که وسط جمله نیست (امتیاز، زمان، رتبه، شماره‌ی دور، آمار)؛ عدد وسط جمله با وزیرمتن می‌مونه.
+   حرف لاتین (s، H S B، #) توی این فونت نیست و خودکار با وزیرمتن نوشته می‌شه.
+   وزن ۴۰۰ چون خود فونت پررنگه (مرورگر نباید پررنگ‌ترش کنه) */
+.site .worth-value,
+.site .final-score-value,
+.site .day-summary .day-song-score,
+.site .day-total b,
+.site .player-time,
+.site .wave-label,
+.site .skip-button:not(.giveup-button) .skip-time,
+.site .lb-rank,
+.site .lb-score,
+.site .word-day-summary .day-score,
+.site .color-big,
+.site .color-round,
+.site .color-slider label b,
+.site .color-half-label b,
+.site .color-summary-score,
+.site .color-rounds b,
+.site .clue-count,
+.site .clue-row-rank,
+.site .survey-goal b,
+.site .survey-card-bg,
+.site .weekly-rank,
+.site .weekly-me-rank b,
+.site .weekly-me-points b,
+.site .weekly-me-games b,
+.site .weekly-points,
+.site .profile-stats dd,
+.site .profile-dist li > span,
+.site .profile-dist li > b,
+.site .profile-rank-card b,
+.site .profile-badge-num,
+.site .lyrics-time,
+.site .lyrics-points,
+.site .lyrics-score b,
+.site .lyrics-daynum,
+.site .lyrics-daypoints,
+.site .about-mini-table .row b,
+.site .not-found-code {
+  font-family: var(--font-score);
+  font-weight: 400;
+  font-synthesis: none;
+}
+
+/* «از ۵۰» و «از ۱۲» کنار عددها متن معمولیه */
+.site .color-summary-score small,
+.site .profile-stats dd small,
+.site .profile-rank-card b small {
+  font-family: var(--font-body);
+}
+
+/* «/» بین دو عدد: توی فونت «بهمن» شبیه ممیز فارسیه، پس با وزیرمتن و با فاصله */
+.site .num-sep {
+  font-family: var(--font-body);
+  margin: 0 4px;
 }

@@ -1,4 +1,4 @@
-// API بازی واژه‌یاب (همه زیر /api/word روی سرور)
+// API بازی جورچین (همه زیر /api/word روی سرور)
 import { call, postJson } from '../../shared/api.js'
 
 export function getWordGame() {
@@ -19,7 +19,7 @@ export function sendWordSuggestion(word) {
   return postJson('/api/word/suggest', { word })
 }
 
-// آمار واژه‌یاب برای صفحه‌ی حساب (فقط کاربر واردشده)
+// آمار جورچین برای صفحه‌ی حساب (فقط کاربر واردشده)
 export function getWordStats() {
   return call('/api/word/stats')
 }

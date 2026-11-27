@@ -1,4 +1,4 @@
-/* بازی حافظه‌ی رنگ (طرح «ب»): گوشی یه ستونه، از ۸۶۰ پیکسل به بالا دو ستونه */
+/* بازی جورنگ (طرح «ب»): گوشی یه ستونه، از ۸۶۰ پیکسل به بالا دو ستونه */
 
 .color-page {
   max-width: 680px;
@@ -39,7 +39,7 @@
   width: 28px;
   height: 8px;
   border-radius: 4px;
-  background: #27272a;
+  background: var(--chip);
   transition: background 0.3s;
 }
 
@@ -57,9 +57,9 @@
   width: 100%;
   min-height: 56px;
   border: none;
-  border-radius: 18px;
+  border-radius: 4px;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-ink);
   font: inherit;
   font-size: 16px;
   font-weight: 900;
@@ -67,7 +67,7 @@
 }
 
 .color-btn:hover:not(:disabled) {
-  background: #4040f0;
+  background: var(--accent-hover);
 }
 
 .color-btn.ghost {
@@ -85,38 +85,141 @@
 
 .color-card {
   box-sizing: border-box;
-  border-radius: 28px;
+  border-radius: 4px;
 }
 
+/* کارت شروع هر دور: سه تا کارت پشت‌ورو با «؟» وسط، متن و دکمه پایین */
 .color-ready {
-  min-height: 300px;
   padding: 28px 22px;
   background: var(--card);
   border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
+  justify-content: space-between;
+  gap: 18px;
   text-align: center;
 }
 
-.color-ready-round {
-  font-size: 22px;
+.color-deck {
+  position: relative;
+  flex: 1 1 auto;
+  width: min(220px, 62%);
+  max-height: 290px;
+  min-height: 170px;
+  margin: 8px 0 18px;
+  aspect-ratio: 220 / 290;
+}
+
+.color-deck > span {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease;
+}
+
+.deck-back.one {
+  background: var(--border);
+  transform: rotate(-10deg) translate(-18px, 6px);
+}
+
+.deck-back.two {
+  background: var(--border-strong);
+  transform: rotate(7deg) translate(14px, 4px);
+}
+
+.deck-front {
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 24px 50px var(--elev-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* خط‌چین داخل کارت، مثل پشت کارت بازی */
+.deck-front::before {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border-radius: 4px;
+  border: 2px dashed var(--border);
+}
+
+.deck-front b {
+  font-size: 110px;
   font-weight: 900;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.deck-front span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.color-ready-bottom {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  transition: opacity 0.25s ease;
 }
 
 .color-ready-text {
-  max-width: 320px;
-  margin-bottom: 8px;
-  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.color-ready-text b {
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.5;
+}
+
+.color-ready-text span {
+  font-size: 15px;
   color: var(--text-soft);
 }
 
+.color-btn.round {
+  border-radius: 4px;
+}
 
+/* «برگردونش!»: کارت‌های پشتی زیر کارت بالایی جمع می‌شن، کارت بالایی کوچیک و محو می‌شه */
+.color-ready.leaving .deck-back {
+  transform: rotate(0) scale(0.9);
+  opacity: 0;
+}
 
+.color-ready.leaving .deck-front {
+  transform: scale(0.6) rotateY(90deg);
+  opacity: 0;
+}
 
+.color-ready.leaving .color-ready-bottom {
+  opacity: 0;
+}
 
+/* بعدش رنگ از وسط کارت مثل یه دایره‌ی بزرگ‌شونده روی کل کارت پخش می‌شه */
+.color-stage.reveal {
+  animation: color-reveal 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes color-reveal {
+  from {
+    clip-path: circle(0% at 50% 42%);
+  }
+  to {
+    clip-path: circle(150% at 50% 42%);
+  }
+}
 
 /* ---------- کارت رنگ: حفظ کردن، ساختن و نتیجه ----------
    وسط صفحه، توی هر سه مرحله یه اندازه (مثل dialed.gg)؛ سربرگ سایت دیده می‌شه */
@@ -131,7 +234,7 @@
   width: 36px;
   height: 36px;
   padding: 0;
-  border-radius: 50%;
+  border-radius: 4px;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text-soft);
@@ -139,6 +242,34 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+/* دکمه‌ی چراغ کنار بلندگو، هم‌اندازه‌ی اون */
+.color-head-row .help-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  background: var(--surface);
+}
+
+/* دو رنگ نمونه توی راهنما */
+.color-help-swatches {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.color-help-swatches span {
+  width: 64px;
+  height: 64px;
+  border-radius: 4px;
+}
+
+.color-help-swatches .arrow {
+  width: auto;
+  height: auto;
+  font-size: 22px;
+  color: var(--text-muted);
 }
 
 .color-sound[aria-pressed='true'] {
@@ -152,9 +283,9 @@
   width: min(560px, 100%);
   height: clamp(420px, calc(100dvh - 250px), 580px);
   margin: 0 auto;
-  border-radius: 28px;
+  border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 20px 50px var(--elev-shadow);
 }
 
 .color-round {
@@ -225,7 +356,7 @@
   box-sizing: border-box;
   margin-top: 12px;
   padding: 14px 16px 16px;
-  border-radius: 22px;
+  border-radius: 4px;
   background: var(--card);
   border: 1px solid var(--border);
   color: var(--text);
@@ -234,9 +365,11 @@
   gap: 12px;
 }
 
-/* وقتی پنل زیر کارته، کارت رنگ کوتاه‌تر می‌شه تا هر دو با دکمه توی یه صفحه جا بشن */
+/* وقتی پنل زیر کارته، کارت رنگ کوتاه‌تر می‌شه تا هر دو با دکمه توی یه صفحه جا بشن؛
+   کارت حفظ کردن (short) هم همین اندازه‌ست تا رنگ بین حفظ کردن و ساختن بزرگ و کوچیک نشه */
 @media (max-width: 1239px) {
-  .color-scene.has-panel .color-stage {
+  .color-scene.has-panel .color-stage,
+  .color-scene.short .color-stage {
     height: clamp(170px, calc(100dvh - 520px), 480px);
   }
 }
@@ -263,7 +396,7 @@
     bottom: 0;
     width: 320px;
     padding: 22px;
-    border-radius: 24px;
+    border-radius: 4px;
     background: var(--card);
     border: 1px solid var(--border);
     -webkit-backdrop-filter: none;
@@ -277,7 +410,7 @@
 }
 
 .color-panel-error {
-  color: #ff8a8a;
+  color: var(--danger);
   font-size: 14px;
 }
 
@@ -334,14 +467,14 @@
   height: 60px;
   padding: 0;
   border: 0;
-  border-radius: 50%;
-  background: #fff;
-  color: #09090b;
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--paper-ink);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 16px var(--elev-shadow);
 }
 
 .color-next:focus-visible {
@@ -381,7 +514,7 @@
   justify-content: space-between;
   margin-bottom: 8px;
   font-size: 14px;
-  color: #c9c9cf;
+  color: var(--text-soft);
 }
 
 .color-slider label b {
@@ -396,7 +529,7 @@
   height: 30px;
   margin: 0;
   padding: 0;
-  border-radius: 15px;
+  border-radius: 4px;
   background: var(--track);
   outline: none;
   cursor: pointer;
@@ -414,13 +547,13 @@
 
 .color-range::-webkit-slider-runnable-track {
   height: 30px;
-  border-radius: 15px;
+  border-radius: 4px;
   background: transparent;
 }
 
 .color-range::-moz-range-track {
   height: 30px;
-  border-radius: 15px;
+  border-radius: 4px;
   background: transparent;
 }
 
@@ -430,23 +563,23 @@
   width: 38px;
   height: 38px;
   margin-top: -4px;
-  border-radius: 50%;
-  background: #fff;
+  border-radius: 4px;
+  background: var(--paper);
   border: 0;
   box-shadow:
-    0 0 0 3px rgba(9, 9, 11, 0.55),
-    0 4px 10px rgba(0, 0, 0, 0.5);
+    0 0 0 3px var(--overlay),
+    0 4px 10px var(--elev-shadow);
 }
 
 .color-range::-moz-range-thumb {
   width: 38px;
   height: 38px;
-  border-radius: 50%;
-  background: #fff;
+  border-radius: 4px;
+  background: var(--paper);
   border: 0;
   box-shadow:
-    0 0 0 3px rgba(9, 9, 11, 0.55),
-    0 4px 10px rgba(0, 0, 0, 0.5);
+    0 0 0 3px var(--overlay),
+    0 4px 10px var(--elev-shadow);
 }
 
 /* ---------- نتیجه‌ی دور ---------- */
@@ -468,15 +601,20 @@
   color: var(--text-soft);
 }
 
+/* روی کارت سرمه‌ای «امتیاز امروز» */
+.color-summary-total .color-summary-score small {
+  color: var(--hero-soft-ink);
+}
+
 .color-bar {
   height: 10px;
-  border-radius: 5px;
-  background: #27272a;
+  border-radius: 4px;
+  background: var(--chip);
 }
 
 .color-bar > div {
   height: 100%;
-  border-radius: 5px;
+  border-radius: 4px;
   background: var(--accent);
   transition: width 0.1s linear;
 }
@@ -495,7 +633,8 @@
 
 .color-summary-total {
   padding: 22px 20px;
-  background: #14143a;
+  background: var(--hero);
+  color: var(--hero-ink);
   border: 1px solid var(--accent);
   display: flex;
   flex-direction: column;
@@ -505,7 +644,7 @@
 
 .color-summary-label {
   font-size: 14px;
-  color: #d4d4ff;
+  color: var(--hero-soft-ink);
 }
 
 .color-summary-score {
@@ -516,18 +655,18 @@
 
 .color-summary-total .color-bar {
   width: 100%;
-  background: rgba(255, 255, 255, 0.12);
+  background: color-mix(in srgb, var(--hero-ink) 12%, transparent);
 }
 
 .color-summary-total .color-bar > div {
-  background: #fff;
+  background: var(--paper);
 }
 
 .color-rounds {
   list-style: none;
   margin: 0;
   padding: 4px 18px;
-  border-radius: 22px;
+  border-radius: 4px;
   background: var(--card);
   border: 1px solid var(--border);
 }
@@ -547,7 +686,7 @@
 .color-mini-circle {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: 4px;
   overflow: hidden;
   display: flex;
 }
@@ -559,7 +698,7 @@
 .color-round-name {
   flex: 1;
   font-size: 14px;
-  color: #c9c9cf;
+  color: var(--text-soft);
 }
 
 .color-rounds b {
@@ -589,17 +728,24 @@
   transform: translateX(-50%);
   z-index: 10;
   padding: 8px 16px;
-  border-radius: 10px;
+  border-radius: 4px;
   background: var(--text);
   color: var(--bg);
   font-size: 14px;
   font-weight: 700;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 20px var(--elev-shadow);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .color-timebar > div {
     transition: none;
+  }
+  .color-deck > span,
+  .color-ready-bottom {
+    transition: none;
+  }
+  .color-stage.reveal {
+    animation: none;
   }
 }
 
@@ -643,7 +789,7 @@
 
   .color-bar {
     height: 12px;
-    border-radius: 6px;
+    border-radius: 4px;
   }
 
 }

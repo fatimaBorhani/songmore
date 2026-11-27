@@ -4,11 +4,13 @@ import { getProfile } from '../games/song/api.js'
 import { getWordStats } from '../games/word/api.js'
 import { getColorStats } from '../games/color/api.js'
 import { getSurveyStats } from '../games/survey/api.js'
+import { getClueStats } from '../games/clue/api.js'
+import { getLyricsStats } from '../games/lyrics/api.js'
 import { logout } from '../shared/api.js'
 import { faNumber } from '../shared/format.js'
 import { SITE_NAME } from '../shared/site.js'
 import ProfileCalendar from './ProfileCalendar.jsx'
-import { ColorStatsPanel, SurveyStatsPanel, WordStatsPanel } from './ProfileStats.jsx'
+import { ClueStatsPanel, ColorStatsPanel, LyricsStatsPanel, SurveyStatsPanel, WordStatsPanel } from './ProfileStats.jsx'
 import { faMonthYear } from './calendar.js'
 import '../games/survey/survey.css' // برای کارت هدف جمعی (توی تب نظرسنجی)
 import './profile.css'
@@ -29,10 +31,12 @@ function statRows(stats, practiceGames) {
 
 // تب‌های صفحه‌ی حساب. بقیه‌ی تب‌ها (غیر از آهنگ که با خود پروفایل میاد) آمارشون فقط وقتی تبشون باز می‌شه گرفته می‌شه
 const TABS = [
-  { id: 'song', label: 'حدس آهنگ' },
-  { id: 'word', label: 'واژه‌یاب', load: getWordStats, Panel: WordStatsPanel },
-  { id: 'color', label: 'رنگ', load: getColorStats, Panel: ColorStatsPanel },
-  { id: 'survey', label: 'نظرسنجی', load: getSurveyStats, Panel: SurveyStatsPanel },
+  { id: 'song', label: 'جورزیک' },
+  { id: 'word', label: 'جورچین', load: getWordStats, Panel: WordStatsPanel },
+  { id: 'color', label: 'جورنگ', load: getColorStats, Panel: ColorStatsPanel },
+  { id: 'clue', label: 'جوربندی', load: getClueStats, Panel: ClueStatsPanel },
+  { id: 'lyrics', label: 'جورشعر', load: getLyricsStats, Panel: LyricsStatsPanel },
+  { id: 'survey', label: 'صد جور', load: getSurveyStats, Panel: SurveyStatsPanel },
 ]
 
 // صفحه‌ی حساب کاربری (آدرس /profile)
@@ -129,7 +133,7 @@ function ProfilePage({ user, onUserChange }) {
           {data.username[0].toUpperCase()}
         </span>
         <div className="profile-id">
-          <h1 dir="ltr">{data.username}</h1>
+          <h1 className="profile-username" dir="ltr">{data.username}</h1>
           <p>
             {since && `عضو از ${since}`}
             {rank && <span className="profile-rank-inline"> · {rankText}</span>}

@@ -1,0 +1,245 @@
+/* جدول هفته: یه ستون ساده؛ رنگ‌ها از تم سایت */
+.weekly-page {
+  max-width: 640px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 16px 16px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.weekly-head h1 {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1.4;
+}
+
+.weekly-head p {
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+/* کارت من: برچسب کاغذی کمی کج */
+.weekly-me {
+  padding: 18px 20px;
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--paper-ink);
+  border: 2px solid var(--line);
+  box-shadow: 6px 6px 0 var(--shadow);
+  transform: rotate(-1deg);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.weekly-me-empty {
+  color: var(--paper-ink);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.weekly-me-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.weekly-me-rank {
+  font-size: 15px;
+}
+
+.weekly-me-rank b {
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.weekly-me-points b {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.weekly-me-games {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.weekly-me-games li {
+  padding: 3px 12px;
+  border-radius: 3px;
+  border: 2px solid var(--line);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* امتیاز هر بازی به رنگ خود بازی */
+.weekly-me-games .game-song {
+  background: var(--mustard);
+  color: var(--mustard-ink);
+}
+
+.weekly-me-games .game-word {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.weekly-me-games .game-color {
+  background: var(--tomato);
+  color: var(--tomato-ink);
+}
+
+.weekly-me-games .game-clue {
+  background: var(--teal);
+  color: var(--teal-ink);
+}
+
+/* لیست رتبه‌ها */
+.weekly-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.weekly-list li {
+  min-height: 52px;
+  box-sizing: border-box;
+  padding: 0 12px;
+  border-radius: 4px;
+  background: var(--card);
+  border: 2px solid var(--edge);
+  box-shadow: 4px 4px 0 var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ردیف‌ها یکی‌درمیون کمی کج، مثل برچسب */
+.weekly-list li:nth-child(odd) {
+  transform: rotate(0.6deg);
+}
+
+.weekly-list li:nth-child(even) {
+  transform: rotate(-0.5deg);
+}
+
+/* ردیف خود بازیکن: برچسب گوجه‌ای */
+.weekly-list li.me {
+  background: var(--tomato);
+  color: var(--tomato-ink);
+  border-color: var(--line);
+}
+
+.weekly-list li.me .weekly-games {
+  color: inherit;
+  opacity: 0.85;
+}
+
+/* شماره‌ی رتبه توی یه دایره‌ی کاغذی */
+.weekly-rank {
+  flex: 0 0 28px;
+  height: 28px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 2px solid var(--line);
+  background: var(--mustard);
+  color: var(--mustard-ink);
+  font-size: 13px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weekly-list li.me .weekly-rank {
+  background: var(--paper);
+  color: var(--paper-ink);
+}
+
+.weekly-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.weekly-games {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.weekly-points {
+  flex: 0 0 auto;
+  min-width: 40px;
+  text-align: left;
+  font-size: 17px;
+}
+
+.weekly-empty,
+.weekly-more {
+  text-align: center;
+  color: var(--text-soft);
+  font-size: 14px;
+}
+
+/* قانون امتیاز */
+.weekly-rules {
+  margin-top: 8px;
+  padding: 14px 16px;
+  border-radius: 4px;
+  background: var(--card);
+  border: 2px solid var(--edge);
+  box-shadow: 4px 4px 0 var(--shadow);
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--text-soft);
+}
+
+.weekly-rules summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--text);
+  min-height: 32px;
+}
+
+.weekly-rules p {
+  margin: 8px 0 12px;
+}
+
+.weekly-rules b {
+  color: var(--text);
+}
+
+.weekly-rules-table {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.weekly-rules-table > div {
+  display: grid;
+  grid-template-columns: 0.9fr 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.weekly-rules-head {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.weekly-rules-table span:first-child {
+  color: var(--text);
+}

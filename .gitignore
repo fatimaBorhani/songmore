@@ -12,3 +12,9 @@ __pycache__/
 
 # منبع‌های لیست کلمه‌ی واژه‌یاب (با git clone گرفته می‌شن؛ توضیحش بالای tools/build_word_lists.py)
 tools/wordlists/
+
+# خروجی آزمایشی build_clue_ranks_model.py --out tools/clue_test_out (برای مقایسه با check_clue_pairs.py)
+tools/clue_test_out/
+
+# داده‌ی بازی «شعر یادت نره»: متن ترانه‌ها و خروجی build_lyrics_game.py (مال خودمون نیست، توی git نمی‌ره)
+data/lyrics/

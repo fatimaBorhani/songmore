@@ -1,4 +1,4 @@
-/* فونت صفحه‌ی اول همون Vazirmatn بقیه‌ی سایته؛ Radio فقط برای ساعت شمارش معکوس (self-hosted) */
+/* فونت صفحه‌ی اول همون میخک بقیه‌ی سایته؛ Radio فقط برای ساعت شمارش معکوس (self-hosted) */
 @font-face {
   font-family: 'Radio';
   src: url('../assets/fonts/Radio.ttf') format('truetype');
@@ -8,10 +8,10 @@
 
 /* صفحه‌ی اول: چینش بنتو (رنگ‌ها و اندازه‌ها از طرح home-design.html) */
 .home-bento-page {
-  --blue: #3030e6;
-  --blue-deep: #14143a; /* پشت آیکن‌ها و سایه‌ی گرامافون */
-  --blue-link: #8f8fff;
-  --desc: #c9c9cf;
+  --blue: var(--accent);
+  --blue-deep: var(--accent-soft); /* پشت آیکن‌ها و سایه‌ی گرامافون */
+  --blue-link: var(--accent-text);
+  --desc: var(--text-soft);
 
   max-width: 1180px;
   margin: 0 auto;
@@ -37,9 +37,9 @@
 }
 
 .home-title-row h1 {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--desc);
+  font-size: 40px;
+  line-height: 1.25;
+  color: var(--text);
 }
 
 .home-countdown {
@@ -84,13 +84,87 @@
   }
 }
 
-/* کارت آبی دو ستون و دو ردیف؛ خونه‌ی پایین‌چپ خالی می‌مونه */
+/* کامپیوتر: کارت آبی دو ستون و دو ردیف، چهار بازی دیگه دو به دو کنارش.
+   همه‌چیز جمع‌وجور تا صفحه‌ی اول بدون اسکرول جا بشه (حتی روی لپ‌تاپ ۷۶۸ پیکسلی) */
 @media (min-width: 1024px) {
+  .home-bento-page {
+    max-width: 1040px;
+    padding-bottom: 12px;
+  }
+  .site:has(.home-bento-page) .site-header {
+    max-width: 1040px;
+  }
+  .home-title-row {
+    padding: 14px 0 18px;
+  }
+  .home-title-row h1 {
+    font-size: 34px;
+  }
   .bento {
     grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
   }
   .bento-item.featured {
     grid-row: span 2;
+  }
+  .bento-card.featured {
+    min-height: 0;
+    padding: 26px;
+  }
+  .featured-title {
+    font-size: 40px;
+  }
+  .featured-desc {
+    font-size: 15px;
+  }
+  .record {
+    width: 240px;
+    height: 240px;
+    left: -36px;
+    bottom: -36px;
+  }
+  .bento-card.small {
+    padding: 16px 18px;
+    gap: 6px;
+  }
+  .small-icon {
+    width: 38px;
+    height: 38px;
+  }
+  .small-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+  .small-title {
+    font-size: 23px;
+  }
+  .small-desc {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  /* about.css هم این کلاس رو داره (بعد از این فایل میاد)؛ برای همین با .home-bento-page */
+  .home-bento-page .home-about-link {
+    margin-top: 10px;
+  }
+}
+
+/* «صد جور» بازی نیست: یه نوار پهن و باریک زیر بازی‌ها (آیکن، اسم، توضیح و دکمه توی یه ردیف) */
+@media (min-width: 640px) {
+  .bento-item:has(.game-survey) {
+    grid-column: 1 / -1;
+  }
+  .bento-card.small.game-survey {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 18px;
+    transform: rotate(-0.4deg);
+  }
+  .bento-card.small.game-survey .small-desc {
+    flex: 1;
+  }
+  .bento-card.small.game-survey .small-cta {
+    margin: 0;
   }
 }
 
@@ -126,9 +200,11 @@ a.bento-card:focus-visible {
   justify-content: space-between;
   gap: 20px;
   padding: 32px;
-  border-radius: 28px;
-  background: var(--blue);
-  color: #fff;
+  border-radius: 4px;
+  background: var(--hero);
+  color: var(--hero-ink);
+  border: 2px solid var(--line);
+  box-shadow: 8px 8px 0 var(--shadow);
 }
 
 .featured-text {
@@ -141,14 +217,15 @@ a.bento-card:focus-visible {
 }
 
 .featured-title {
-  font-size: 40px;
-  font-weight: 800;
-  line-height: 1.3;
+  font-family: var(--font-display);
+  font-size: 46px;
+  font-weight: 400;
+  line-height: 1.2;
 }
 
 .featured-desc {
   font-size: 17px;
-  color: #e6e6ff;
+  color: var(--hero-soft-ink);
 }
 
 .featured-cta {
@@ -159,8 +236,11 @@ a.bento-card:focus-visible {
   align-items: center;
   min-height: 50px;
   padding: 0 28px;
-  border-radius: 999px;
-  background: var(--bg);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--paper-ink);
+  border: 2px solid var(--line);
+  box-shadow: 3px 3px 0 var(--shadow);
   font-weight: 800;
 }
 
@@ -172,8 +252,9 @@ a.bento-card:focus-visible {
   width: 300px;
   height: 300px;
   border-radius: 50%;
-  background: var(--blue);
-  box-shadow: 12px 12px 0 var(--blue-deep);
+  background: repeating-radial-gradient(circle, var(--vinyl-1) 0 2px, var(--vinyl-2) 2px 4px);
+  border: 3px solid var(--line);
+  box-shadow: 10px 10px 0 var(--shadow);
 }
 
 .record > span {
@@ -182,7 +263,7 @@ a.bento-card:focus-visible {
 }
 
 .record-groove {
-  border: 1px solid #5656f0;
+  border: 1px solid color-mix(in srgb, var(--hero-ink) 10%, transparent);
 }
 .record-groove.g1 {
   inset: 7%;
@@ -198,18 +279,25 @@ a.bento-card:focus-visible {
 .record-shine {
   inset: 10%;
   border: 3px solid transparent;
-  border-top-color: #a9a9ff;
-  border-right-color: #6a6af2;
+  border-top-color: color-mix(in srgb, var(--hero-ink) 35%, transparent);
+  border-right-color: color-mix(in srgb, var(--hero-ink) 18%, transparent);
   animation: record-spin 2.86s linear infinite;
 }
 
 .record-label {
   inset: 32%;
-  background: #f4f4ff;
-  color: var(--bg);
+  background: var(--paper);
+  color: var(--paper-ink);
+  border: 2px solid var(--line);
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.record-mark {
+  display: block;
+  width: 92%;
+  height: auto;
 }
 
 @keyframes record-spin {
@@ -231,33 +319,86 @@ a.bento-card:focus-visible {
 }
 
 /* کارت‌های کوچیک تیره */
+/* کارت‌های کوچیک: برچسب‌های کاغذی رنگی، کمی کج، با سایه‌ی سخت */
 .bento-card.small {
   gap: 10px;
   padding: 24px;
-  border-radius: 24px;
+  border-radius: 4px;
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 2px solid var(--line);
+  box-shadow: 5px 5px 0 var(--shadow);
   color: var(--text);
+  transform: rotate(-1.2deg);
 }
 
-a.bento-card.small:hover {
-  border-color: var(--blue);
+.bento-item:nth-child(odd) .bento-card.small {
+  transform: rotate(1deg);
+}
+
+a.bento-card.small:hover,
+.bento-item:nth-child(odd) a.bento-card.small:hover {
+  transform: rotate(0deg) translateY(-3px);
+}
+
+.bento-card.small.game-word {
+  background: var(--paper);
+  color: var(--paper-ink);
+}
+
+.bento-card.small.game-color {
+  background: var(--tomato);
+  color: var(--tomato-ink);
+}
+
+.bento-card.small.game-clue {
+  background: var(--teal);
+  color: var(--teal-ink);
+}
+
+/* صد جور: بنفش (توی روز هم با سرمه‌ای جورزیک فرق داره) */
+.bento-card.small.game-survey {
+  background: var(--violet);
+  color: var(--violet-ink);
+}
+
+.bento-card.small.game-lyrics {
+  background: var(--mustard);
+  color: var(--mustard-ink);
+}
+
+/* روی برچسب رنگی همه‌چیز همرنگ متن خود برچسبه */
+.bento-card.small .small-desc,
+.bento-card.small .small-cta,
+.bento-card.small .small-badge {
+  color: inherit;
+}
+
+.bento-card.small .small-desc {
+  opacity: 0.85;
+}
+
+.bento-card.small .beta-badge {
+  border-color: currentColor;
+  color: inherit;
 }
 
 .small-icon {
   width: 48px;
   height: 48px;
-  border-radius: 14px;
-  background: var(--blue-deep);
-  color: #fff;
+  border-radius: 4px;
+  border: 2px solid var(--line);
+  background: var(--paper);
+  color: var(--paper-ink);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .small-title {
-  font-size: 22px;
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.3;
 }
 
 .small-desc {
@@ -276,7 +417,7 @@ a.bento-card.small:hover {
   margin-top: auto;
   align-self: flex-start;
   padding: 2px 12px;
-  border-radius: 999px;
+  border-radius: 4px;
   border: 1px solid var(--border);
   font-size: 12px;
   color: var(--desc);
@@ -315,11 +456,10 @@ a.bento-card.small:hover {
     height: 200px;
     left: -30px;
     bottom: -30px;
-    box-shadow: 8px 8px 0 var(--blue-deep);
+    box-shadow: 6px 6px 0 var(--shadow);
   }
-  .record-label svg {
-    width: 22px;
-    height: 22px;
+  .record-mark {
+    width: 88%;
   }
 }
 
@@ -340,8 +480,19 @@ a.bento-card.small:hover {
 }
 
 .not-found h1 {
-  font-size: 26px;
-  font-weight: 900;
+  font-size: 34px;
+}
+
+/* نت لوگو، درشت و کمی کج */
+.not-found-mark {
+  width: 150px;
+  height: 150px;
+  transform: rotate(-12deg);
+}
+
+.not-found-code {
+  font-size: 54px;
+  line-height: 1;
 }
 
 .not-found p {
@@ -351,5 +502,13 @@ a.bento-card.small:hover {
 .not-found .ghost-button {
   display: inline-flex;
   align-items: center;
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: 4px;
+  border: 2px solid var(--line);
+  background: var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 3px 3px 0 var(--shadow);
+  font-weight: 800;
   text-decoration: none;
 }

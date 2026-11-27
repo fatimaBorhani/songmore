@@ -1,0 +1,340 @@
+/* بازی «جوربندی»: یه ستون باریک وسط صفحه؛ رنگ‌ها همه از تم سایت (index.css) */
+.clue-page {
+  --heat-hot: var(--meter);
+  --heat-warm: var(--meter);
+  --heat-cold: var(--meter-cold);
+
+  max-width: 540px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  /* سمت راست جای فلش «آخرین حدس» کنار ردیف‌ها */
+  padding: 8px 16px 56px 28px;
+  padding-inline: 28px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.clue-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* عنوان درشت وسط (با برچسب «آزمایشی»)، دکمه‌ی چراغ گوشه */
+.clue-title-row {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 52px 22px;
+}
+
+.clue-title-row h1 {
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+  text-align: center;
+}
+
+.clue-help-slot {
+  position: absolute;
+  inset-inline-end: 0;
+}
+
+.clue-icon-button:hover {
+  background: var(--surface);
+}
+
+/* جای نوشتن + دکمه‌ی ⋯ */
+.clue-form {
+  display: flex;
+  gap: 8px;
+}
+
+.clue-input {
+  flex-grow: 1;
+  min-width: 0;
+  height: 48px;
+  box-sizing: border-box;
+  padding: 0 14px;
+  border-radius: 4px;
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-soft);
+}
+
+.clue-input:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+}
+
+.clue-input input {
+  flex-grow: 1;
+  min-width: 0;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 17px;
+  outline: none;
+}
+
+.clue-input input::placeholder {
+  color: var(--text-muted);
+}
+
+.clue-count {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.clue-menu {
+  position: relative;
+}
+
+.clue-icon-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  border: 0;
+  background: var(--card);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.clue-menu-list {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + 6px);
+  z-index: 5;
+  min-width: 210px;
+  padding: 6px;
+  border-radius: 4px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 32px var(--elev-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.clue-menu-list button {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 10px;
+  min-height: 48px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: start;
+  cursor: pointer;
+}
+
+.clue-menu-list button small {
+  grid-column: 2;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.clue-menu-list button:hover:not(:disabled) {
+  background: var(--surface);
+}
+
+.clue-menu-list button.danger {
+  display: block;
+  background: var(--surface);
+  color: var(--text-soft);
+}
+
+.clue-message {
+  min-height: 24px;
+  padding: 6px 2px 0;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+/* یه ردیف حدس: مثل نوار پیشرفت از راست به اندازه‌ی نزدیکی (--fill) رنگ می‌خوره؛
+   داغ و ولرم --meter (شب سرمه‌ای، روز خردلی؛ متن روش همیشه خوانا)، سردتر طوسی؛ خیلی دورها فقط یه نوار باریک کنارشون */
+.clue-row {
+  --fill-color: var(--heat-cold);
+  position: relative;
+  height: 44px;
+  box-sizing: border-box;
+  padding: 0 14px;
+  border-radius: 4px;
+  background: var(--card);
+  border-inline-start: 4px solid var(--heat-cold);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 700;
+}
+
+.clue-row.heat-hot,
+.clue-row.heat-warm {
+  --fill-color: var(--meter);
+}
+
+.clue-row.filled {
+  border-inline-start: 0;
+  padding-inline-start: 18px;
+  /* to left یعنی از راست شروع می‌شه (صفحه راست‌به‌چپه) */
+  background: linear-gradient(to left, var(--fill-color) var(--fill), var(--card) var(--fill));
+}
+
+.clue-row-word {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clue-row-word svg {
+  flex: 0 0 auto;
+  color: var(--text-soft);
+}
+
+.clue-row:not(.filled) .clue-row-rank {
+  color: var(--text-soft);
+}
+
+.clue-row.filled .clue-row-word svg {
+  color: inherit;
+}
+
+/* فلش کنار آخرین حدس (بیرون ردیف، سمت راست) */
+.clue-row-marker {
+  position: absolute;
+  inset-inline-start: -22px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-inline-start: 10px solid var(--text);
+}
+
+.clue-divider {
+  width: 100%;
+  height: 1px;
+  margin: 20px 0;
+  border: 0;
+  background: var(--border);
+}
+
+.clue-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ردیف‌های نمونه توی پنجره‌ی راهنما */
+.clue-help-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* آخر بازی: بدون کارت؛ جواب درشت وسط با یه خط کوتاه زیرش (آبی اگه پیدا شده، طوسی اگه تسلیم) */
+.clue-result {
+  padding: 6px 0 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.clue-result-label {
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.clue-result-answer {
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.clue-result-line {
+  width: 48px;
+  height: 4px;
+  margin: 4px 0 12px;
+  border-radius: 4px;
+  background: var(--incorrect);
+}
+
+.clue-result.won .clue-result-line {
+  background: var(--accent);
+}
+
+.clue-result-stats {
+  font-size: 15px;
+  color: var(--text-soft);
+}
+
+.clue-result-stats b {
+  color: var(--text);
+}
+
+.clue-share {
+  margin-top: 24px;
+  min-width: 200px;
+  height: 50px;
+  padding: 0 28px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.clue-next {
+  margin: 10px 0 24px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.clue-next b {
+  color: var(--text);
+}
+
+.clue-test-reset {
+  align-self: center;
+  margin-top: 28px;
+}
+
+/* گوشی: عنوان کوچیک‌تر */
+@media (max-width: 480px) {
+  .clue-page {
+    padding-inline: 26px 14px;
+  }
+  .clue-title-row h1 {
+    font-size: 32px;
+  }
+}

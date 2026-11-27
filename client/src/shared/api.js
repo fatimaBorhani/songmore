@@ -43,3 +43,16 @@ export async function login(username, password) {
 export function logout() {
   return postJson('/api/auth/logout')
 }
+
+// ---------- راهنمای بازی‌ها ----------
+
+// راهنمای کدوم بازی‌ها رو این حساب دیده: ['word', ...] (فقط کاربر واردشده)
+export async function getHelpSeen() {
+  const data = await call('/api/help')
+  return data.seen
+}
+
+// راهنمای این بازی دیده شد (فقط کاربر واردشده)
+export function markHelpSeen(game) {
+  return postJson('/api/help/seen', { game })
+}

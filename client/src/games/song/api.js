@@ -1,4 +1,4 @@
-// API بازی حدس آهنگ (همه زیر /api/song روی سرور)
+// API جورزیک (همه زیر /api/song روی سرور)
 import { API_URL, call, postJson } from '../../shared/api.js'
 
 export function getGame() {
@@ -62,4 +62,9 @@ export function sendPracticeGiveUp() {
 // بازی تمرینی بعدی (فقط وقتی بازی فعلی تموم شده)
 export function nextPracticeGame() {
   return postJson('/api/song/practice/next')
+}
+
+// «آهنگم توی لیست نیست»: پیشنهاد یه آهنگ برای اضافه شدن (مهمان هم می‌تونه)
+export function suggestSong(title, artist) {
+  return postJson('/api/song/suggest', { title, artist })
 }

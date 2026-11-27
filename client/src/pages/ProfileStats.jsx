@@ -1,4 +1,4 @@
-// پنل‌های آمار هر بخش توی صفحه‌ی حساب: واژه‌یاب، حافظه‌ی رنگ و نظرسنجی
+// پنل‌های آمار هر بخش توی صفحه‌ی حساب: جورچین، جورنگ، جوربندی و نظرسنجی
 import { Link } from 'react-router'
 import { faNumber } from '../shared/format.js'
 import GoalBar from '../games/survey/components/GoalBar.jsx'
@@ -43,7 +43,7 @@ const withOf = (value, of) => (
 )
 
 export function WordStatsPanel({ stats }) {
-  if (stats.played === 0) return <EmptyStats text="هنوز واژه‌یاب بازی نکردی." to="/word" linkText="برو به واژه‌یاب" />
+  if (stats.played === 0) return <EmptyStats text="هنوز جورچین بازی نکردی." to="/word" linkText="برو به جورچین" />
   const winPercent = Math.round((stats.wins / stats.played) * 100)
   const rows = [
     ['کلمه‌های تموم‌شده', faNumber(stats.played)],
@@ -57,7 +57,7 @@ export function WordStatsPanel({ stats }) {
   const most = Math.max(...stats.distribution, 1)
   return (
     <div className="profile-panels">
-      <StatsList label="آمار واژه‌یاب" rows={rows} total={['بردها', withOf(faNumber(stats.wins), faNumber(stats.played))]} />
+      <StatsList label="آمار جورچین" rows={rows} total={['بردها', withOf(faNumber(stats.wins), faNumber(stats.played))]} />
       <section className="profile-card profile-dist" aria-label="توزیع حدس‌ها">
         <h2>بردها با چند حدس؟</h2>
         <ol>
@@ -77,7 +77,7 @@ export function WordStatsPanel({ stats }) {
 }
 
 export function ColorStatsPanel({ stats }) {
-  if (stats.played === 0) return <EmptyStats text="هنوز حافظه‌ی رنگ رو تموم نکردی." to="/color" linkText="برو به حافظه‌ی رنگ" />
+  if (stats.played === 0) return <EmptyStats text="هنوز جورنگ رو تموم نکردی." to="/color" linkText="برو به جورنگ" />
   const rows = [
     ['بازی‌های تموم‌شده', faNumber(stats.played)],
     ['میانگین امتیاز هر بازی', `${faNumber(stats.averageTotal, 2)} از ${faNumber(stats.maxTotal)}`],
@@ -89,7 +89,46 @@ export function ColorStatsPanel({ stats }) {
   ]
   return (
     <div className="profile-panels">
-      <StatsList label="آمار حافظه‌ی رنگ" rows={rows} total={['مجموع امتیاز', faNumber(stats.totalScore, 2)]} />
+      <StatsList label="آمار جورنگ" rows={rows} total={['مجموع امتیاز', faNumber(stats.totalScore, 2)]} />
+    </div>
+  )
+}
+
+export function ClueStatsPanel({ stats }) {
+  if (stats.played === 0) return <EmptyStats text="هنوز جوربندی رو تموم نکردی." to="/clue" linkText="برو به جوربندی" />
+  const rows = [
+    ['روزهای بازی‌شده', faNumber(stats.played)],
+    ['تسلیم', faNumber(stats.gaveUps)],
+    ['میانگین حدس برای پیدا کردن', stats.wins ? faNumber(stats.averageGuesses, 1) : '—'],
+    ['کمترین حدس', stats.wins ? faNumber(stats.bestGuesses) : '—'],
+    ['پیدا کردن بدون راهنما', faNumber(stats.noHintWins)],
+    ['راهنماهای گرفته‌شده', faNumber(stats.totalHints)],
+    ['روزهای پشت‌سرهم', faNumber(stats.currentStreak)],
+    ['بهترین رکورد', faNumber(stats.maxStreak)],
+  ]
+  return (
+    <div className="profile-panels">
+      <StatsList label="آمار جوربندی" rows={rows} total={['پیدا کردی', withOf(faNumber(stats.wins), faNumber(stats.played))]} />
+    </div>
+  )
+}
+
+export function LyricsStatsPanel({ stats }) {
+  if (stats.songs === 0) return <EmptyStats text="هنوز جورشعر بازی نکردی." to="/lyrics" linkText="برو به جورشعر" />
+  const rows = [
+    ['آهنگ‌های جواب‌داده', faNumber(stats.songs)],
+    ['میانگین امتیاز هر روز', stats.played ? withOf(faNumber(stats.averageDay, Number.isInteger(stats.averageDay) ? 0 : 1), faNumber(stats.maxDay)) : '—'],
+    ['بهترین روز', stats.played ? withOf(faNumber(stats.bestDay), faNumber(stats.maxDay)) : '—'],
+    ['آهنگ‌هایی که هر دو خطش درست بود', faNumber(stats.perfectSongs)],
+    ['خط‌های درست', faNumber(stats.okLines)],
+    ['خط‌های نزدیک', faNumber(stats.closeLines)],
+    ['خط‌های غلط', faNumber(stats.wrongLines)],
+    ['روزهای پشت‌سرهم', faNumber(stats.currentStreak)],
+    ['بهترین رکورد', faNumber(stats.maxStreak)],
+  ]
+  return (
+    <div className="profile-panels">
+      <StatsList label="آمار جورشعر" rows={rows} total={['روزهای تموم‌شده', faNumber(stats.played)]} />
     </div>
   )
 }

@@ -1,0 +1,704 @@
+/* فونت Radio برای ساعت «۰۰:۰۰» (همون فونت ساعت صفحه‌ی اول، self-hosted) */
+@font-face {
+  font-family: 'Radio';
+  src: url('../assets/fonts/Radio.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* صفحه‌ی «درباره»: گوشی یه فهرست جمع‌وجور، کامپیوتر (از ۷۶۰ پیکسل) چینش بنتو با تصویر */
+.about-page {
+  --about-blue-deep: var(--accent-soft);
+  --about-blue-soft: var(--accent-text);
+
+  max-width: 1080px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 20px 16px 56px;
+  line-height: 1.8;
+}
+
+/* سربرگ مشترک روی این صفحه هم‌عرض خود صفحه می‌شه (مثل صفحه‌ی اول) */
+.site:has(.about-page) .site-header {
+  max-width: 1080px;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.about-card {
+  box-sizing: border-box;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+/* ---------- کارت آبی بالا ---------- */
+.about-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 210px;
+  box-sizing: border-box;
+  padding: 22px;
+  border-radius: 4px;
+  background: var(--hero);
+  color: var(--hero-ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.about-hero h1 {
+  position: relative;
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.about-hero p {
+  position: relative;
+  font-size: 15px;
+  color: var(--hero-soft-ink);
+}
+
+
+/* لوگوی عمودی: روی گوشی وسط بالای کارت، روی کامپیوتر سمت چپ (پایین CSS) */
+.about-lockup {
+  position: relative;
+  align-self: center;
+  width: 110px;
+  height: auto;
+  margin: 18px 0 10px;
+}
+
+/* برچسب کج سفید گوشه‌ی کارت */
+.about-sticker {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 3px 12px;
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 900;
+  transform: rotate(5deg);
+  box-shadow: 3px 3px 0 var(--about-blue-deep);
+}
+
+/* گرامافون گوشه‌ی بالا‌چپ (مثل صفحه‌ی اول، بدون چرخش) */
+.about-record {
+  position: absolute;
+  left: -46px;
+  top: -46px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 7px 7px 0 var(--about-blue-deep);
+}
+
+.about-record > span {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.about-record .g1,
+.about-record .g2,
+.about-record .g3 {
+  border: 1px solid var(--vinyl-2);
+}
+.about-record .g1 {
+  inset: 7%;
+}
+.about-record .g2 {
+  inset: 15%;
+}
+.about-record .g3 {
+  inset: 23%;
+}
+.about-record .shine {
+  inset: 10%;
+  border: 3px solid transparent;
+  border-bottom-color: var(--accent-text);
+  border-left-color: var(--accent-text);
+}
+.about-record .label {
+  inset: 32%;
+  background: var(--vinyl-label);
+}
+
+/* ---------- لیگ هفته (روی گوشی هم با جدول کوچیک) ---------- */
+.about-league {
+  order: 1;
+  margin-bottom: 12px;
+  padding: 18px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.about-league-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.about-league-head b {
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.about-league-head a {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+.about-league-text {
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.about-mini-table {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.about-mini-table .row {
+  height: 36px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  color: var(--about-blue-soft);
+}
+
+.about-mini-table .row b {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  background: var(--border);
+  color: var(--text);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* جای اسم: فقط یه نوار طوسی (اسم الکی نمی‌نویسیم) */
+.about-mini-table .row i {
+  height: 7px;
+  border-radius: 4px;
+  background: var(--border-strong);
+}
+
+.about-mini-table .row.me {
+  background: var(--about-blue-deep);
+  border: 1px solid var(--accent);
+}
+
+.about-mini-table .row.me b {
+  background: var(--accent);
+}
+
+.about-mini-table .row strong {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.about-mini-table .row em {
+  margin-right: auto;
+  font-size: 12px;
+  font-style: normal;
+}
+
+/* ---------- کارت‌های «چطوری کار می‌کنه»: روی گوشی ردیف‌های یه فهرست ---------- */
+.about-fact {
+  order: 2;
+  padding: 14px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  border-top: 0;
+}
+
+.about-night {
+  border-top: 1px solid var(--border);
+  border-radius: 4px 4px 0 0;
+}
+
+.about-join {
+  border-radius: 0 0 4px 4px;
+}
+
+.about-fact .about-art,
+.about-long,
+.about-games,
+.hide-phone {
+  display: none !important;
+}
+
+.about-fact-icon {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border-radius: 4px;
+  background: var(--about-blue-deep);
+  color: var(--about-blue-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-fact-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-fact-text b {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.6;
+}
+
+.about-fact-text > span {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+/* ---------- درباره‌ی ما: روی گوشی یه کارت آبی تیره ---------- */
+.about-us {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.about-us-card,
+.about-contact {
+  position: relative;
+  box-sizing: border-box;
+  background: var(--about-blue-deep);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.about-us-card {
+  padding: 22px 20px 6px;
+  border-radius: 4px 4px 0 0;
+}
+
+.about-contact {
+  padding: 6px 20px 22px;
+  border-radius: 0 0 4px 4px;
+}
+
+.about-us-card h2 {
+  position: relative;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.about-us-card p,
+.about-contact p {
+  position: relative;
+  font-size: 14px;
+  color: var(--text-soft);
+  line-height: 2;
+}
+
+/* «درباره‌ی ما» چند پاراگرافه */
+.about-us-card p + p {
+  margin-top: 8px;
+}
+
+.about-contact b {
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.about-contact p {
+  display: none;
+}
+
+.about-quote {
+  display: none;
+}
+
+.about-contact-button {
+  margin-top: 4px;
+  min-height: 48px;
+  padding: 0 26px;
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.about-contact-soon {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+
+/* ---------- کامپیوتر: بنتو ۶ ستونه با تصویر ---------- */
+@media (min-width: 760px) {
+  .about-page {
+    padding: 32px 24px 64px;
+  }
+
+  .site:has(.about-page) .site-header {
+    padding-inline: 24px;
+  }
+
+  .about-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .about-hero,
+  .about-league,
+  .about-fact {
+    order: 0;
+    margin: 0;
+  }
+
+  .about-hero {
+    grid-column: span 4;
+    min-height: 340px;
+    padding: 40px;
+    border-radius: 4px;
+    gap: 12px;
+  }
+
+  .about-hero h1 {
+    max-width: 520px;
+    font-size: 50px;
+    line-height: 1.3;
+  }
+
+  .about-hero p {
+    max-width: 500px;
+    font-size: 19px;
+    line-height: 2;
+  }
+
+
+  .about-lockup {
+    position: absolute;
+    left: 46px;
+    bottom: 34px;
+    width: 112px;
+    margin: 0;
+  }
+
+  .about-sticker {
+    top: 34px;
+    right: 36px;
+    padding: 6px 16px;
+    font-size: 15px;
+    box-shadow: 4px 4px 0 var(--about-blue-deep);
+  }
+
+  /* کوچیک‌تر از قبل تا لوگوی عمودی زیرش جا بشه */
+  .about-record {
+    left: -60px;
+    top: -60px;
+    width: 200px;
+    height: 200px;
+    box-shadow: 12px 12px 0 var(--about-blue-deep);
+  }
+
+  /* کارت‌ها: تصویر بالا، متن پایین */
+  .about-fact,
+  .about-league,
+  .about-games {
+    padding: 28px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 18px;
+  }
+
+  .about-night {
+    grid-column: span 2;
+    border-radius: 4px;
+  }
+  .about-league,
+  .about-together {
+    grid-column: span 3;
+  }
+  .about-hint,
+  .about-join,
+  .about-games {
+    grid-column: span 2;
+  }
+
+  .about-fact .about-art {
+    display: flex !important;
+    min-height: 120px;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--text-muted);
+  }
+
+  .about-long,
+  .hide-phone {
+    display: inline !important;
+  }
+  .about-mini-table .row.hide-phone {
+    display: flex !important;
+  }
+  .about-games {
+    display: flex !important;
+  }
+
+  .about-fact-icon,
+  .about-short {
+    display: none;
+  }
+
+  .about-fact-text b,
+  .about-league-head b {
+    font-size: 19px;
+    line-height: 1.5;
+  }
+
+  .about-fact-text > span,
+  .about-league-text {
+    font-size: 15px;
+    color: var(--text-soft);
+  }
+
+  .about-mini-table .row {
+    height: 44px;
+    border-radius: 4px;
+  }
+
+  /* ساعت نیمه‌شب */
+  .about-night .about-art {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .about-night-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-soft);
+  }
+
+  .about-night-top svg {
+    color: var(--about-blue-soft);
+  }
+
+  .about-zzz {
+    margin-right: auto;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-muted);
+    transform: rotate(-8deg);
+  }
+
+  .about-clock {
+    font-family: 'Radio', monospace;
+    font-size: 56px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 2px;
+    text-align: center;
+    color: var(--text);
+  }
+
+  /* چند نفر ← یه بازی */
+  .about-faces {
+    display: flex;
+  }
+
+  .about-faces span {
+    width: 48px;
+    height: 48px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 3px solid var(--card);
+  }
+  .about-faces span + span {
+    margin-right: -14px;
+  }
+  .about-faces span:nth-child(1) {
+    background: var(--accent);
+  }
+  .about-faces span:nth-child(2) {
+    background: var(--accent-text);
+  }
+  .about-faces span:nth-child(3) {
+    background: var(--present);
+  }
+  .about-faces span:nth-child(4) {
+    background: var(--incorrect);
+  }
+
+  .about-one-game {
+    width: 72px;
+    height: 72px;
+    border-radius: 4px;
+    background: var(--about-blue-deep);
+    border: 1px solid var(--accent);
+    color: var(--text-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* چراغ با نور آبی */
+  .about-bulb {
+    width: 76px;
+    height: 76px;
+    border-radius: 4px;
+    background: var(--about-blue-deep);
+    color: var(--hero-soft-ink);
+    box-shadow:
+      0 0 0 12px color-mix(in srgb, var(--accent) 14%, transparent),
+      0 0 48px color-mix(in srgb, var(--accent) 55%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* مهمان ← توی لیگ */
+  .about-guest {
+    padding: 8px 14px;
+    border-radius: 4px;
+    border: 1px dashed var(--text-muted);
+    font-size: 14px;
+    color: var(--text-soft);
+  }
+
+  .about-in-league {
+    padding: 8px 14px;
+    border-radius: 4px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-size: 14px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transform: rotate(-4deg);
+    box-shadow: 3px 3px 0 var(--about-blue-deep);
+  }
+
+  /* آیکن بازی‌ها + خونه‌ی خالی */
+  .about-games .about-art {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    align-content: center;
+    min-height: 120px;
+  }
+
+  .about-game-tile {
+    height: 52px;
+    border-radius: 4px;
+    background: var(--about-blue-deep);
+    color: var(--text-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .about-game-tile.empty {
+    background: none;
+    border: 1px dashed var(--border-strong);
+    color: var(--text-muted);
+    font-size: 22px;
+  }
+
+  /* درباره‌ی ما: دو کارت کنار هم */
+  .about-us {
+    margin-top: 72px;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .about-us-card,
+  .about-contact {
+    padding: 36px;
+    border-radius: 4px;
+    gap: 12px;
+  }
+
+  .about-us-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+
+  .about-us-card h2 {
+    font-size: 28px;
+  }
+
+  .about-us-card p {
+    font-size: 18px;
+  }
+
+  .about-contact b {
+    font-size: 22px;
+  }
+
+  .about-contact p {
+    display: block;
+    font-size: 16px;
+  }
+
+  .about-contact-button {
+    margin-top: auto;
+    align-self: flex-start;
+    min-height: 52px;
+  }
+
+  /* علامت نقل‌قول بزرگ و کم‌رنگ پشت متن */
+  .about-quote {
+    display: block;
+    position: absolute;
+    top: 4px;
+    left: 28px;
+    font-size: 140px;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--border);
+  }
+
+}
+
+/* لینک «درباره» پایین صفحه‌ی اول */
+.home-about-link {
+  display: block;
+  margin-top: 28px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.home-about-link:hover {
+  color: var(--text);
+}

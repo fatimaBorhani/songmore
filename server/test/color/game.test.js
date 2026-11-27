@@ -1,4 +1,4 @@
-// تست سرتاسری API حافظه‌ی رنگ: رنگ‌ها لو نرن، امتیاز، ۵ دور، خطاها و انتقال بازی مهمان
+// تست سرتاسری API جورنگ: رنگ‌ها لو نرن، امتیاز، ۵ دور، خطاها و انتقال بازی مهمان
 import { test, before, after } from 'node:test'
 import assert from 'node:assert/strict'
 import http from 'node:http'

@@ -1,4 +1,4 @@
-// مسیرهای API بازی حافظه‌ی رنگ (همه زیر /api/color)
+// مسیرهای API بازی جورنگ (همه زیر /api/color)
 import express from 'express'
 import { getTodayDateString } from '../../core/today.js'
 import { regenerateDailyColors } from './daily.js'
@@ -19,7 +19,7 @@ colorRouter.get('/game', (req, res) => {
   res.json({ ...getColorState(req.playerKey, date), testMode: COLOR_TEST_MODE })
 })
 
-// آمار حافظه‌ی رنگ برای صفحه‌ی حساب (فقط کاربر واردشده)
+// آمار جورنگ برای صفحه‌ی حساب (فقط کاربر واردشده)
 colorRouter.get('/stats', (req, res) => {
   if (!req.user) return res.status(401).json({ error: 'NOT_LOGGED_IN' })
   res.json(getColorStats(req.playerKey, getTodayDateString()))

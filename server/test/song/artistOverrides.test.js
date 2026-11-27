@@ -2,6 +2,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { applyArtistOverrides, loadArtistOverrides, parseCsv } from '../../games/song/artistOverrides.js'
@@ -22,8 +23,10 @@ test('parseCsv: ویرگول و نقل‌قول توی متن، CRLF و BOM', ()
   ])
 })
 
-test('loadArtistOverrides: نقش پیش‌فرض main است و فایل نبود یعنی بدون اصلاح', () => {
-  const file = path.join(fs.mkdtempSync(path.join(fs.realpathSync('/tmp'), 'ov-')), 'o.csv')
+test('loadArtistOverrides: نقش پیش‌فرض main است و فایل نبود یعنی بدون اصلاح', (t) => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'songmore-overrides-'))
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }))
+  const file = path.join(dir, 'o.csv')
   fs.writeFileSync(file, 'song_id,title,add_artists,credit\ns1,One,b:featured; c,"A, B & C"\ns2,Two,,\n')
   assert.deepEqual(loadArtistOverrides(file), [
     { songId: 's1', credit: 'A, B & C', artists: [{ id: 'b', role: 'featured' }, { id: 'c', role: 'main' }] },
@@ -32,8 +35,10 @@ test('loadArtistOverrides: نقش پیش‌فرض main است و فایل نبو
   assert.deepEqual(loadArtistOverrides(file + '.nope'), [])
 })
 
-test('نقش اشتباه خطا می‌ده', () => {
-  const file = path.join(fs.mkdtempSync(path.join(fs.realpathSync('/tmp'), 'ov-')), 'o.csv')
+test('نقش اشتباه خطا می‌ده', (t) => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'songmore-overrides-'))
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }))
+  const file = path.join(dir, 'o.csv')
   fs.writeFileSync(file, 'song_id,add_artists,credit\ns1,b:boss,\n')
   assert.throws(() => loadArtistOverrides(file), /نقش/)
 })

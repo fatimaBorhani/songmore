@@ -4,7 +4,7 @@ export const GAMES = [
   {
     id: 'song',
     path: '/song',
-    title: 'حدس آهنگ',
+    title: 'جورزیک',
     description: 'آهنگ امروز رو از چند صدم ثانیه‌ش بشناس.',
     icon: 'wave',
     featured: true, // کارت بزرگ آبی (با گرامافون) توی صفحه‌ی اول
@@ -13,7 +13,7 @@ export const GAMES = [
   {
     id: 'word',
     path: '/word',
-    title: 'واژه‌یاب', // اسم موقت؛ هنوز قطعی نشده
+    title: 'جورچین',
     description: 'سه کلمه‌ی ۳، ۴ و ۵ حرفی رو با شش حدس پیدا کن.',
     icon: 'grid',
     ready: true, // false = توی صفحه‌ی اول «به‌زودی» نشون داده می‌شه
@@ -21,15 +21,33 @@ export const GAMES = [
   {
     id: 'color',
     path: '/color',
-    title: 'حافظه‌ی رنگ', // اسم موقت
+    title: 'جورنگ',
     description: 'یه رنگ رو چند ثانیه ببین، بعد از حافظه بسازش.',
     icon: 'palette',
     ready: true,
   },
   {
+    id: 'clue',
+    path: '/clue',
+    title: 'جوربندی',
+    description: 'کلمه‌ی امروز رو از روی نزدیکی معنی حدس‌هات پیدا کن.',
+    icon: 'search',
+    ready: true,
+    beta: true, // برچسب «آزمایشی» (رتبه‌بندی معنایی هنوز خوب نیست)
+  },
+  {
+    id: 'lyrics',
+    path: '/lyrics',
+    title: 'جورشعر',
+    description: 'یه تیکه آهنگ می‌شنوی؛ دو خط بعدیش رو از حفظ بنویس.',
+    icon: 'mic',
+    ready: true,
+    beta: true, // برچسب «آزمایشی» (تازه‌ست و داده‌ش هنوز کمه)
+  },
+  {
     id: 'survey',
     path: '/survey',
-    title: 'صد نفر گفتن', // اسم موقت
+    title: 'صد جور',
     description: 'به چند سؤال کوتاه جواب بده و به ساختن بازی بعدی کمک کن.',
     icon: 'chat',
     cta: 'جواب بده ←', // متن دکمه‌ی کارت (پیش‌فرض: «بازی کن ←»)

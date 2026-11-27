@@ -1,4 +1,4 @@
-// بانک سؤال‌های نظرسنجی «صد نفر گفتن» (فایل questions.json؛ منبع و تغییرها توی NOTICE.md)
+// بانک سؤال‌های نظرسنجی «صد جور» (فایل questions.json؛ منبع و تغییرها توی NOTICE.md)
 import { readFileSync } from 'node:fs'
 
 const data = JSON.parse(readFileSync(new URL('./questions.json', import.meta.url), 'utf8'))

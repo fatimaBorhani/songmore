@@ -39,8 +39,8 @@
   width: 56px;
   height: 56px;
   flex-shrink: 0;
-  border-radius: 16px;
-  background: #27272a;
+  border-radius: 4px;
+  background: var(--chip);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,18 +80,21 @@
 .profile-tabs {
   display: flex;
   gap: 4px;
+  /* پنج تب روی گوشی جا نمی‌شن؛ به‌جای بیرون زدن از صفحه، توی خودش افقی اسکرول می‌شه */
+  overflow-x: auto;
+  scrollbar-width: none;
   padding: 4px;
-  border-radius: 16px;
-  background: #111113;
-  border: 1px solid #1f1f23;
+  border-radius: 4px;
+  background: var(--sunken);
+  border: 1px solid var(--border);
 }
 
 .profile-tabs button {
-  flex: 1;
+  flex: 1 0 auto;
   min-height: 44px;
-  padding: 0 10px; /* سه تب روی گوشی باید یه خطی بمونن */
+  padding: 0 12px; /* تب‌ها یه خطی می‌مونن */
   white-space: nowrap;
-  border-radius: 12px;
+  border-radius: 4px;
   border: none;
   background: transparent;
   color: var(--text-soft);
@@ -101,8 +104,8 @@
 }
 
 .profile-tabs button[aria-pressed='true'] {
-  background: #27272a;
-  color: #fff;
+  background: var(--chip);
+  color: var(--text-strong);
   font-weight: 700;
 }
 
@@ -114,9 +117,9 @@
 
 .profile-card {
   box-sizing: border-box;
-  border-radius: 20px;
-  background: #141416;
-  border: 1px solid #1f1f23;
+  border-radius: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
 }
 
 .profile-soon {
@@ -180,14 +183,14 @@
 .profile-dist-bar {
   flex-grow: 1;
   height: 12px;
-  border-radius: 6px;
+  border-radius: 4px;
   background: var(--border);
   overflow: hidden;
 }
 
 .profile-dist-bar div {
   height: 100%;
-  border-radius: 6px;
+  border-radius: 4px;
   background: var(--accent);
 }
 
@@ -236,9 +239,9 @@
 .profile-badge {
   box-sizing: border-box;
   padding: 14px 12px;
-  border-radius: 16px;
-  border: 1px solid #1f1f23;
-  background: #111113;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--sunken);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -248,13 +251,13 @@
 
 .profile-badge.earned {
   border-color: var(--accent);
-  background: rgba(48, 48, 230, 0.1);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .profile-badge-disc {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
+  border-radius: 4px;
   background: var(--border);
   color: var(--text-muted);
   display: flex;
@@ -264,7 +267,7 @@
 
 .profile-badge.earned .profile-badge-disc {
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-ink);
 }
 
 .profile-badge-num {
@@ -287,9 +290,9 @@
 .profile-badge-state {
   margin-top: auto;
   padding: 2px 12px;
-  border-radius: 999px;
-  background: rgba(48, 48, 230, 0.25);
-  color: #c9c9ff;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
+  color: var(--hero-soft-ink);
   font-size: 12px;
   font-weight: 700;
 }
@@ -360,7 +363,7 @@
 .heatmap i,
 .heatmap-legend i {
   display: block;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 .heatmap i {
@@ -368,19 +371,19 @@
 }
 
 .lv0 {
-  background: #1f1f23;
+  background: var(--lv0);
 }
 .lv1 {
-  background: #16164a;
+  background: var(--lv1);
 }
 .lv2 {
-  background: #24249a;
+  background: var(--lv2);
 }
 .lv3 {
-  background: #3030e6;
+  background: var(--lv3);
 }
 .lv4 {
-  background: #8f8fff;
+  background: var(--lv4);
 }
 
 .heatmap i.future {
@@ -417,12 +420,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #1f1f23;
+  border-bottom: 1px solid var(--border);
 }
 
 .profile-stats dt {
   font-size: 14px;
-  color: #c9c9cf;
+  color: var(--text-soft);
 }
 
 .profile-stats dd {
@@ -437,20 +440,21 @@
 }
 
 .profile-stats .total dt {
-  color: #d4d4ff;
+  color: var(--text-soft);
+  font-weight: 700;
 }
 
 .profile-stats .total dd {
   font-size: 20px;
-  color: #fff;
+  color: var(--text-strong);
 }
 
 .profile-logout {
   min-height: 48px;
-  border-radius: 14px;
+  border-radius: 4px;
   border: 1px solid var(--border);
   background: transparent;
-  color: #c9c9cf;
+  color: var(--text-soft);
   font: inherit;
   font-size: 14px;
   cursor: pointer;
@@ -474,9 +478,9 @@
     flex: 0 0 280px;
     box-sizing: border-box;
     padding: 28px 22px 22px;
-    border-radius: 24px;
+    border-radius: 4px;
     background: var(--card);
-    border: 1px solid #27272a;
+    border: 1px solid var(--chip);
     flex-direction: column;
     gap: 6px;
   }
@@ -484,7 +488,7 @@
   .profile-avatar {
     width: 96px;
     height: 96px;
-    border-radius: 50%;
+    border-radius: 4px;
     border: 3px solid var(--accent);
     font-size: 42px;
   }
@@ -508,8 +512,8 @@
     margin-top: 12px;
     box-sizing: border-box;
     padding: 14px 16px;
-    border-radius: 16px;
-    background: #14143a;
+    border-radius: 4px;
+    background: var(--hero);
     box-shadow: inset 0 0 0 1px var(--accent);
     display: flex;
     align-items: center;
@@ -518,7 +522,7 @@
 
   .profile-rank-card span {
     font-size: 13px;
-    color: #d4d4ff;
+    color: var(--hero-soft-ink);
   }
 
   .profile-rank-card b {
@@ -529,7 +533,7 @@
   .profile-rank-card small {
     font-size: 13px;
     font-weight: 400;
-    color: #d4d4ff;
+    color: var(--hero-soft-ink);
   }
 
   .desktop-only {
@@ -546,8 +550,9 @@
     gap: 16px;
   }
 
+  /* نوار تب‌ها وسط */
   .profile-tabs {
-    align-self: flex-start;
+    align-self: center;
   }
 
   .profile-tabs button {

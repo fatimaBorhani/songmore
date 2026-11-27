@@ -1,15 +1,16 @@
-// مسیرهای API بازی حدس آهنگ (همه زیر /api/song)
+// مسیرهای API جورزیک (همه زیر /api/song)
 import express from 'express'
 import { db } from '../../core/db.js'
 import { getTodayDateString, pickDailySongs, pickNewRandomSongs } from './dailySong.js'
 import { searchSongs } from './search.js'
-import { buildSongArtistsMap, evaluateGuess } from './guessLogic.js'
+import { buildSongArtistsMap, cleanLabel, evaluateGuess } from './guessLogic.js'
 import { addGuess, currentSlot, getGameState } from './guesses.js'
 import { getPlayerStats } from './playerStats.js'
 import { getActivity } from './activity.js'
 import { practiceRouter } from './practiceRoutes.js'
 import { countFinishedPracticeGames } from './practice.js'
 import { getDailyLeaderboard } from './leaderboard.js'
+import { suggestSong } from './suggestions.js'
 
 // حالت تست (npm run dev): فقط دکمه‌ی «بازی دوباره (تست)» آهنگ‌های امروز رو عوض می‌کنه؛
 // رفرش صفحه بازی رو پاک نمی‌کنه
@@ -21,6 +22,13 @@ export const songRouter = express.Router()
 songRouter.use('/practice', practiceRouter)
 
 // بازی امروز: آهنگ جاری (اولین آهنگی که هنوز تموم نکردی) + پیشرفت روز
+// «آهنگم توی لیست نیست»: { title, artist } → { ok: true } یا خطا (مهمان هم می‌تونه)
+songRouter.post('/suggest', (req, res) => {
+  const error = suggestSong(req.playerKey, getTodayDateString(), req.body?.title, req.body?.artist)
+  if (error) return res.status(400).json({ error })
+  res.json({ ok: true })
+})
+
 songRouter.get('/game', (req, res) => {
   const date = getTodayDateString()
   const songIds = pickDailySongs(date)
@@ -84,7 +92,7 @@ songRouter.post('/guess', (req, res) => {
     return res.status(400).json({ error: 'GAME_OVER' })
   }
 
-  const { songId: guessSongId, label } = req.body
+  const { songId: guessSongId, label } = req.body || {}
   const guessSong = db.prepare('SELECT id FROM songs WHERE id = ?').get(guessSongId)
   if (!guessSongId || !guessSong) {
     return res.status(400).json({ error: 'INVALID_SONG' })
@@ -92,7 +100,7 @@ songRouter.post('/guess', (req, res) => {
 
   const artistsMap = buildSongArtistsMap()
   const result = evaluateGuess(guessSongId, songId, artistsMap)
-  addGuess(req.playerKey, date, slot, label || guessSong.id, result)
+  addGuess(req.playerKey, date, slot, cleanLabel(label, guessSong.id), result)
 
   res.json(getGameState(req.playerKey, date, songIds, slot))
 })
